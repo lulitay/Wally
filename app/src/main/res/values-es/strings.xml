@@ -11,4 +11,5 @@
     <string name="saving">Ahorro</string>
     <string name="spending">Gasto</string>
     <string name="income">Ingreso</string>
+    <string name="amount">cantidad</string>
 </resources>

@@ -10,5 +10,6 @@
     <string name="spending">Spending</string>
     <string name="saving">Saving</string>
     <string name="income">Income</string>
+    <string name="amount">amount</string>
 
 </resources>

@@ -8,4 +8,8 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryAccent</item>
     </style>
 
+    <style name="FormInputs" parent="AppTheme">
+        <item name="android:padding">@dimen/form_padding</item>
+    </style>
+
 </resources>
