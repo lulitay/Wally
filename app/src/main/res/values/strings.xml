@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">PAM-APP</string>
+    <string name="app_name">wally</string>
     <string name="welcome">Welcome to the app!</string>
+    <string name="add_entry">Add entry</string>
+    <string name="description">description</string>
+    <string name="bucket">bucket</string>
+    <string name="add_spending">Add spending</string>
+    <string name="add_income">Add income</string>
+    <string name="add_saving">Add saving</string>
+    <string name="spending">Spending</string>
+    <string name="saving">Saving</string>
+    <string name="income">Income</string>
 
 </resources>
