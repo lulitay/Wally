@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.FTUActivity" />
-        <activity android:name=".activity.BucketActivity" />
+        <activity android:name=".activity.bucket.BucketActivity" />
     </application>
 
 </manifest>
