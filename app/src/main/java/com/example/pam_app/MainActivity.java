@@ -7,7 +7,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.pam_app.entry.AddEntryActivity;
+import com.example.pam_app.activity.AddEntryActivity;
+import com.example.pam_app.activity.FTUActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {

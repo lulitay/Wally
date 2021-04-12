@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".entry.AddIncomeEntryFragment">
+    tools:context=".fragment.AddIncomeEntryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,45 +13,51 @@
         android:padding="20dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/description"
-            style="@style/FormInputs">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/menu"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bucket"
-            android:padding="@dimen/form_padding">
+            android:layout_marginBottom="@dimen/form_margin">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/auto_complete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/income_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/amount"
-            style="@style/FormInputs">
-
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/textField"
+                android:hint="@string/description"
+                style="@style/FormInputs"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/income_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
+                android:hint="@string/amount"
+                style="@style/FormInputs"
                 />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/date"
+            android:hint="@string/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            style="@style/FormInputs"
+            android:focusable="false" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/add_income"
+            style="@style/FormInputs"/>
 
     </LinearLayout>
 </FrameLayout>

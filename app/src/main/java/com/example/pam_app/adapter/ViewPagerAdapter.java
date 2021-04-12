@@ -1,9 +1,13 @@
-package com.example.pam_app.entry;
+package com.example.pam_app.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.pam_app.fragment.AddIncomeEntryFragment;
+import com.example.pam_app.fragment.AddSavingEntryFragment;
+import com.example.pam_app.fragment.AddSpendingEntryFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 

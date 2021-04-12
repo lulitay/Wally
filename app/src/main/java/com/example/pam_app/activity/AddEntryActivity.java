@@ -1,4 +1,4 @@
-package com.example.pam_app.entry;
+package com.example.pam_app.activity;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.pam_app.R;
+import com.example.pam_app.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -33,7 +34,7 @@ public class AddEntryActivity extends AppCompatActivity {
         toolbar.setTitle(null);
         setSupportActionBar(toolbar);
 
-        ActionBar ab = getSupportActionBar();
+        final ActionBar ab = getSupportActionBar();
         ab.setDisplayShowTitleEnabled(false);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeAsUpIndicator(R.drawable.ic_close);

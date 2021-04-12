@@ -1,4 +1,4 @@
-package com.example.pam_app.entry;
+package com.example.pam_app.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,12 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +25,7 @@ public class AddIncomeEntryFragment extends Fragment {
     private static final List<String> BUCKETS = new ArrayList<>(Arrays.asList("Salary", "Bonus"));
 
     public AddIncomeEntryFragment() {
-        // Required empty public constructor
+
     }
 
     @Nullable
@@ -36,9 +39,26 @@ public class AddIncomeEntryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.list_item, BUCKETS);
-
         AutoCompleteTextView editTextFilledExposedDropdown = view.findViewById(R.id.auto_complete);
         editTextFilledExposedDropdown.setAdapter(adapter);
+
+        final EditText dateInput = (EditText) view.findViewById(R.id.date);
+        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Pick a date").build();
+
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                dateInput.setText(datePicker.getHeaderText());
+            }
+        });
+
+        dateInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePicker.show(getParentFragmentManager(), "tag");
+            }
+        });
     }
 
     public static AddIncomeEntryFragment newInstance(Integer counter) {
