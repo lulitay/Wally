@@ -39,4 +39,8 @@ public class Bucket {
     public String getTotalString() {
         return "" + this.getTotal() + " / " + this.target;
     }
+
+    public String getRemainingTime() {
+        return "300D 11Hs"; //TODO check how we are going to handle times
+    }
 }

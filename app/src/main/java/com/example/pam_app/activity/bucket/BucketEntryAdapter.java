@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.activity.data_bind.BindableAdapter;
+import com.example.pam_app.databinding.ActivityBucketEntryBinding;
 import com.example.pam_app.model.BucketEntry;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
     @Override
     public BucketEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new BucketEntryHolder(inflater.inflate(R.layout.activity_bucket_entry, parent, false));
+        return new BucketEntryHolder(ActivityBucketEntryBinding.inflate(inflater, parent, false));
     }
 
     @Override
@@ -37,20 +38,20 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
 
     @Override
     public void onBindViewHolder(BucketEntryHolder holder, final int position) {
-        holder.bind(items.get(position).toString());
+        holder.bind(items.get(position));
     }
 
     public static class BucketEntryHolder extends RecyclerView.ViewHolder {
 
-        private final View itemView;
+        private final ActivityBucketEntryBinding binding;
 
-        public BucketEntryHolder(View itemView) {
-            super(itemView);
-            this.itemView = itemView;
+        public BucketEntryHolder(ActivityBucketEntryBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
-        public void bind(String text) {
-            ((TextView) this.itemView.findViewById(R.id.textView)).setText(text);
+        public void bind(BucketEntry entry) {
+            this.binding.setEntry(entry);
         }
     }
 }
