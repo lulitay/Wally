@@ -12,7 +12,7 @@
     <string name="spending">Gasto</string>
     <string name="income">Ingreso</string>
     <string name="amount">cantidad</string>
-    <string name="welcome_to_wally">Welcome to Wally!</string>
-    <string name="save">Save</string>
+    <string name="welcome_to_wally">Bienvenid@ a Wally!</string>
+    <string name="save">Guardar</string>
     <string name="date">date</string>
 </resources>
