@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.pam_app.R;
-import com.example.pam_app.databinding.ActivityBucketHeaderBinding;
+import com.example.pam_app.databinding.ActivityBucketBinding;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.model.BucketType;
@@ -22,7 +22,7 @@ public class BucketActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        ActivityBucketHeaderBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
+        ActivityBucketBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
         ArrayList<BucketEntry> entries = new ArrayList<>();
         entries.add(new BucketEntry(200, new Date(), "Algo"));
         entries.add(new BucketEntry(-100, new Date(), "Algo2"));

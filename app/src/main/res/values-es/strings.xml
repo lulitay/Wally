@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PAM-APP</string>
+    <string name="app_name">wally</string>
     <string name="welcome">Bienvenid@ a la aplicación!</string>
-    <string name="spending">Gasto</string>
+    <string name="add_entry">Agregar entrada</string>
+    <string name="description">descripción</string>
+    <string name="bucket">balde</string>
+    <string name="add_spending">Agregar gasto</string>
+    <string name="add_income">Agregar ingreso</string>
+    <string name="add_saving">Agregar ahorro</string>
     <string name="saving">Ahorro</string>
+    <string name="spending">Gasto</string>
+    <string name="income">Ingreso</string>
+    <string name="amount">cantidad</string>
+    <string name="welcome_to_wally">Bienvenid@ a Wally!</string>
+    <string name="save">Guardar</string>
+    <string name="date">date</string>
 </resources>

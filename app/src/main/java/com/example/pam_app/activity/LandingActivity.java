@@ -1,4 +1,4 @@
-package com.example.pam_app.activity.landing;
+package com.example.pam_app.activity;
 
 import android.os.Bundle;
 
