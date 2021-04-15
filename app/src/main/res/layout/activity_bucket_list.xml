@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/add_entry_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Bucket" />
+        android:text="Add Entry" />
 
 </LinearLayout>
