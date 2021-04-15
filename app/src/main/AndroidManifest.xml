@@ -19,6 +19,7 @@
         <activity android:name=".activity.FTUActivity" />
         <activity android:name=".activity.BucketActivity" />
         <activity android:name=".activity.AddEntryActivity"/>
+        <activity android:name=".activity.BucketListActivity"/>
     </application>
 
 </manifest>
