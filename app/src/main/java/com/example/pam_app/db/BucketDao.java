@@ -24,7 +24,7 @@ public interface BucketDao {
 
     @Transaction
     @Query("SELECT * FROM buckets WHERE id=:id")
-    BucketWithEntriesEntity get(final int id); //TODO check async call??????
+    Flowable<BucketWithEntriesEntity> get(final int id);
 
     @Insert
     void addEntry(final BucketEntryEntity entry);

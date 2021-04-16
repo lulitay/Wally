@@ -15,4 +15,11 @@ public class BucketEntryEntity {
     public double amount;
     public Date date;
     public String comment;
+
+    public BucketEntryEntity(int idBucket, double amount, Date date, String comment) {
+        this.idBucket = idBucket;
+        this.amount = amount;
+        this.date = date;
+        this.comment = comment;
+    }
 }

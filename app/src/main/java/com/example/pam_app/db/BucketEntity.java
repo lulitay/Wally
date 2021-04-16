@@ -15,4 +15,11 @@ public class BucketEntity {
     public Date dueDate;
     public int bucketType;
     public double target;
+
+    public BucketEntity(String title, Date dueDate, int bucketType, double target) {
+        this.title = title;
+        this.dueDate = dueDate;
+        this.bucketType = bucketType;
+        this.target = target;
+    }
 }
