@@ -8,7 +8,9 @@ import com.example.pam_app.model.BucketEntry;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 
 public class RoomBucketRepository implements BucketRepository {
 
@@ -23,7 +25,7 @@ public class RoomBucketRepository implements BucketRepository {
     @Override
     public Flowable<List<Bucket>> getList() {
         return this.bucketDao.getList().map(bucketEntityList -> {
-            List<Bucket> buckets = new ArrayList<>();
+            final List<Bucket> buckets = new ArrayList<>();
             for (final BucketEntity be: bucketEntityList) {
                 buckets.add(bucketMapper.toModel(be));
             }
@@ -33,12 +35,16 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public void create(Bucket bucket) {
-        this.bucketDao.create(this.bucketMapper.toEntity(bucket));
+        Completable.fromRunnable(
+                () -> bucketDao.create(bucketMapper.toEntity(bucket))).subscribeOn(Schedulers.io()
+        ).subscribe();
     }
 
     @Override
     public void delete(Bucket bucket) {
-        this.bucketDao.delete(this.bucketMapper.toEntity(bucket));
+        Completable.fromRunnable(
+                () -> bucketDao.delete(bucketMapper.toEntity(bucket))
+        ).subscribeOn(Schedulers.io()).subscribe();
     }
 
     @Override
@@ -48,11 +54,15 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public void addEntry(BucketEntry entry, final int idBucket) {
-        this.bucketDao.addEntry(bucketMapper.toEntity(entry, idBucket));
+        Completable.fromRunnable(
+                () -> bucketDao.addEntry(bucketMapper.toEntity(entry, idBucket))
+        ).subscribeOn(Schedulers.io()).subscribe();
     }
 
     @Override
     public void removeEntry(BucketEntry entry, final int idBucket) {
-        this.bucketDao.removeEntry(bucketMapper.toEntity(entry, idBucket));
+        Completable.fromRunnable(
+                () -> bucketDao.removeEntry(bucketMapper.toEntity(entry, idBucket))
+        ).subscribeOn(Schedulers.io()).subscribe();
     }
 }

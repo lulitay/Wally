@@ -15,4 +15,9 @@
     <string name="welcome_to_wally">Bienvenid@ a Wally!</string>
     <string name="save">Guardar</string>
     <string name="date">date</string>
+    <string name="add_bucket">Agregar balde</string>
+    <string name="bucket_type">tipo</string>
+    <string name="due_date">fecha límite</string>
+    <string name="title">título</string>
+    <string name="target">objetivo</string>
 </resources>
