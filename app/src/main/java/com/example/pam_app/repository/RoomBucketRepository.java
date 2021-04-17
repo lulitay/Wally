@@ -53,9 +53,15 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void addEntry(BucketEntry entry, final int idBucket) {
+    public Flowable<Bucket> get(final String title) {
+        return this.bucketDao.getBucket(title).map(bucketMapper::toModel);
+    }
+
+    @Override
+    public void addEntry(BucketEntry entry, final String bucketTitle) {
+        final Bucket bucket = get(bucketTitle).blockingFirst();
         Completable.fromRunnable(
-                () -> bucketDao.addEntry(bucketMapper.toEntity(entry, idBucket))
+                () -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id))
         ).subscribeOn(Schedulers.io()).subscribe();
     }
 
@@ -64,5 +70,10 @@ public class RoomBucketRepository implements BucketRepository {
         Completable.fromRunnable(
                 () -> bucketDao.removeEntry(bucketMapper.toEntity(entry, idBucket))
         ).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    @Override
+    public Flowable<List<String>> getTitleListByType(int type) {
+        return this.bucketDao.getTitleListByType(type);
     }
 }

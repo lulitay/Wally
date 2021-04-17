@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,11 +24,13 @@ import com.example.pam_app.view.AddBucketEntryView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public abstract class AddBucketEntryFragment extends Fragment implements AddBucketEntryView {
 
     private AddBucketEntryPresenter presenter;
+    private View createdView;
 
     @Nullable
     @Override
@@ -43,6 +46,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        createdView = view;
+        presenter.onViewAttached();
 
         final EditText description = view.findViewById(R.id.description);
         final EditText amount = view.findViewById(R.id.amount);
@@ -51,24 +56,31 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         final AutoCompleteTextView bucket = view.findViewById(R.id.bucket);
 
         setDatePicker(date, selectedDate);
-        saveEntry(view, description, amount, date, selectedDate, bucket);
+        saveEntry(description, amount, date, selectedDate, bucket);
     }
 
-    void saveEntry(final @NonNull View view,
-                           final EditText description,
-                           final EditText amount,
-                           final EditText date,
-                           final Calendar selectedDate,
-                           final AutoCompleteTextView bucket
+    @Override
+    public void setDropDownOptions(final List<String> buckets) {
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.list_item, buckets);
+        final AutoCompleteTextView editTextFilledExposedDropdown = createdView.findViewById(R.id.bucket);
+        editTextFilledExposedDropdown.setAdapter(adapter);
+    }
+
+    void saveEntry(final EditText description,
+                   final EditText amount,
+                   final EditText date,
+                   final Calendar selectedDate,
+                   final AutoCompleteTextView bucket
     ) {
-        final Button saveEntry = view.findViewById(R.id.save);
+        final Button saveEntry = createdView.findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
             final boolean fields = checkFields(description, amount, date, bucket);
             if (fields) {
                 presenter.saveBucketEntry(
                         Double.parseDouble(amount.getText().toString()),
                         selectedDate.getTime(),
-                        description.getText().toString()
+                        description.getText().toString(),
+                        bucket.getText().toString()
                 );
                 Toast.makeText(
                         getContext(),

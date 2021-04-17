@@ -16,7 +16,11 @@ public interface BucketRepository {
 
     Flowable<Bucket> get(final int id);
 
-    void addEntry(final BucketEntry entry, final int idBucket);
+    Flowable<Bucket> get(final String title);
+
+    void addEntry(final BucketEntry entry, final String bucketTitle);
 
     void removeEntry(final BucketEntry entry, final int idBucket);
+
+    Flowable<List<String>> getTitleListByType(final int type);
 }
