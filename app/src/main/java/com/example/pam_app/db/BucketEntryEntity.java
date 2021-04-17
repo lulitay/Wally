@@ -11,10 +11,10 @@ import java.util.Date;
 public class BucketEntryEntity {
     @PrimaryKey(autoGenerate = true)
     public int idEntry;
-    public int idBucket;
-    public double amount;
-    public Date date;
-    public String comment;
+    public final int idBucket;
+    public final double amount;
+    public final Date date;
+    public final String comment;
 
     public BucketEntryEntity(int idBucket, double amount, Date date, String comment) {
         this.idBucket = idBucket;

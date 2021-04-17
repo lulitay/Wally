@@ -11,10 +11,10 @@ import java.util.Date;
 public class BucketEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String title;
-    public Date dueDate;
-    public int bucketType;
-    public double target;
+    public final String title;
+    public final Date dueDate;
+    public final int bucketType;
+    public final double target;
 
     public BucketEntity(String title, Date dueDate, int bucketType, double target) {
         this.title = title;
