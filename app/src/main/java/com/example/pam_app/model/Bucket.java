@@ -11,7 +11,7 @@ public class Bucket {
     public final BucketType bucketType;
     public final double target;
     public final List<BucketEntry> entries;
-
+    public final Integer id;
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
                   List<BucketEntry> entries) {
@@ -20,6 +20,17 @@ public class Bucket {
         this.bucketType = bucketType;
         this.target = target;
         this.entries = entries;
+        this.id = null;
+    }
+
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target,
+                  List<BucketEntry> entries, int id) {
+        this.title = title;
+        this.dueDate = dueDate;
+        this.bucketType = bucketType;
+        this.target = target;
+        this.entries = entries;
+        this.id = id;
     }
 
     public int getProgress() {
