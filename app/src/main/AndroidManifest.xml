@@ -20,6 +20,8 @@
         <activity android:name=".activity.BucketActivity" />
         <activity android:name=".activity.AddEntryActivity"/>
         <activity android:name=".activity.BucketListActivity"/>
+        <activity android:name=".activity.AddBucketEntryActivity"/>
+        <activity android:name=".activity.AddBucketActivity"/>
     </application>
 
 </manifest>

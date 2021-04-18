@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.pam_app.activity.AddEntryActivity;
+import com.example.pam_app.activity.AddBucketActivity;
+import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.activity.FTUActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,18 +29,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, FTUActivity.class));
         }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addEntry(view);
-            }
-        });
-
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        final Button addBucketButton = findViewById(R.id.add_bucket);
+        fab.setOnClickListener(this::addEntry);
+        addBucketButton.setOnClickListener(this::addBucket);
     }
 
     public void addEntry(final View view) {
-        Intent intent = new Intent(this, AddEntryActivity.class);
+        final Intent intent = new Intent(this, AddBucketEntryActivity.class);
+        startActivity(intent);
+    }
+
+    public void addBucket(final View view) {
+        final Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
     }
 }

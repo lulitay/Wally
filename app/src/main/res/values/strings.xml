@@ -14,4 +14,9 @@
     <string name="welcome_to_wally">Welcome to Wally!</string>
     <string name="save">Save</string>
     <string name="date">date</string>
+    <string name="add_bucket">Add bucket</string>
+    <string name="bucket_type">bucket type</string>
+    <string name="due_date">due date</string>
+    <string name="title">title</string>
+    <string name="target">target</string>
 </resources>
