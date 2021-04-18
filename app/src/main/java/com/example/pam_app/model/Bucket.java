@@ -1,6 +1,7 @@
 package com.example.pam_app.model;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.Math.sqrt;
@@ -31,6 +32,15 @@ public class Bucket {
         this.target = target;
         this.entries = entries;
         this.id = id;
+    }
+
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target) {
+        this.title = title;
+        this.dueDate = dueDate;
+        this.bucketType = bucketType;
+        this.target = target;
+        this.entries = new LinkedList<>();
+        this.id = null;
     }
 
     public int getProgress() {

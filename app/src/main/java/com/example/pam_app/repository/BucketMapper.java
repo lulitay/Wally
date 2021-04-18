@@ -41,7 +41,7 @@ public class BucketMapper {
 
     public BucketEntry toModel(final BucketEntryEntity bucketEntryEntity) {
         return new BucketEntry(bucketEntryEntity.amount, bucketEntryEntity.date,
-                bucketEntryEntity.comment);
+                bucketEntryEntity.title);
     }
 
     public BucketEntryEntity toEntity(final BucketEntry bucketEntry, final int idBucket) {

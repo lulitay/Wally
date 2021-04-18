@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.pam_app.fragment.AddIncomeEntryFragment;
-import com.example.pam_app.fragment.AddSavingEntryFragment;
-import com.example.pam_app.fragment.AddSpendingEntryFragment;
+import com.example.pam_app.fragment.AddIncomeBucketEntryFragment;
+import com.example.pam_app.fragment.AddSavingBucketEntryFragment;
+import com.example.pam_app.fragment.AddSpendingBucketEntryFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
@@ -20,11 +20,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position) {
             case 1:
-                return AddSavingEntryFragment.newInstance(position);
+                return AddSavingBucketEntryFragment.newInstance(position);
             case 2:
-                return AddIncomeEntryFragment.newInstance(position);
+                return AddIncomeBucketEntryFragment.newInstance(position);
             default:
-                return AddSpendingEntryFragment.newInstance(position);
+                return AddSpendingBucketEntryFragment.newInstance(position);
         }
     }
 
