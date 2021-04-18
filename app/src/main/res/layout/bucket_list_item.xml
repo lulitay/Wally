@@ -15,6 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
@@ -22,6 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:gravity="center_vertical|right"
+            android:paddingRight="20dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:paddingEnd="20dp" />
     </LinearLayout>
 </LinearLayout>
