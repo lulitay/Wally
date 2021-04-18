@@ -23,9 +23,11 @@ public class BucketListActivity extends AppCompatActivity {
     Button addBucketButton;
     ListView bucketListView;
 
+    //TODO: replace this with buckets from the DB
     private Bucket savingsBucket = new Bucket("Car", Date.valueOf("2021-06-12"), BucketType.SAVING, 20000.0, null);
     private Bucket spendingBucket = new Bucket("Food", Date.valueOf("2021-06-12"), BucketType.SPENDING, 10000.0, null);
-    private ArrayList<Bucket> bucketList = new ArrayList(Arrays.asList(savingsBucket, spendingBucket));
+    private Bucket spendingBucket2 = new Bucket("Rent", Date.valueOf("2021-06-12"), BucketType.SPENDING, 10000.0, null);
+    private ArrayList<Bucket> bucketList = new ArrayList(Arrays.asList(savingsBucket, spendingBucket, spendingBucket2));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class BucketListActivity extends AppCompatActivity {
     }
 
     public void addBucket(View view) {
-        Intent intent = new Intent(this, AddEntryActivity.class);
+        Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
     }
 }
