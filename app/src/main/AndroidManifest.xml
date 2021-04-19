@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_wally_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.BucketListActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,8 +18,6 @@
         </activity>
         <activity android:name=".activity.FTUActivity" />
         <activity android:name=".activity.BucketActivity" />
-        <activity android:name=".activity.AddEntryActivity"/>
-<!--        <activity android:name=".activity.BucketListActivity"/>-->
         <activity android:name=".activity.AddBucketEntryActivity"/>
         <activity android:name=".activity.AddBucketActivity"/>
     </application>
