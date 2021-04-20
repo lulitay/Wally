@@ -11,17 +11,18 @@ import com.example.pam_app.R;
 import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BucketListAdapter extends ArrayAdapter<Bucket> {
     private final Activity context;
-    private final ArrayList<Bucket> bucketList;
+    private final List<Bucket> bucketList;
 
     static class ViewHolder {
         public TextView title;
         public TextView target;
     }
 
-    public BucketListAdapter(Activity context, ArrayList<Bucket> bucketList) {
+    public BucketListAdapter(Activity context, List<Bucket> bucketList) {
         super(context, R.layout.bucket_list_item, bucketList);
         this.context = context;
         this.bucketList = bucketList;

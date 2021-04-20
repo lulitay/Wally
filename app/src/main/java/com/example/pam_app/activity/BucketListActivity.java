@@ -12,36 +12,41 @@ import android.widget.ListView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
+import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
-import com.example.pam_app.model.BucketType;
+import com.example.pam_app.presenter.BucketListPresenter;
+import com.example.pam_app.repository.BucketMapper;
+import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.RoomBucketRepository;
+import com.example.pam_app.view.BucketListView;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
-public class BucketListActivity extends AppCompatActivity {
-    Button addBucketButton;
-    ListView bucketListView;
+public class BucketListActivity extends AppCompatActivity implements BucketListView {
+    private Button addBucketButton;
+    private ListView bucketListView;
 
-    //TODO: replace this with buckets from the DB
-    private Bucket savingsBucket = new Bucket("Car", Date.valueOf("2021-06-12"), BucketType.SAVING, 20000.0, null);
-    private Bucket spendingBucket = new Bucket("Food", Date.valueOf("2021-06-12"), BucketType.SPENDING, 10000.0, null);
-    private Bucket spendingBucket2 = new Bucket("Rent", Date.valueOf("2021-06-12"), BucketType.SPENDING, 10000.0, null);
-    private ArrayList<Bucket> bucketList = new ArrayList(Arrays.asList(savingsBucket, spendingBucket, spendingBucket2));
+    private BucketListPresenter presenter;
+
+    private List<Bucket> bucketList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bucket_list);
 
+        final BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
+                new BucketMapper()
+        );
+        presenter = new BucketListPresenter(this, bucketRepository);
+
         bucketListView = findViewById(R.id.listView);
         addBucketButton = findViewById(R.id.add_entry_button);
-        addBucketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addBucket(v);
-            }
-        });
+        addBucketButton.setOnClickListener(v -> addBucket(v));
+
+        bucketList = presenter.getBuckets();
 
         final ArrayAdapter<Bucket> adapter = new BucketListAdapter
                 (this, bucketList);
