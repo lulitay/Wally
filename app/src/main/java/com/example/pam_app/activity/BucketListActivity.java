@@ -61,15 +61,6 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
         presenter.onViewAttached();
     }
 
-    private List<Bucket> adaptModel(List<BucketEntity> model) {
-        final List<Bucket> list = new ArrayList<>();
-        for (final BucketEntity entity : model) {
-            list.add(new Bucket(entity.title, entity.dueDate, BucketType.values()[entity.bucketType], entity.target));
-        }
-
-        return list;
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
