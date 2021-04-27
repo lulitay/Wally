@@ -35,16 +35,16 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public void create(Bucket bucket) {
-        Completable.fromRunnable(
-                () -> bucketDao.create(bucketMapper.toEntity(bucket))).subscribeOn(Schedulers.io()
-        ).subscribe();
+        Completable.fromRunnable(() -> bucketDao.create(bucketMapper.toEntity(bucket)))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     @Override
     public void delete(Bucket bucket) {
-        Completable.fromRunnable(
-                () -> bucketDao.delete(bucketMapper.toEntity(bucket))
-        ).subscribeOn(Schedulers.io()).subscribe();
+        Completable.fromRunnable(() -> bucketDao.delete(bucketMapper.toEntity(bucket)))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     @Override
@@ -60,8 +60,7 @@ public class RoomBucketRepository implements BucketRepository {
     @Override
     public void addEntry(BucketEntry entry, final String bucketTitle) {
         final Bucket bucket = get(bucketTitle).blockingFirst();
-        Completable.fromRunnable(
-                () -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id))
+        Completable.fromRunnable(() -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id))
         ).subscribeOn(Schedulers.io()).subscribe();
     }
 

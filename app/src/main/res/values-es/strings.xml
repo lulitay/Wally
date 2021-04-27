@@ -20,4 +20,7 @@
     <string name="due_date">fecha límite</string>
     <string name="title">título</string>
     <string name="target">objetivo</string>
+    <string name="Home">Inicio</string>
+    <string name="Profile">Profile</string>
+    <string name="Buckets">Baldes</string>
 </resources>
