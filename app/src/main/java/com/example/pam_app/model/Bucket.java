@@ -46,6 +46,9 @@ public class Bucket {
     public int getProgress() {
         double total = this.getTotal();
 
+        if (total == 0) {
+            return 0;
+        }
         return (int) sqrt((target / total) * (target / total));
     }
 
@@ -59,5 +62,9 @@ public class Bucket {
 
     public String getTotalString() {
         return "" + this.getTotal() + " / " + this.target;
+    }
+
+    public String getRemainingTime() {
+        return "300D 11Hs"; //TODO check how we are going to handle times
     }
 }

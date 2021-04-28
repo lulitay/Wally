@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="entry" type="com.example.pam_app.model.BucketEntry"/>
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40sp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#3A9A2F"
+        android:background="@{(entry.amount >= 0) ? @color/green : @color/red}"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
@@ -13,8 +16,9 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="+ 200"
-            android:textColor="#FFFFFF"
+            android:text="@{entry.toString()}"
+            android:textColor="@color/white"
+            android:padding="5dp"
             android:textSize="20sp"
             android:gravity="start|center_vertical"/>
 
