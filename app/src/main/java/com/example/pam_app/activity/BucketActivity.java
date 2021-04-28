@@ -1,21 +1,26 @@
 package com.example.pam_app.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
+import com.example.pam_app.adapter.BucketEntryAdapter;
 import com.example.pam_app.databinding.ActivityBucketBinding;
-import com.example.pam_app.model.Bucket;
-import com.example.pam_app.model.BucketEntry;
-import com.example.pam_app.model.BucketType;
-
-import java.util.ArrayList;
-import java.util.Date;
+import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.repository.BucketMapper;
+import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.RoomBucketRepository;
+;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class BucketActivity extends AppCompatActivity {
 
@@ -23,22 +28,22 @@ public class BucketActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
         ActivityBucketBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
-        ArrayList<BucketEntry> entries = new ArrayList<>();
-        entries.add(new BucketEntry(200, new Date(), "Algo"));
-        entries.add(new BucketEntry(-100, new Date(), "Algo2"));
-        entries.add(new BucketEntry(-100, new Date(), "Algo2"));
-        entries.add(new BucketEntry(200, new Date(), "Algo"));
-        entries.add(new BucketEntry(200, new Date(), "Algo"));
-        entries.add(new BucketEntry(200, new Date(), "Algo"));
-        entries.add(new BucketEntry(-100, new Date(), "Algo2"));
 
-        Bucket bucket = new Bucket("Titulo", new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-                BucketType.SPENDING, 2000, entries);
-        binding.setBucket(bucket);
+        BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
+                new BucketMapper()
+            );
 
-        ArrayAdapter<BucketEntry> adapter = new ArrayAdapter<>(this, R.layout.activity_bucket_entry, R.id.textView, bucket.entries);
+        int id = Integer.parseInt(getIntent().getData().getQueryParameter("id"));
 
-        ListView listView = findViewById(R.id.bucket_entries);
+        Disposable disposable = bucketRepository.get(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(binding::setBucket);
+
+        RecyclerView listView = findViewById(R.id.bucket_entries);
+        BucketEntryAdapter adapter = new BucketEntryAdapter();
         listView.setAdapter(adapter);
+        ViewCompat.setNestedScrollingEnabled(listView, false);
     }
 }
