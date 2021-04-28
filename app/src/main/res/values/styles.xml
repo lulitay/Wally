@@ -1,10 +1,20 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimaryAccent</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryAccent</item>
+    </style>
+
+    <style name="FormInputs" parent="AppTheme">
+        <item name="android:layout_marginBottom">@dimen/form_margin</item>
+    </style>
+
+    <style name="Titles" parent="AppTheme">
+        <item name="android:layout_marginBottom">@dimen/form_margin</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
