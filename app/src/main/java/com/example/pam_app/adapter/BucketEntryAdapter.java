@@ -1,14 +1,11 @@
-package com.example.pam_app.activity.bucket;
+package com.example.pam_app.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pam_app.R;
-import com.example.pam_app.activity.data_bind.BindableAdapter;
 import com.example.pam_app.databinding.ActivityBucketEntryBinding;
 import com.example.pam_app.model.BucketEntry;
 
@@ -25,6 +22,7 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
     public BucketEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -33,7 +31,7 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return (items == null) ? 0 : items.size();
     }
 
     @Override

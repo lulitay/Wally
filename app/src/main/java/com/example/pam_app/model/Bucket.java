@@ -46,6 +46,9 @@ public class Bucket {
     public int getProgress() {
         double total = this.getTotal();
 
+        if (total == 0) {
+            return 0;
+        }
         return (int) sqrt((target / total) * (target / total));
     }
 

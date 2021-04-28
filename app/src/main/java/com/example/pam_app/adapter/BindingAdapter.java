@@ -1,4 +1,4 @@
-package com.example.pam_app.activity.data_bind;
+package com.example.pam_app.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
