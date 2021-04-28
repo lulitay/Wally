@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BucketListView {
     void bindBuckets(List<Bucket> model);
+
+    void launchBucketActivity(int position);
 }

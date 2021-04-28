@@ -1,9 +1,11 @@
 package com.example.pam_app.presenter;
 
+import com.example.pam_app.model.Bucket;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.view.BucketListView;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -23,15 +25,26 @@ public class BucketListPresenter {
         disposable = repository.getList()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model -> {
-                    if (view != null) {
-                        view.get().bindBuckets(model);
-                    }
-                });
+                .subscribe(this::onBucketsReceived, this::onBucketsError);
+    }
+
+    private void onBucketsReceived(final List<Bucket> model) {
+        if (view != null) {
+            view.get().bindBuckets(model);
+        }
+    }
+
+    private void onBucketsError(Throwable throwable) {
+        //TODO: throw error
     }
 
     public void onViewDetached() {
         disposable.dispose();
     }
 
+    public void onBucketClicked(int bucketId) {
+        if (view != null) {
+            view.get().launchBucketActivity(bucketId);
+        }
+    }
 }

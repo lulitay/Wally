@@ -39,6 +39,10 @@ public class BucketListAdapter extends ArrayAdapter<Bucket> {
         notifyDataSetChanged();
     }
 
+    public int getBucketId(int position) {
+        return bucketList.get(position).id;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
@@ -60,4 +64,6 @@ public class BucketListAdapter extends ArrayAdapter<Bucket> {
         holder.target.setText(String.valueOf(currentBucket.target));
         return rowView;
     }
+
+
 }
