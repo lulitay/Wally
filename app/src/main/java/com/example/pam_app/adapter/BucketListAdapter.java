@@ -15,17 +15,32 @@ import java.util.List;
 
 public class BucketListAdapter extends ArrayAdapter<Bucket> {
     private final Activity context;
-    private final List<Bucket> bucketList;
+    private final List<Bucket> bucketList = new ArrayList<>();
 
     static class ViewHolder {
         public TextView title;
         public TextView target;
     }
 
-    public BucketListAdapter(Activity context, List<Bucket> bucketList) {
-        super(context, R.layout.bucket_list_item, bucketList);
+    public BucketListAdapter(Activity context) {
+        super(context, R.layout.bucket_list_item);
         this.context = context;
-        this.bucketList = bucketList;
+
+    }
+
+    public void update(final List<Bucket> newBucketList) {
+        bucketList.clear();
+        if (newBucketList != null) {
+            bucketList.addAll(newBucketList);
+        }
+
+        super.addAll(bucketList);
+
+        notifyDataSetChanged();
+    }
+
+    public int getBucketId(int position) {
+        return bucketList.get(position).id;
     }
 
     @Override
@@ -49,4 +64,6 @@ public class BucketListAdapter extends ArrayAdapter<Bucket> {
         holder.target.setText(String.valueOf(currentBucket.target));
         return rowView;
     }
+
+
 }
