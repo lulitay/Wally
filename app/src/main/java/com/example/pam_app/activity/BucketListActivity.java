@@ -5,10 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
@@ -24,13 +27,15 @@ import com.example.pam_app.view.BucketListView;
 import java.util.List;
 
 public class BucketListActivity extends AppCompatActivity implements BucketListView, OnBucketClickedListener {
-    private Button addBucketButton;
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
 
     private BucketListPresenter presenter;
     private BucketListAdapter spendingAdapter;
     private BucketListAdapter savingsAdapter;
+
+    private boolean isSpendingListExpanded = false;
+    private boolean isSavingsListExpanded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +54,13 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
 
         spendingBuckets = findViewById(R.id.spending_buckets);
         savingsBuckets = findViewById(R.id.savings_buckets);
-        addBucketButton = findViewById(R.id.add_entry_button);
+        Button addBucketButton = findViewById(R.id.add_entry_button);
+        CardView spendingCard = findViewById(R.id.spending_buckets_card);
+        CardView savingsCard = findViewById(R.id.savings_buckets_card);
+
         addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
+        spendingCard.setOnClickListener(v -> presenter.OnSpendingCardClicked());
+        savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
 
         spendingAdapter = new BucketListAdapter();
         spendingBuckets.setAdapter(spendingAdapter);
@@ -92,6 +102,34 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
     public void launchAddBucketActivity() {
         final Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void collapseSpendingBuckets() {
+        ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
+        if(isSpendingListExpanded) {
+            spendingBuckets.setVisibility(View.GONE);
+            isSpendingListExpanded = false;
+            indicator.setRotation(0);
+        } else {
+            spendingBuckets.setVisibility(View.VISIBLE);
+            isSpendingListExpanded = true;
+            indicator.setRotation(180);
+        }
+    }
+
+    @Override
+    public void collapseSavingsBuckets() {
+        ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
+        if(isSavingsListExpanded) {
+            savingsBuckets.setVisibility(View.GONE);
+            isSavingsListExpanded = false;
+            indicator.setRotation(0);
+        } else {
+            savingsBuckets.setVisibility(View.VISIBLE);
+            isSavingsListExpanded = true;
+            indicator.setRotation(180);
+        }
     }
 
     @Override

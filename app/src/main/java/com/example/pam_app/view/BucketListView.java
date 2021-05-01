@@ -12,4 +12,8 @@ public interface BucketListView {
     void launchBucketDetailActivity(int position);
 
     void launchAddBucketActivity();
+
+    void collapseSpendingBuckets();
+
+    void collapseSavingsBuckets();
 }

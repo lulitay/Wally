@@ -67,4 +67,16 @@ public class BucketListPresenter {
             view.get().launchAddBucketActivity();
         }
     }
+
+    public void OnSpendingCardClicked() {
+        if (view != null) {
+            view.get().collapseSpendingBuckets();
+        }
+    }
+
+    public void OnSavingsCardClicked() {
+        if (view != null) {
+            view.get().collapseSavingsBuckets();
+        }
+    }
 }
