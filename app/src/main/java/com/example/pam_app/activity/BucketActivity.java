@@ -42,6 +42,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
             );
         bucketPresenter = new BucketPresenter(id, this, bucketRepository);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
+        binding.setLifecycleOwner(this);
 
         this.setUpToolBar();
         this.setUpList();
@@ -51,7 +52,19 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     @Override
     protected void onStart() {
         super.onStart();
-        bucketPresenter.onViewAttached();
+        bucketPresenter.onViewAttach();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bucketPresenter.onViewResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bucketPresenter.onViewPause();
     }
 
     @Override
@@ -83,11 +96,18 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     @Override
     public void bind(Bucket bucket) {
         this.binding.setBucket(bucket);
+//        this.binding.executePendingBindings();
     }
 
     @Override
     public void back() {
         onBackPressed();
+    }
+
+    @Override
+    public void goToAddEntry() {
+        Intent intent = new Intent(this, AddBucketEntryActivity.class);
+        startActivity(intent);
     }
 
     private void setUpList() {
@@ -109,9 +129,6 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
 
     private void setUpAddEntryButton() {
         Button addBucketButton = findViewById(R.id.add_entry_button);
-        addBucketButton.setOnClickListener((View view) -> {
-            Intent intent = new Intent(this, AddBucketEntryActivity.class);
-            startActivity(intent);
-        });
+        addBucketButton.setOnClickListener((View view) -> bucketPresenter.onAddEntryClick());
     }
 }
