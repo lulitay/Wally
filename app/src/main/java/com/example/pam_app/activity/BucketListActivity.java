@@ -5,14 +5,15 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
 import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.listener.OnBucketClickedListener;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.BucketListPresenter;
 import com.example.pam_app.repository.BucketMapper;
@@ -20,25 +21,21 @@ import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.view.BucketListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BucketListActivity extends AppCompatActivity implements BucketListView {
+public class BucketListActivity extends AppCompatActivity implements BucketListView, OnBucketClickedListener {
     private Button addBucketButton;
-    private ListView listView;
-
-    private List<Bucket> bucketList;
+    private RecyclerView spendingBuckets;
+    private RecyclerView savingsBuckets;
 
     private BucketListPresenter presenter;
-    private BucketListAdapter adapter;
+    private BucketListAdapter spendingAdapter;
+    private BucketListAdapter savingsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bucket_list);
-        if (bucketList == null) {
-            bucketList = new ArrayList<>();
-        }
         final BucketRepository bucketRepository = new RoomBucketRepository(
                 WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
                 new BucketMapper()
@@ -50,19 +47,22 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
     protected void onStart() {
         super.onStart();
 
-        listView = findViewById(R.id.listView);
+        spendingBuckets = findViewById(R.id.spending_buckets);
+        savingsBuckets = findViewById(R.id.savings_buckets);
         addBucketButton = findViewById(R.id.add_entry_button);
-        addBucketButton.setOnClickListener(v -> addBucket(v));
+        addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
 
+        spendingAdapter = new BucketListAdapter();
+        spendingBuckets.setAdapter(spendingAdapter);
+        spendingBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        spendingAdapter.setOnClickListener(this);
 
-        adapter = new BucketListAdapter(this);
-        listView.setAdapter(adapter);
+        savingsAdapter = new BucketListAdapter();
+        savingsBuckets.setAdapter(savingsAdapter);
+        savingsBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        savingsAdapter.setOnClickListener(this);
+
         presenter.onViewAttached();
-
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            int bucketId = adapter.getBucketId(position);
-            presenter.onBucketClicked(bucketId);
-        });
     }
 
     @Override
@@ -71,20 +71,31 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
         presenter.onViewDetached();
     }
 
-    public void addBucket(View view) {
+    @Override
+    public void bindSpendingBuckets(final List<Bucket> model) {
+        spendingAdapter.update(model);
+    }
+
+    @Override
+    public void bindSavingsBuckets(final List<Bucket> model) {
+        savingsAdapter.update(model);
+    }
+
+    @Override
+    public void launchBucketDetailActivity(int bucketId) {
+        String uri = "wally://bucket/detail?id=" + bucketId;
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+    }
+
+    @Override
+    public void launchAddBucketActivity() {
         final Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void bindBuckets(final List<Bucket> model) {
-        adapter.update(model);
-    }
-
-    @Override
-    public void launchBucketActivity(int bucketId) {
-        String uri = "wally://bucket/detail?id=" + bucketId;
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        startActivity(intent);
+    public void onClick(int bucketId) {
+        presenter.onBucketClicked(bucketId);
     }
 }

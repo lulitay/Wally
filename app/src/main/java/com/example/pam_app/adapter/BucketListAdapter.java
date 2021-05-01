@@ -1,31 +1,30 @@
 package com.example.pam_app.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.pam_app.R;
+import com.example.pam_app.listener.OnBucketClickedListener;
 import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BucketListAdapter extends ArrayAdapter<Bucket> {
-    private final Activity context;
-    private final List<Bucket> bucketList = new ArrayList<>();
+public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.BucketViewHolder> {
+    private final List<Bucket> bucketList;
+    private OnBucketClickedListener listener;
 
-    static class ViewHolder {
-        public TextView title;
-        public TextView target;
+    public BucketListAdapter() {
+        this.bucketList = new ArrayList<>();
     }
 
-    public BucketListAdapter(Activity context) {
-        super(context, R.layout.bucket_list_item);
-        this.context = context;
-
+    public void setOnClickListener(final OnBucketClickedListener listener) {
+        this.listener = listener;
     }
 
     public void update(final List<Bucket> newBucketList) {
@@ -33,37 +32,49 @@ public class BucketListAdapter extends ArrayAdapter<Bucket> {
         if (newBucketList != null) {
             bucketList.addAll(newBucketList);
         }
-
-        super.addAll(bucketList);
-
         notifyDataSetChanged();
     }
 
-    public int getBucketId(int position) {
-        return bucketList.get(position).id;
+    @NonNull
+    @Override
+    public BucketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bucket_list_item, parent, false);
+        return new BucketViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
-        // reuse views
-        if (rowView == null) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.bucket_list_item, null);
-            // configure view holder
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) rowView.findViewById(R.id.bucket_title);
-            viewHolder.target = (TextView) rowView.findViewById(R.id.bucket_target);
-            rowView.setTag(viewHolder);
-        }
-
-        // fill data
-        ViewHolder holder = (ViewHolder) rowView.getTag();
-        Bucket currentBucket = bucketList.get(position);
-        holder.title.setText(currentBucket.title);
-        holder.target.setText(String.valueOf(currentBucket.target));
-        return rowView;
+    public void onBindViewHolder(@NonNull BucketViewHolder holder, int position) {
+        holder.bind(bucketList.get(position));
+        holder.setOnClickListener(listener);
     }
 
+    @Override
+    public int getItemCount() {
+        return bucketList.size();
+    }
 
+    public static class BucketViewHolder extends RecyclerView.ViewHolder {
+        private OnBucketClickedListener listener;
+
+        public BucketViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public void bind(Bucket bucket) {
+            final TextView title = itemView.findViewById(R.id.bucket_title);
+            final TextView target = itemView.findViewById(R.id.bucket_target);
+
+            title.setText(bucket.title);
+            target.setText(String.valueOf(bucket.target));
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onClick(bucket.id);
+                }
+            });
+        }
+
+        public void setOnClickListener(OnBucketClickedListener listener) {
+            this.listener = listener;
+        }
+    }
 }

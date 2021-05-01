@@ -1,10 +1,12 @@
 package com.example.pam_app.presenter;
 
 import com.example.pam_app.model.Bucket;
+import com.example.pam_app.model.BucketType;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.view.BucketListView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,8 +31,20 @@ public class BucketListPresenter {
     }
 
     private void onBucketsReceived(final List<Bucket> model) {
+        List<Bucket> spendingBuckets = new ArrayList<>();
+        List<Bucket> savingsBuckets = new ArrayList<>();
+
+        for (Bucket bucket : model) {
+            if (bucket.bucketType == BucketType.SPENDING) {
+                spendingBuckets.add(bucket);
+            } else if (bucket.bucketType == BucketType.SAVING) {
+                savingsBuckets.add(bucket);
+            }
+        }
+
         if (view != null) {
-            view.get().bindBuckets(model);
+            view.get().bindSpendingBuckets(spendingBuckets);
+            view.get().bindSavingsBuckets(savingsBuckets);
         }
     }
 
@@ -44,7 +58,13 @@ public class BucketListPresenter {
 
     public void onBucketClicked(int bucketId) {
         if (view != null) {
-            view.get().launchBucketActivity(bucketId);
+            view.get().launchBucketDetailActivity(bucketId);
+        }
+    }
+
+    public void OnAddBucketClicked() {
+        if (view != null) {
+            view.get().launchAddBucketActivity();
         }
     }
 }

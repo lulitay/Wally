@@ -5,7 +5,11 @@ import com.example.pam_app.model.Bucket;
 import java.util.List;
 
 public interface BucketListView {
-    void bindBuckets(List<Bucket> model);
+    void bindSpendingBuckets(List<Bucket> model);
 
-    void launchBucketActivity(int position);
+    void bindSavingsBuckets(List<Bucket> model);
+
+    void launchBucketDetailActivity(int position);
+
+    void launchAddBucketActivity();
 }

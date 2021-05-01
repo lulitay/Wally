@@ -1,19 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:descendantFocusability="beforeDescendants"-->
+<!--        android:focusableInTouchMode="true">-->
 
-    <Button
-        android:id="@+id/add_entry_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Entry" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <!--TODO: extract string resource-->
+            <Button
+                android:id="@+id/add_entry_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Bucket" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Spending" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/spending_buckets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Savings" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/savings_buckets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+<!--    </androidx.core.widget.NestedScrollView>-->
+</layout>
+
+    <!--    <?xml version="1.0" encoding="utf-8"?>-->
+
+    <!--<androidx.coordinatorlayout.widget.CoordinatorLayout-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context=".lists.tasks.TaskActivity">-->
+
+    <!--<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:descendantFocusability="beforeDescendants"-->
+    <!--    android:focusableInTouchMode="true"-->
+    <!--    >-->
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:paddingBottom="30dp">-->
+
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:id="@+id/pendingTasks"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            tools:context=".lists.tasks.TaskActivity"/>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/doneTasksTitle"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:text="@string/done_tasks"-->
+    <!--            android:textSize="20dp"-->
+    <!--            android:paddingLeft="30dp"-->
+    <!--            android:paddingTop="30dp"-->
+    <!--            android:textStyle="italic|bold"-->
+    <!--            tools:ignore="RtlSymmetry,SpUsage" />-->
+
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:id="@+id/doneTasks"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            tools:context=".lists.tasks.TaskActivity"/>-->
+
+    <!--    </LinearLayout>-->
+    <!--</androidx.core.widget.NestedScrollView>-->
+
+    <!--<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+    <!--    android:id="@+id/extended_fab_add_task"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:layout_margin="24dp"-->
+    <!--    android:layout_gravity="bottom|right"-->
+    <!--    android:contentDescription="@string/add_task"-->
+    <!--    android:text="@string/add_task"-->
+    <!--    android:textColor="@color/white"-->
+    <!--    android:clickable="true"-->
+    <!--    android:focusable="true"-->
+    <!--    app:backgroundTint="@color/dark_blue"-->
+    <!--    app:icon="@drawable/ic_add"-->
+    <!--    app:iconTint="@color/white" />-->
+
+    <!--</androidx.coordinatorlayout.widget.CoordinatorLayout>-->
