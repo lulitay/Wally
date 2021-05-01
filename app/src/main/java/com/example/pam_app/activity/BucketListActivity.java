@@ -22,6 +22,8 @@ import com.example.pam_app.presenter.BucketListPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
+import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 
 import java.util.List;
@@ -45,7 +47,8 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
                 WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
-        presenter = new BucketListPresenter(bucketRepository, this);
+        final SchedulerProvider provider = new AndroidSchedulerProvider();
+        presenter = new BucketListPresenter(bucketRepository, this, provider);
     }
 
     @Override

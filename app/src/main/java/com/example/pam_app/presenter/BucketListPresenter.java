@@ -3,6 +3,7 @@ package com.example.pam_app.presenter;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
 import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 
 import java.lang.ref.WeakReference;
@@ -16,17 +17,19 @@ import io.reactivex.schedulers.Schedulers;
 public class BucketListPresenter {
     private final WeakReference<BucketListView> view;
     private final BucketRepository repository;
+    private final SchedulerProvider schedulerProvider;
     private Disposable disposable;
 
-    public BucketListPresenter(final BucketRepository repository, final BucketListView view) {
+    public BucketListPresenter(final BucketRepository repository, final BucketListView view, final SchedulerProvider schedulerProvider) {
         this.view = new WeakReference<>(view);
         this.repository = repository;
+        this.schedulerProvider = schedulerProvider;
     }
 
     public void onViewAttached() {
         disposable = repository.getList()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(this::onBucketsReceived, this::onBucketsError);
     }
 
