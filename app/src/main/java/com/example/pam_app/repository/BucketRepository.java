@@ -12,7 +12,7 @@ public interface BucketRepository {
 
     void create(final Bucket bucket);
 
-    void delete(final Bucket bucket);
+    void delete(final int id);
 
     Flowable<Bucket> get(final int id);
 

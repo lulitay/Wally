@@ -41,10 +41,8 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void delete(Bucket bucket) {
-        Completable.fromRunnable(
-                () -> bucketDao.delete(bucketMapper.toEntity(bucket))
-        ).subscribeOn(Schedulers.io()).subscribe();
+    public void delete(int id) {
+        this.bucketDao.delete(id);
     }
 
     @Override
