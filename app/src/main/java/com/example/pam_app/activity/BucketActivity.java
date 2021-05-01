@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -25,6 +24,7 @@ import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.view.BucketView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class BucketActivity extends AppCompatActivity implements BucketView {
 
@@ -96,7 +96,6 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     @Override
     public void bind(Bucket bucket) {
         this.binding.setBucket(bucket);
-//        this.binding.executePendingBindings();
     }
 
     @Override
@@ -128,7 +127,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     private void setUpAddEntryButton() {
-        Button addBucketButton = findViewById(R.id.add_entry_button);
-        addBucketButton.setOnClickListener((View view) -> bucketPresenter.onAddEntryClick());
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener((View view) -> bucketPresenter.onAddEntryClick());
     }
 }
