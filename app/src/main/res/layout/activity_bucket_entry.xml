@@ -4,24 +4,47 @@
         <variable name="entry" type="com.example.pam_app.model.BucketEntry"/>
     </data>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@{(entry.amount >= 0) ? @color/green : @color/red}"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="start|center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@{entry.getAmountString()}"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:gravity="start|center_vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@{entry.getComment()}"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:gravity="start|center_vertical" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@{entry.toString()}"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:textSize="20sp"
-            android:gravity="start|center_vertical"/>
+            android:text="@{entry.getDateString()}"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:padding="10dp"
+            android:gravity="end|center_vertical"
+            android:layout_weight="1"/>
 
-    </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </layout>

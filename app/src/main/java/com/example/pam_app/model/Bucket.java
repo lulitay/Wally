@@ -1,8 +1,14 @@
 package com.example.pam_app.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.sqrt;
 
@@ -49,7 +55,7 @@ public class Bucket {
         if (total == 0) {
             return 0;
         }
-        return (int) sqrt((target / total) * (target / total));
+        return (int) ((total / target) * 100);
     }
 
     public double getTotal() {
@@ -65,6 +71,28 @@ public class Bucket {
     }
 
     public String getRemainingTime() {
-        return "300D 11Hs"; //TODO check how we are going to handle times
+        Date timeNow = new Date();
+        if (dueDate.getTime() > timeNow.getTime()) {
+            Map<TimeUnit,Long> diff = this.computeDiff(new Date(), dueDate);
+            return "" + diff.get(TimeUnit.DAYS) + "D " + diff.get(TimeUnit.HOURS) + "Hs";
+        }
+        return "0D 0Hs";
+    }
+
+    private Map<TimeUnit,Long> computeDiff(Date date1, Date date2) {
+        long diffInMillis = date2.getTime() - date1.getTime();
+        List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
+        Collections.reverse(units);
+        Map<TimeUnit,Long> result = new LinkedHashMap<>();
+        long milliesRest = diffInMillis;
+
+        for (TimeUnit unit : units) {
+            long diff = unit.convert(milliesRest,TimeUnit.MILLISECONDS);
+            long diffInMilliesForUnit = unit.toMillis(diff);
+            milliesRest = milliesRest - diffInMilliesForUnit;
+            result.put(unit,diff);
+        }
+
+        return result;
     }
 }
