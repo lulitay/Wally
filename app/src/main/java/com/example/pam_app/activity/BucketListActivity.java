@@ -55,27 +55,44 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
     protected void onStart() {
         super.onStart();
 
-        spendingBuckets = findViewById(R.id.spending_buckets);
-        savingsBuckets = findViewById(R.id.savings_buckets);
+        setUpAddBucketButton();
+        setUpSpendingCard();
+        setUpSavingsCard();
+        setUpSpendingList();
+        setUpSavingsList();
+
+        presenter.onViewAttached();
+    }
+
+    private void setUpAddBucketButton() {
         Button addBucketButton = findViewById(R.id.add_entry_button);
-        CardView spendingCard = findViewById(R.id.spending_buckets_card);
-        CardView savingsCard = findViewById(R.id.savings_buckets_card);
-
         addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
-        spendingCard.setOnClickListener(v -> presenter.OnSpendingCardClicked());
-        savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
+    }
 
+    private void setUpSpendingCard() {
+        CardView spendingCard = findViewById(R.id.spending_buckets_card);
+        spendingCard.setOnClickListener(v -> presenter.OnSpendingCardClicked());
+    }
+
+    private void setUpSavingsCard() {
+        CardView savingsCard = findViewById(R.id.savings_buckets_card);
+        savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
+    }
+
+    private void setUpSpendingList() {
+        spendingBuckets = findViewById(R.id.spending_buckets);
         spendingAdapter = new BucketListAdapter();
         spendingBuckets.setAdapter(spendingAdapter);
         spendingBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         spendingAdapter.setOnClickListener(this);
+    }
 
+    private void setUpSavingsList() {
+        savingsBuckets = findViewById(R.id.savings_buckets);
         savingsAdapter = new BucketListAdapter();
         savingsBuckets.setAdapter(savingsAdapter);
         savingsBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         savingsAdapter.setOnClickListener(this);
-
-        presenter.onViewAttached();
     }
 
     @Override
