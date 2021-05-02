@@ -48,6 +48,11 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
+    public void delete(int id) {
+        this.bucketDao.delete(id);
+    }
+
+    @Override
     public Flowable<Bucket> get(int id) {
         return this.bucketDao.get(id).map(bucketMapper::toModel);
     }

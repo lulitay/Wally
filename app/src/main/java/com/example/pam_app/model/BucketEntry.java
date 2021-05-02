@@ -2,6 +2,8 @@ package com.example.pam_app.model;
 
 import androidx.annotation.NonNull;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BucketEntry {
@@ -24,9 +26,16 @@ public class BucketEntry {
         this.id = id;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
+    public String getAmountString() {
         return "" + amount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getDateString() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        return dateFormat.format(date);
     }
 }

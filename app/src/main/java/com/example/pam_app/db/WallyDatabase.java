@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {BucketEntity.class, BucketEntryEntity.class}, version = 2)
+@Database(entities = {BucketEntity.class, BucketEntryEntity.class}, version = 3, exportSchema = false)
 public abstract class WallyDatabase extends RoomDatabase {
 
     private static final String NAME = "wally_db";

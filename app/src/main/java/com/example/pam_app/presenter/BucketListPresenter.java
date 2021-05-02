@@ -7,16 +7,44 @@ import com.example.pam_app.view.BucketListView;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class BucketListPresenter {
-    private final WeakReference<BucketListView> bucketListView;
-    private final BucketRepository bucketRepository;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-    public BucketListPresenter(final BucketListView bucketListView, final BucketRepository bucketRepository) {
-        this.bucketListView = new WeakReference<>(bucketListView);
-        this.bucketRepository = bucketRepository;
+public class BucketListPresenter {
+    private final WeakReference<BucketListView> view;
+    private final BucketRepository repository;
+    private Disposable disposable;
+
+    public BucketListPresenter(final BucketRepository repository, final BucketListView view) {
+        this.view = new WeakReference<>(view);
+        this.repository = repository;
     }
 
-    public List<Bucket> getBuckets() {
-        return bucketRepository.getList().blockingFirst();
+    public void onViewAttached() {
+        disposable = repository.getList()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onBucketsReceived, this::onBucketsError);
+    }
+
+    private void onBucketsReceived(final List<Bucket> model) {
+        if (view != null) {
+            view.get().bindBuckets(model);
+        }
+    }
+
+    private void onBucketsError(Throwable throwable) {
+        //TODO: throw error
+    }
+
+    public void onViewDetached() {
+        disposable.dispose();
+    }
+
+    public void onBucketClicked(int bucketId) {
+        if (view != null) {
+            view.get().launchBucketActivity(bucketId);
+        }
     }
 }
