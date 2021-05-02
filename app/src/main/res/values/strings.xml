@@ -22,4 +22,5 @@
     <string name="entries">Entries</string>
     <string name="options">Options</string>
     <string name="delete">Delete</string>
+    <string name="collapsed_indicator">Collapsed indicator</string>
 </resources>
