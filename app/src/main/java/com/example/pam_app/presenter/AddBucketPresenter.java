@@ -8,6 +8,10 @@ import com.example.pam_app.view.AddBucketView;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class AddBucketPresenter {
 
     private final WeakReference<AddBucketView> addBucketView;
@@ -21,6 +25,11 @@ public class AddBucketPresenter {
     public void saveBucket(final String name, final Date dueDate, final BucketType bucketType,
                            final double target) {
         final Bucket bucket = new Bucket(name, dueDate, bucketType, target);
-        bucketRepository.create(bucket);
+        Completable.fromAction(() -> bucketRepository.create(bucket))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnError(e -> addBucketView.get().onErrorSavingBucket())
+                .doOnComplete(() -> addBucketView.get().onSuccessSavingBucket(name))
+                .subscribe();
     }
 }

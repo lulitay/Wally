@@ -6,4 +6,6 @@ public interface AddBucketEntryView {
 
     int getBucketType();
     void setDropDownOptions(final List<String> buckets);
+    void onErrorSavingBucketEntry();
+    void onSuccessSavingBucketEntry(final String description);
 }

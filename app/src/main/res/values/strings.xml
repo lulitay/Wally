@@ -25,4 +25,7 @@
     <string name="Home">Home</string>
     <string name="Buckets">Buckets</string>
     <string name="Profile">Profile</string>
+    <string name="add_bucket_entry">Add bucket entry</string>
+    <string name="metrics_coming_soon">Metrics coming soon!</string>
+    <string name="activity">Activity</string>
 </resources>

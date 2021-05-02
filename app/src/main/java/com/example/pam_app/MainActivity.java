@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.pam_app.activity.AddBucketActivity;
 import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.activity.FTUActivity;
+import com.example.pam_app.listener.OnAddBucketClickedListener;
 import com.example.pam_app.view.HomeView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnAddBucketClickedListener {
 
     private static final String SP_ID = "demo-pref";
     private static final String FTU = "ftu";
@@ -37,10 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setUpViews();
         setUpBottomNavigation();
 
-        //final FloatingActionButton fab = findViewById(R.id.fab);
-        //final Button addBucketButton = findViewById(R.id.add_bucket);
-        //fab.setOnClickListener(this::addEntry);
-        //addBucketButton.setOnClickListener(this::addBucket);
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this::addEntry);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -65,13 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpViews() {
         viewSwitcher = findViewById(R.id.switcher);
-
         setUpHomeView();
     }
 
     private void setUpHomeView() {
         homeView = findViewById(R.id.home);
         homeView.bind();
+        homeView.setOnAddBucketClickedListener(this);
     }
 
     public void addEntry(final View view) {
@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addBucket(final View view) {
+    @Override
+    public void onClick() {
         final Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
     }

@@ -8,6 +8,10 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class AddBucketEntryPresenter {
 
     private final WeakReference<AddBucketEntryView> addBucketEntryView;
@@ -30,6 +34,11 @@ public class AddBucketEntryPresenter {
     public void saveBucketEntry(final double amount, final Date date, final String description,
                                 final String bucketTitle) {
         final BucketEntry entry = new BucketEntry(amount, date, description);
-        bucketRepository.addEntry(entry, bucketTitle);
+        Completable.fromAction(() -> bucketRepository.addEntry(entry, bucketTitle))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnError(e -> addBucketEntryView.get().onErrorSavingBucketEntry())
+                .doOnComplete(() -> addBucketEntryView.get().onSuccessSavingBucketEntry(description))
+                .subscribe();
     }
 }

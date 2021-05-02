@@ -8,9 +8,7 @@ import com.example.pam_app.model.BucketEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 
 public class RoomBucketRepository implements BucketRepository {
 
@@ -35,16 +33,7 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public void create(Bucket bucket) {
-        Completable.fromRunnable(() -> bucketDao.create(bucketMapper.toEntity(bucket)))
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-    }
-
-    @Override
-    public void delete(Bucket bucket) {
-        Completable.fromRunnable(() -> bucketDao.delete(bucketMapper.toEntity(bucket)))
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        bucketDao.create(bucketMapper.toEntity(bucket));
     }
 
     @Override
@@ -65,15 +54,12 @@ public class RoomBucketRepository implements BucketRepository {
     @Override
     public void addEntry(BucketEntry entry, final String bucketTitle) {
         final Bucket bucket = get(bucketTitle).blockingFirst();
-        Completable.fromRunnable(() -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id))
-        ).subscribeOn(Schedulers.io()).subscribe();
+        bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id));
     }
 
     @Override
     public void removeEntry(BucketEntry entry, final int idBucket) {
-        Completable.fromRunnable(
-                () -> bucketDao.removeEntry(bucketMapper.toEntity(entry, idBucket))
-        ).subscribeOn(Schedulers.io()).subscribe();
+        bucketDao.removeEntry(bucketMapper.toEntity(entry, idBucket));
     }
 
     @Override
