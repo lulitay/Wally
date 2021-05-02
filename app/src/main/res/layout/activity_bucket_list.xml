@@ -7,12 +7,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--TODO: extract string resource-->
         <Button
             android:id="@+id/add_entry_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Add Bucket" />
+            android:text="@string/add_bucket" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/spending_buckets_card"
@@ -33,7 +32,7 @@
                     android:layout_marginStart="21dp"
                     android:layout_marginLeft="21dp"
                     android:gravity="center"
-                    android:text="Spending"
+                    android:text="@string/spending"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +43,7 @@
                     android:id="@+id/spending_buckets_collapsed_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Collapsed indicator"
+                    android:contentDescription="@string/collapsed_indicator"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1"
@@ -81,7 +80,7 @@
                     android:layout_marginStart="21dp"
                     android:layout_marginLeft="21dp"
                     android:gravity="center"
-                    android:text="Savings"
+                    android:text="@string/saving"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +91,7 @@
                     android:id="@+id/savings_buckets_collapsed_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Collapsed indicator"
+                    android:contentDescription="@string/collapsed_indicator"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1"
