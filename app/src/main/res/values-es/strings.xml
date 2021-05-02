@@ -20,5 +20,8 @@
     <string name="due_date">fecha límite</string>
     <string name="title">título</string>
     <string name="target">objetivo</string>
+    <string name="entries">Entradas</string>
+    <string name="options">Opciones</string>
+    <string name="delete">Eliminar</string>
     <string name="collapsed_indicator">Indicador de colapso</string>
 </resources>

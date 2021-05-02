@@ -22,8 +22,8 @@ public interface BucketDao {
     @Insert
     void create(final BucketEntity bucket);
 
-    @Delete
-    void delete(final BucketEntity bucketEntity);
+    @Query("DELETE FROM buckets WHERE id=:id")
+    void delete(final int id);
 
     @Transaction
     @Query("SELECT * FROM buckets WHERE id=:id")
