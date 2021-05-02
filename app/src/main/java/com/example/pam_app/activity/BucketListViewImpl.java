@@ -1,22 +1,22 @@
 package com.example.pam_app.activity;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
 import com.example.pam_app.db.WallyDatabase;
-import com.example.pam_app.listener.OnBucketClickedListener;
+import com.example.pam_app.listener.Clickable;
+import com.example.pam_app.listener.ClickableWithParameter;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.BucketListPresenter;
 import com.example.pam_app.repository.BucketMapper;
@@ -28,7 +28,8 @@ import com.example.pam_app.view.BucketListView;
 
 import java.util.List;
 
-public class BucketListActivity extends AppCompatActivity implements BucketListView, OnBucketClickedListener {
+public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter {
+
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
 
@@ -36,15 +37,27 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
     private BucketListAdapter spendingAdapter;
     private BucketListAdapter savingsAdapter;
 
+    private Clickable onAddBucketClickedListener;
+    private ClickableWithParameter onBucketClickedListener;
+
     private boolean isSpendingListExpanded = false;
     private boolean isSavingsListExpanded = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bucket_list);
+    public BucketListViewImpl(Context context) {
+        this(context, null);
+    }
+
+    public BucketListViewImpl(Context context, @Nullable AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
+    }
+
+    public BucketListViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
+        super(context, attributeSet, defStyleAttr);
+        inflate(context, R.layout.activity_bucket_list, this);
+        setOrientation(VERTICAL);
+
         final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
+                WallyDatabase.getInstance(context).bucketDao(),
                 new BucketMapper()
         );
         final SchedulerProvider provider = new AndroidSchedulerProvider();
@@ -52,15 +65,19 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    public void bind(
+            final Context context,
+            final Clickable onAddBucketClickedListener,
+            final ClickableWithParameter onBucketClickedListener
+    ) {
         setUpAddBucketButton();
         setUpSpendingCard();
         setUpSavingsCard();
-        setUpSpendingList();
-        setUpSavingsList();
+        setUpSpendingList(context);
+        setUpSavingsList(context);
 
+        this.onAddBucketClickedListener = onAddBucketClickedListener;
+        this.onBucketClickedListener = onBucketClickedListener;
         presenter.onViewAttached();
     }
 
@@ -79,25 +96,24 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
         savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
     }
 
-    private void setUpSpendingList() {
+    private void setUpSpendingList(final Context context) {
         spendingBuckets = findViewById(R.id.spending_buckets);
         spendingAdapter = new BucketListAdapter();
         spendingBuckets.setAdapter(spendingAdapter);
-        spendingBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        spendingBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         spendingAdapter.setOnClickListener(this);
     }
 
-    private void setUpSavingsList() {
+    private void setUpSavingsList(final Context context) {
         savingsBuckets = findViewById(R.id.savings_buckets);
         savingsAdapter = new BucketListAdapter();
         savingsBuckets.setAdapter(savingsAdapter);
-        savingsBuckets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        savingsBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         savingsAdapter.setOnClickListener(this);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public void onViewStop() {
         presenter.onViewDetached();
     }
 
@@ -113,15 +129,12 @@ public class BucketListActivity extends AppCompatActivity implements BucketListV
 
     @Override
     public void launchBucketDetailActivity(int bucketId) {
-        String uri = "wally://bucket/detail?id=" + bucketId;
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        startActivity(intent);
+        onBucketClickedListener.onClick(bucketId);
     }
 
     @Override
     public void launchAddBucketActivity() {
-        final Intent intent = new Intent(this, AddBucketActivity.class);
-        startActivity(intent);
+        onAddBucketClickedListener.onClick();
     }
 
     @Override

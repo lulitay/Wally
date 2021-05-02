@@ -18,6 +18,12 @@
             android:layout_height="match_parent"
             tools:context=".MainActivity"/>
 
+        <com.example.pam_app.activity.BucketListViewImpl
+            android:id="@+id/buckets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity"/>
+
     </ViewSwitcher>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -25,6 +25,9 @@ public interface BucketDao {
     @Query("DELETE FROM buckets WHERE id=:id")
     void delete(final int id);
 
+    @Query("SELECT * FROM entries")
+    Flowable<List<BucketEntryEntity>> getEntryList();
+
     @Transaction
     @Query("SELECT * FROM buckets WHERE id=:id")
     Flowable<BucketWithEntriesEntity> get(final int id);

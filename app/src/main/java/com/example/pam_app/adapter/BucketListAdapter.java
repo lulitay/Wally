@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
-import com.example.pam_app.listener.OnBucketClickedListener;
+import com.example.pam_app.listener.ClickableWithParameter;
 import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ import java.util.List;
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.BucketViewHolder> {
     private final List<Bucket> bucketList;
-    private OnBucketClickedListener listener;
+    private ClickableWithParameter listener;
 
     public BucketListAdapter() {
         this.bucketList = new ArrayList<>();
     }
 
-    public void setOnClickListener(final OnBucketClickedListener listener) {
+    public void setOnClickListener(final ClickableWithParameter listener) {
         this.listener = listener;
     }
 
@@ -54,7 +54,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
     }
 
     public static class BucketViewHolder extends RecyclerView.ViewHolder {
-        private OnBucketClickedListener listener;
+        private ClickableWithParameter listener;
 
         public BucketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,7 +73,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
             });
         }
 
-        public void setOnClickListener(OnBucketClickedListener listener) {
+        public void setOnClickListener(ClickableWithParameter listener) {
             this.listener = listener;
         }
     }

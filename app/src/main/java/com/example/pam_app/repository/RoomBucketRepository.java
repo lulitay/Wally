@@ -2,6 +2,7 @@ package com.example.pam_app.repository;
 
 import com.example.pam_app.db.BucketDao;
 import com.example.pam_app.db.BucketEntity;
+import com.example.pam_app.db.BucketEntryEntity;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 
@@ -49,6 +50,17 @@ public class RoomBucketRepository implements BucketRepository {
     @Override
     public Flowable<Bucket> get(final String title) {
         return this.bucketDao.getBucket(title).map(bucketMapper::toModel);
+    }
+
+    @Override
+    public Flowable<List<BucketEntry>> getEntryList() {
+        return this.bucketDao.getEntryList().map(bucketEntryEntityList -> {
+            final List<BucketEntry> entries = new ArrayList<>();
+            for (final BucketEntryEntity be: bucketEntryEntityList) {
+                entries.add(bucketMapper.toModel(be));
+            }
+            return entries;
+        });
     }
 
     @Override

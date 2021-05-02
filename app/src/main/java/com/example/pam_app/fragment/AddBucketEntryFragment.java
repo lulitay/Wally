@@ -100,8 +100,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
                         description.getText().toString(),
                         bucket.getText().toString()
                 );
-                requireActivity().onBackPressed();
             }
+            requireActivity().onBackPressed();
         });
     }
 

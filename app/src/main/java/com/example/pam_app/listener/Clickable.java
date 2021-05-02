@@ -1,6 +1,6 @@
 package com.example.pam_app.listener;
 
-public interface OnAddBucketClickedListener {
+public interface Clickable {
 
     void onClick();
 }
