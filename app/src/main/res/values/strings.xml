@@ -19,4 +19,7 @@
     <string name="due_date">due date</string>
     <string name="title">title</string>
     <string name="target">target</string>
+    <string name="entries">Entries</string>
+    <string name="options">Options</string>
+    <string name="delete">Delete</string>
 </resources>
