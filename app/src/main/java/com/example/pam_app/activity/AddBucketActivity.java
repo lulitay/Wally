@@ -65,14 +65,9 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 presenter.saveBucket(
                         title.getText().toString(),
                         selectedDate.getTime(),
-                        BucketType.valueOf(bucketType.getText().toString()),
+                        BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
                         Double.parseDouble(target.getText().toString())
                 );
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Bucket " + title.getText().toString() + " saved",
-                        Toast.LENGTH_LONG
-                ).show();
                 onBackPressed();
             }
         });
@@ -125,5 +120,23 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 getApplicationContext(), R.layout.list_item, BucketType.values()
         );
         bucketType.setAdapter(adapter);
+    }
+
+    @Override
+    public void onErrorSavingBucket() {
+        Toast.makeText(
+                getApplicationContext(),
+                "Error saving bucket",
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
+    @Override
+    public void onSuccessSavingBucket(final String title) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Bucket " + title + " saved",
+                Toast.LENGTH_LONG
+        ).show();
     }
 }

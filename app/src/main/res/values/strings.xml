@@ -22,5 +22,11 @@
     <string name="entries">Entries</string>
     <string name="options">Options</string>
     <string name="delete">Delete</string>
+    <string name="Home">Home</string>
+    <string name="Buckets">Buckets</string>
+    <string name="Profile">Profile</string>
+    <string name="add_bucket_entry">Add bucket entry</string>
+    <string name="metrics_coming_soon">Metrics coming soon!</string>
+    <string name="activity">Activity</string>
     <string name="collapsed_indicator">Collapsed indicator</string>
 </resources>

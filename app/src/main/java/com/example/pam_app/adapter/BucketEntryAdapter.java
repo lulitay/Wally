@@ -39,6 +39,16 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
         holder.bind(items.get(position));
     }
 
+    public void update(final List<BucketEntry> newBucketList) {
+        if (items != null) {
+            items.clear();
+            items.addAll(newBucketList);
+        } else {
+            setData(newBucketList);
+        }
+        notifyDataSetChanged();
+    }
+
     public static class BucketEntryHolder extends RecyclerView.ViewHolder {
 
         private final ActivityBucketEntryBinding binding;

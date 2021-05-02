@@ -27,7 +27,7 @@
         </activity>
         <activity android:name=".activity.AddBucketEntryActivity"/>
         <activity android:name=".activity.AddBucketActivity"/>
-        <activity android:name=".activity.BucketListActivity"/>
+        <activity android:name=".activity.BucketListViewImpl"/>
     </application>
 
 </manifest>

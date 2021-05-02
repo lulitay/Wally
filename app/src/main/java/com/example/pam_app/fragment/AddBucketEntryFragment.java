@@ -66,6 +66,24 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         editTextFilledExposedDropdown.setAdapter(adapter);
     }
 
+    @Override
+    public void onErrorSavingBucketEntry() {
+        Toast.makeText(
+                getContext(),
+                "Entry could not be saved",
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
+    @Override
+    public void onSuccessSavingBucketEntry(final String description) {
+        Toast.makeText(
+                getContext(),
+                "Entry " + description + " saved",
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
     void saveEntry(final EditText description,
                    final EditText amount,
                    final EditText date,
@@ -82,13 +100,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
                         description.getText().toString(),
                         bucket.getText().toString()
                 );
-                Toast.makeText(
-                        getContext(),
-                        "Entry " + description.getText().toString() + " saved",
-                        Toast.LENGTH_LONG
-                ).show();
-                requireActivity().onBackPressed();
             }
+            requireActivity().onBackPressed();
         });
     }
 

@@ -28,10 +28,10 @@ public class AddBucketEntryActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         final Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
 
         toolbar.setTitle(null);
-        setSupportActionBar(toolbar);
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);

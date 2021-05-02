@@ -1,7 +1,5 @@
 package com.example.pam_app.model;
 
-import androidx.annotation.NonNull;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,5 +35,9 @@ public class BucketEntry {
     public String getDateString() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(date);
+    }
+
+    public Date getDate() {
+        return this.date;
     }
 }
