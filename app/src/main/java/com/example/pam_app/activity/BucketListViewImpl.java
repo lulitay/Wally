@@ -82,7 +82,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     private void setUpAddBucketButton() {
-        Button addBucketButton = findViewById(R.id.add_entry_button);
+        Button addBucketButton = findViewById(R.id.add_bucket_button);
         addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
     }
 
