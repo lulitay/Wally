@@ -45,7 +45,7 @@ public class BucketListPresenter {
             }
         }
 
-        if (view != null) {
+        if (view.get() != null) {
             view.get().bindSpendingBuckets(spendingBuckets);
             view.get().bindSavingsBuckets(savingsBuckets);
         }
@@ -60,25 +60,25 @@ public class BucketListPresenter {
     }
 
     public void onBucketClicked(int bucketId) {
-        if (view != null) {
+        if (view.get() != null) {
             view.get().launchBucketDetailActivity(bucketId);
         }
     }
 
     public void OnAddBucketClicked() {
-        if (view != null) {
+        if (view.get() != null) {
             view.get().launchAddBucketActivity();
         }
     }
 
     public void OnSpendingCardClicked() {
-        if (view != null) {
+        if (view.get() != null) {
             view.get().collapseSpendingBuckets();
         }
     }
 
     public void OnSavingsCardClicked() {
-        if (view != null) {
+        if (view.get() != null) {
             view.get().collapseSavingsBuckets();
         }
     }
