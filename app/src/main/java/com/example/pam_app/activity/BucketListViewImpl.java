@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +34,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
 
-    private BucketListPresenter presenter;
+    private final BucketListPresenter presenter;
     private BucketListAdapter spendingAdapter;
     private BucketListAdapter savingsAdapter;
 
@@ -100,16 +101,26 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
         spendingBuckets = findViewById(R.id.spending_buckets);
         spendingAdapter = new BucketListAdapter();
         spendingBuckets.setAdapter(spendingAdapter);
-        spendingBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        spendingBuckets.setLayoutManager(layoutManager);
         spendingAdapter.setOnClickListener(this);
+
+        final DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(spendingBuckets.getContext(),
+                layoutManager.getOrientation());
+        spendingBuckets.addItemDecoration(dividerItemDecoration);
     }
 
     private void setUpSavingsList(final Context context) {
         savingsBuckets = findViewById(R.id.savings_buckets);
         savingsAdapter = new BucketListAdapter();
         savingsBuckets.setAdapter(savingsAdapter);
-        savingsBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        savingsBuckets.setLayoutManager(layoutManager);
         savingsAdapter.setOnClickListener(this);
+
+        final DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(savingsBuckets.getContext(),
+                layoutManager.getOrientation());
+        savingsBuckets.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
