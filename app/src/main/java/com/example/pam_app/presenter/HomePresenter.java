@@ -31,6 +31,10 @@ public class HomePresenter {
     }
 
     public void onViewAttached() {
+        // TODO check if this is ok
+    }
+
+    public void onViewResume() {
         this.disposable = repository.getEntryList()
                 .map(unsortedList -> {
                     List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
@@ -41,24 +45,6 @@ public class HomePresenter {
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onEntriesComplete);
     }
-
-    /*public void onViewResume() {
-        disposable.add(
-                repository.getEntryList()
-                        .map(unsortedList -> {
-                            List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
-                            Collections.sort(sortedList, new BucketEntryComparator());
-                            return sortedList;
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.computation())
-                        .subscribe(this::onEntriesComplete)
-        );
-    }
-
-    public void onViewPause() {
-        disposable.clear();
-    }*/
 
     public void onViewDetached() {
         disposable.dispose();
