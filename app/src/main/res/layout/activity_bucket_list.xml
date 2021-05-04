@@ -42,7 +42,6 @@
                         android:layout_marginLeft="21dp"
                         android:gravity="center"
                         android:text="@string/spending"
-                        android:textColor="@android:color/black"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +62,15 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/spending_buckets_unavailable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="@string/no_spending_buckets_available"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/spending_header"
@@ -117,7 +125,6 @@
                         android:layout_marginLeft="21dp"
                         android:gravity="center"
                         android:text="@string/saving"
-                        android:textColor="@android:color/black"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -138,6 +145,15 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/savings_buckets_unavailable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="@string/no_savings_buckets_available"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/savings_header"

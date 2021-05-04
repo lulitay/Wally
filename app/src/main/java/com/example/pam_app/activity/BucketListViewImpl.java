@@ -44,6 +44,8 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     private boolean isSpendingListExpanded = false;
     private boolean isSavingsListExpanded = false;
+    private boolean isSpendingListEmpty = true;
+    private boolean isSavingsListEmpty = true;
 
     public BucketListViewImpl(Context context) {
         this(context, null);
@@ -130,6 +132,16 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
+    public void setIsSpendingListEmpty(boolean isEmpty) {
+        isSpendingListEmpty = isEmpty;
+    }
+
+    @Override
+    public void setIsSavingsListEmpty(boolean isEmpty) {
+        isSavingsListEmpty = isEmpty;
+    }
+
+    @Override
     public void bindSpendingBuckets(final List<Bucket> model) {
         spendingAdapter.update(model);
     }
@@ -153,14 +165,21 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     public void collapseSpendingBuckets() {
         ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
         LinearLayout header = findViewById(R.id.spending_header);
-        if(isSpendingListExpanded) {
+        TextView bucketsUnavailable = findViewById(R.id.spending_buckets_unavailable);
+
+        if (isSpendingListExpanded) {
+            bucketsUnavailable.setVisibility(View.GONE);
             spendingBuckets.setVisibility(View.GONE);
             header.setVisibility(View.GONE);
             isSpendingListExpanded = false;
             indicator.setRotation(0);
         } else {
-            spendingBuckets.setVisibility(View.VISIBLE);
-            header.setVisibility(View.VISIBLE);
+            if (isSpendingListEmpty) {
+                bucketsUnavailable.findViewById(View.VISIBLE);
+            } else {
+                spendingBuckets.setVisibility(View.VISIBLE);
+                header.setVisibility(View.VISIBLE);
+            }
             isSpendingListExpanded = true;
             indicator.setRotation(180);
         }
@@ -170,14 +189,21 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     public void collapseSavingsBuckets() {
         ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
         LinearLayout header = findViewById(R.id.savings_header);
-        if(isSavingsListExpanded) {
+        TextView bucketsUnavailable = findViewById(R.id.savings_buckets_unavailable);
+
+        if (isSavingsListExpanded) {
+            bucketsUnavailable.setVisibility(View.GONE);
             savingsBuckets.setVisibility(View.GONE);
             header.setVisibility(View.GONE);
             isSavingsListExpanded = false;
             indicator.setRotation(0);
         } else {
-            savingsBuckets.setVisibility(View.VISIBLE);
-            header.setVisibility(View.VISIBLE);
+            if (isSavingsListEmpty) {
+                bucketsUnavailable.setVisibility(View.VISIBLE);
+            } else {
+                savingsBuckets.setVisibility(View.VISIBLE);
+                header.setVisibility(View.VISIBLE);
+            }
             isSavingsListExpanded = true;
             indicator.setRotation(180);
         }

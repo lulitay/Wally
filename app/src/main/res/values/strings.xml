@@ -31,4 +31,6 @@
     <string name="collapsed_indicator">Collapsed indicator</string>
     <string name="all_buckets">All buckets</string>
     <string name="name">Name</string>
+    <string name="no_spending_buckets_available">No spending buckets available</string>
+    <string name="no_savings_buckets_available">No savings buckets available</string>
 </resources>
