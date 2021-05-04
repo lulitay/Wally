@@ -23,8 +23,8 @@ public class AddBucketPresenter {
     }
 
     public void saveBucket(final String name, final Date dueDate, final BucketType bucketType,
-                           final double target) {
-        final Bucket bucket = new Bucket(name, dueDate, bucketType, target);
+                           final double target, final String imagePath) {
+        final Bucket bucket = new Bucket(name, dueDate, bucketType, target, imagePath);
         Completable.fromAction(() -> bucketRepository.create(bucket))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -32,4 +32,11 @@ public class AddBucketPresenter {
                 .doOnComplete(() -> addBucketView.get().onSuccessSavingBucket(name))
                 .subscribe();
     }
+
+    public void onClickLoadImage() {
+        if (addBucketView.get() != null) {
+            addBucketView.get().goToLoadImage();
+        }
+    }
+
 }
