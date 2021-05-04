@@ -17,15 +17,15 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
     private List<BucketEntry> items;
 
     @Override
-    public void setData(List<BucketEntry> items) {
+    public void setData(final List<BucketEntry> items) {
         this.items = items;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public BucketEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+    public BucketEntryHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new BucketEntryHolder(ActivityBucketEntryBinding.inflate(inflater, parent, false));
     }
 
@@ -35,30 +35,20 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
     }
 
     @Override
-    public void onBindViewHolder(BucketEntryHolder holder, final int position) {
+    public void onBindViewHolder(final BucketEntryHolder holder, final int position) {
         holder.bind(items.get(position));
-    }
-
-    public void update(final List<BucketEntry> newBucketList) {
-        if (items != null) {
-            items.clear();
-            items.addAll(newBucketList);
-        } else {
-            setData(newBucketList);
-        }
-        notifyDataSetChanged();
     }
 
     public static class BucketEntryHolder extends RecyclerView.ViewHolder {
 
         private final ActivityBucketEntryBinding binding;
 
-        public BucketEntryHolder(ActivityBucketEntryBinding binding) {
+        public BucketEntryHolder(final ActivityBucketEntryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public void bind(BucketEntry entry) {
+        public void bind(final BucketEntry entry) {
             this.binding.setEntry(entry);
         }
     }

@@ -16,13 +16,13 @@
             android:id="@+id/home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity"/>
+            tools:context=".MainActivity" />
 
         <com.example.pam_app.activity.BucketListViewImpl
-            android:id="@+id/buckets"
+            android:id="@+id/buckets_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity"/>
+            tools:context=".MainActivity" />
 
     </ViewSwitcher>
 

@@ -69,11 +69,10 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     private void setUpHomeView() {
         homeView = findViewById(R.id.home);
         homeView.bind();
-        homeView.setClickable(this);
     }
 
     private void setUpBucketListView() {
-        bucketListView = findViewById(R.id.buckets);
+        bucketListView = findViewById(R.id.buckets_view);
         bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity);
     }
 
