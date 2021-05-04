@@ -34,4 +34,6 @@
     <string name="name">Nombre</string>
     <string name="no_spending_buckets_available">No hay buckets de gastos</string>
     <string name="no_savings_buckets_available">No hay buckets de ahorros</string>
+    <string name="load_image">Cargar imagen</string>
+    <string name="image">Imagen</string>
 </resources>

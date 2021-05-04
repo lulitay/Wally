@@ -6,4 +6,5 @@ public interface AddBucketView {
 
     void onSuccessSavingBucket(final String text);
 
+    void goToLoadImage();
 }
