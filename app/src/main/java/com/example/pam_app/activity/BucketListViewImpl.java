@@ -175,7 +175,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
             indicator.setRotation(0);
         } else {
             if (isSpendingListEmpty) {
-                bucketsUnavailable.findViewById(View.VISIBLE);
+                bucketsUnavailable.setVisibility(View.VISIBLE);
             } else {
                 spendingBuckets.setVisibility(View.VISIBLE);
                 header.setVisibility(View.VISIBLE);
