@@ -18,6 +18,16 @@
         <item name="android:textSize">@dimen/subtitle_text_size</item>
     </style>
 
+    <style name="TitlesToolbar" parent="AppTheme">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/subtitle_text_size</item>
+    </style>
+
+    <style name="TitlesToolbarExpanded" parent="AppTheme">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
     <style name="Subtitles" parent="AppTheme">
         <item name="android:layout_marginBottom">@dimen/form_margin</item>
         <item name="android:layout_marginTop">@dimen/form_margin</item>
