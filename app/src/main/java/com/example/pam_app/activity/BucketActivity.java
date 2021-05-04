@@ -1,15 +1,24 @@
 package com.example.pam_app.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,10 +35,15 @@ import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.view.BucketView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class BucketActivity extends AppCompatActivity implements BucketView {
 
     private BucketPresenter bucketPresenter;
     private ActivityBucketBinding binding;
+
+    private boolean readExternalStorage;
 
     @Override
     protected void onCreate(@Nullable Bundle bundle) {
@@ -47,6 +61,16 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         this.setUpToolBar();
         this.setUpList();
         this.setUpAddEntryButton();
+
+        ActivityResultLauncher<String>  permissionResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (!isGranted) {
+                        Toast.makeText(getApplicationContext(), "You will not be able to see the buckets pictures", Toast.LENGTH_LONG).show();
+                    }
+                    readExternalStorage = isGranted;
+                });
+        permissionResultLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -96,6 +120,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     @Override
     public void bind(Bucket bucket) {
         this.binding.setBucket(bucket);
+        drawImage(bucket.imagePath);
     }
 
     @Override
@@ -107,6 +132,32 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     public void goToAddEntry() {
         Intent intent = new Intent(this, AddBucketEntryActivity.class);
         startActivity(intent);
+    }
+
+    private void drawImage(String imagePath) {
+        final AppCompatImageView imageView = findViewById(R.id.image_view);
+        boolean renderDefault = true;
+        if (imagePath != null && readExternalStorage) {
+            try {
+
+                final InputStream imageStream = getContentResolver().openInputStream(Uri.parse(imagePath));
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                imageView.setImageBitmap(selectedImage);
+                renderDefault = false;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (renderDefault) {
+            imageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                            getApplicationContext(),
+                            R.drawable.ic_launcher_background
+                    )
+            );
+        }
     }
 
     private void setUpList() {

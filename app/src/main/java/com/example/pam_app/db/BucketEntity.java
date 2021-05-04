@@ -15,11 +15,13 @@ public class BucketEntity {
     public final Date dueDate;
     public final int bucketType;
     public final double target;
+    public final String imagePath;
 
-    public BucketEntity(String title, Date dueDate, int bucketType, double target) {
+    public BucketEntity(String title, Date dueDate, int bucketType, double target, String imagePath) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
+        this.imagePath = imagePath;
     }
 }

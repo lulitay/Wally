@@ -30,4 +30,6 @@
     <string name="metrics_coming_soon">Metrics coming soon!</string>
     <string name="activity">Activity</string>
     <string name="collapsed_indicator">Indicador de colapso</string>
+    <string name="load_image">Cargar imagen</string>
+    <string name="image">imagen</string>
 </resources>
