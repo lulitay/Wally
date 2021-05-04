@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -151,12 +152,15 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     @Override
     public void collapseSpendingBuckets() {
         ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
+        LinearLayout header = findViewById(R.id.spending_header);
         if(isSpendingListExpanded) {
             spendingBuckets.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
             isSpendingListExpanded = false;
             indicator.setRotation(0);
         } else {
             spendingBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
             isSpendingListExpanded = true;
             indicator.setRotation(180);
         }
@@ -165,12 +169,15 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     @Override
     public void collapseSavingsBuckets() {
         ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
+        LinearLayout header = findViewById(R.id.savings_header);
         if(isSavingsListExpanded) {
             savingsBuckets.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
             isSavingsListExpanded = false;
             indicator.setRotation(0);
         } else {
             savingsBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
             isSavingsListExpanded = true;
             indicator.setRotation(180);
         }
