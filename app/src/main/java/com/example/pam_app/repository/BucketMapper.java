@@ -23,7 +23,7 @@ public class BucketMapper {
 
         return new Bucket(bucketEntity.title, bucketEntity.dueDate,
                 BucketType.values()[bucketEntity.bucketType], bucketEntity.target,
-                entries, bucketEntity.id);
+                entries, bucketEntity.id, bucketEntity.imagePath);
     }
 
     public Bucket toModel(final BucketEntity bucketEntity) {
@@ -36,7 +36,7 @@ public class BucketMapper {
 
     public BucketEntity toEntity(final Bucket bucket) {
         return new BucketEntity(bucket.title, bucket.dueDate, bucket.bucketType.ordinal(),
-                bucket.target);
+                bucket.target, bucket.imagePath);
     }
 
     public BucketEntry toModel(final BucketEntryEntity bucketEntryEntity) {

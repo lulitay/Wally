@@ -19,6 +19,7 @@ public class Bucket {
     public final double target;
     public final List<BucketEntry> entries;
     public final Integer id;
+    public final String imagePath;
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
                   List<BucketEntry> entries) {
@@ -28,16 +29,18 @@ public class Bucket {
         this.target = target;
         this.entries = entries;
         this.id = null;
+        this.imagePath = null;
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries, int id) {
+                  List<BucketEntry> entries, int id, String imagePath) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
         this.entries = entries;
         this.id = id;
+        this.imagePath = imagePath;
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target) {
@@ -47,6 +50,17 @@ public class Bucket {
         this.target = target;
         this.entries = new LinkedList<>();
         this.id = null;
+        this.imagePath = null;
+    }
+
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath) {
+        this.title = title;
+        this.dueDate = dueDate;
+        this.bucketType = bucketType;
+        this.target = target;
+        this.entries = new LinkedList<>();
+        this.id = null;
+        this.imagePath = imagePath;
     }
 
     public int getProgress() {
