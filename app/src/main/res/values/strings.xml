@@ -54,4 +54,7 @@
     <string name="error_future_date">Can\'t set future date</string>
     <string name="max_amount">Max amount is %1$d</string>
     <string name="max_characters">Max characters is %1$d</string>
+    <string name="error_past_date">Can\'t be a past date</string>
+    <string name="error_saving_bucket">Error saving bucket</string>
+    <string name="bucket_saved">Bucket %1$s saved</string>
 </resources>

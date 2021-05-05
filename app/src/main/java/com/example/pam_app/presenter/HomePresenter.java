@@ -47,7 +47,9 @@ public class HomePresenter {
     }
 
     public void onViewDetached() {
-        disposable.dispose();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     private void onEntriesComplete(final List<BucketEntry> entries) {

@@ -1,5 +1,6 @@
 package com.example.pam_app.presenter;
 
+import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
@@ -10,14 +11,14 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class AddBucketEntryPresenter {
 
     private final WeakReference<AddBucketEntryView> addBucketEntryView;
     private final BucketRepository bucketRepository;
     private final SchedulerProvider schedulerProvider;
-    private Disposable disposable;
+    private final CompositeDisposable disposable;
 
     public AddBucketEntryPresenter(
             final AddBucketEntryView addBucketEntryView,
@@ -26,6 +27,7 @@ public class AddBucketEntryPresenter {
         this.addBucketEntryView = new WeakReference<>(addBucketEntryView);
         this.bucketRepository = bucketRepository;
         this.schedulerProvider = schedulerProvider;
+        this.disposable = new CompositeDisposable();
     }
 
     public void onViewAttached() {
@@ -44,25 +46,27 @@ public class AddBucketEntryPresenter {
     public void saveBucketEntry(final double amount, final Date date, final String description,
                                 final String bucketTitle) {
         final BucketEntry entry = new BucketEntry(amount, date, description);
-        disposable = bucketRepository.get(bucketTitle)
+        disposable.add(
+                bucketRepository.get(bucketTitle)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe((bucket) -> {
-                    disposable = Completable.fromAction(() ->  bucketRepository.addEntry(entry, bucket.id))
-                            .subscribeOn(schedulerProvider.io())
-                            .observeOn(schedulerProvider.ui())
-                            .subscribe(() -> {
-                                if (addBucketEntryView.get() != null) {
-                                    addBucketEntryView.get().onSuccessSavingBucketEntry(description);
-                                } }, (throwable) -> {
-                                if (addBucketEntryView.get() != null) {
-                                    addBucketEntryView.get().onErrorSavingBucketEntry();
-                                }
-                            });
-                    }, (throwable) -> {
+                .subscribe((Bucket bucket) -> disposable.add(
+                        Completable.fromAction(() ->  bucketRepository.addEntry(entry, bucket.id))
+                        .subscribeOn(schedulerProvider.io())
+                        .observeOn(schedulerProvider.ui())
+                        .subscribe(() -> {
+                            if (addBucketEntryView.get() != null) {
+                                addBucketEntryView.get().onSuccessSavingBucketEntry(description);
+                            } }, (throwable) -> {
+                            if (addBucketEntryView.get() != null) {
+                                addBucketEntryView.get().onErrorSavingBucketEntry();
+                            }
+                        })
+                ), (throwable) -> {
                     if (addBucketEntryView.get() != null) {
                         addBucketEntryView.get().onErrorSavingBucketEntry();
                     }
-                });
+                })
+        );
     }
 }
