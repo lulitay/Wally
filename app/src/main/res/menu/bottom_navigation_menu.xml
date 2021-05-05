@@ -3,17 +3,17 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/ic_wally_foreground"
+        android:icon="@drawable/ic_home"
         android:title="@string/Home"/>
     <item
         android:id="@+id/buckets"
         android:enabled="true"
-        android:icon="@drawable/ic_wally_foreground"
+        android:icon="@drawable/ic_wallet"
         android:title="@string/Buckets"/>
     <item
         android:id="@+id/profile"
         android:enabled="true"
-        android:icon="@drawable/ic_wally_foreground"
+        android:icon="@drawable/ic_profile"
         android:title="@string/Profile"/>
 
 </menu>

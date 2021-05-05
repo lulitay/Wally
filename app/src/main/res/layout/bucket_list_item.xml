@@ -10,23 +10,21 @@
         android:layout_height="66dp"
         android:orientation="horizontal">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bucket_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|left"
-            android:paddingLeft="20dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:paddingLeft="20dp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bucket_target"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|right"
-            android:paddingRight="20dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:paddingEnd="20dp" />
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp" />
     </LinearLayout>
 </LinearLayout>
