@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ViewSwitcher
+    <ViewFlipper
         android:id="@+id/switcher"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -20,26 +20,22 @@
             android:layout_height="match_parent"
             tools:context=".MainActivity" />
 
-        <com.example.pam_app.activity.BucketListViewImpl
+        <com.example.pam_app.view.BucketListViewImpl
             android:id="@+id/buckets"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity" />
 
-    </ViewSwitcher>
+        <com.example.pam_app.view.ProfileViewImpl
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity"
+            android:layout_margin="@dimen/form_margin"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/add_bucket_entry"
-        app:backgroundTint="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="@id/bottom_navigation"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@android:color/white" />
+    </ViewFlipper>
+
+    <include layout="@layout/fab"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

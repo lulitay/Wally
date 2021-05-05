@@ -24,13 +24,19 @@ import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.contracts.GalleryContract;
+import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
+
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
 
 public class AddBucketActivity extends AppCompatActivity implements AddBucketView {
 
@@ -50,10 +56,10 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
-        presenter = new AddBucketPresenter(this, bucketRepository);
-        final Button load_image = findViewById(R.id.button_load_image);
-
-        load_image.setOnClickListener(view -> presenter.onClickLoadImage());
+        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        presenter = new AddBucketPresenter(this, bucketRepository, schedulerProvider);
+        final Button loadImage = findViewById(R.id.button_load_image);
+        loadImage.setOnClickListener(view -> presenter.onClickLoadImage());
         this.imageView = findViewById(R.id.image_view);
 
         this.galleryResultLauncher = registerForActivityResult(
@@ -67,7 +73,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                             imagePath = result.toString();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -100,7 +106,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             }
             catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -112,7 +118,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                             final AutoCompleteTextView bucketType) {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, bucketType, imagePath);
+            final boolean fields = checkFields(title, target, dueDate, selectedDate, bucketType, imagePath);
             if (fields) {
                 presenter.saveBucket(
                         title.getText().toString(),
@@ -121,7 +127,6 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                         Double.parseDouble(target.getText().toString()),
                         imagePath
                 );
-                onBackPressed();
             }
         });
 
@@ -132,31 +137,42 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             final EditText title,
             final EditText target,
             final EditText dueDate,
+            final Calendar selectedDate,
             final AutoCompleteTextView bucketType,
             final String imagePath
     ) {
+        boolean isCorrect = true;
         if (title.length() == 0) {
-            title.setError("Can't be empty");
-            return false;
+            title.setError(getString(R.string.error_empty));
+            isCorrect = false;
+        } else if (title.getText().length() > MAX_CHARACTERS) {
+            title.setError(getString(R.string.max_characters, MAX_CHARACTERS));
+            isCorrect = false;
         }
         if (target.length() == 0) {
-            target.setError("Can't be empty");
-            return false;
+            target.setError(getString(R.string.error_empty));
+            isCorrect = false;
+        } else if (Double.parseDouble(target.getText().toString()) >= MAX_AMOUNT) {
+            target.setError(getString(R.string.max_amount, MAX_AMOUNT));
+            isCorrect = false;
         }
-        if (dueDate.length() == 0) {
-            dueDate.setError("Can't be empty");
-            return false;
+        if (selectedDate == null) {
+            dueDate.setError(getString(R.string.error_empty));
+            isCorrect = false;
+        } else if (selectedDate.getTimeInMillis() < new Date().getTime()) {
+            dueDate.setError(getString(R.string.error_past_date));
+            isCorrect = false;
         }
         if (bucketType.length() == 0) {
-            bucketType.setError("Can't be empty");
-            return false;
+            bucketType.setError(getString(R.string.error_empty));
+            isCorrect = false;
         }
-        return true;
+        return isCorrect;
     }
 
     private void setDatePicker(final EditText date, final Calendar selectedDate) {
         final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Pick a date").build();
+                .setTitleText(getString(R.string.pick_a_date)).build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
             date.setText(datePicker.getHeaderText());
@@ -180,7 +196,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     public void onErrorSavingBucket() {
         Toast.makeText(
                 getApplicationContext(),
-                "Error saving bucket",
+                getString(R.string.error_saving_bucket),
                 Toast.LENGTH_LONG
         ).show();
     }
@@ -189,13 +205,20 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     public void onSuccessSavingBucket(final String title) {
         Toast.makeText(
                 getApplicationContext(),
-                "Bucket " + title + " saved",
+                getString(R.string.bucket_saved, title),
                 Toast.LENGTH_LONG
         ).show();
+        onBackPressed();
     }
 
     @Override
     public void goToLoadImage() {
         galleryResultLauncher.launch("image/*");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onDetachView();
     }
 }

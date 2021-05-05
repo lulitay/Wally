@@ -10,9 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class BucketListPresenter {
     private final WeakReference<BucketListView> view;
@@ -34,8 +32,8 @@ public class BucketListPresenter {
     }
 
     private void onBucketsReceived(final List<Bucket> model) {
-        List<Bucket> spendingBuckets = new ArrayList<>();
-        List<Bucket> savingsBuckets = new ArrayList<>();
+        final List<Bucket> spendingBuckets = new ArrayList<>();
+        final List<Bucket> savingsBuckets = new ArrayList<>();
 
         for (Bucket bucket : model) {
             if (bucket.bucketType == BucketType.SPENDING) {

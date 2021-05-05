@@ -40,6 +40,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -69,7 +70,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         this.setUpList();
         this.setUpAddEntryButton();
 
-        ActivityResultLauncher<String>  permissionResultLauncher = registerForActivityResult(
+        ActivityResultLauncher<String> permissionResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (!isGranted) {
@@ -126,8 +127,14 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     @Override
-    public void bind(Bucket bucket) {
+    public void bind(final Bucket bucket) {
         this.binding.setBucket(bucket);
+        final MaterialTextView noEntriesText = findViewById(R.id.entries_unavailable);
+        if (bucket.entries.isEmpty()) {
+            noEntriesText.setVisibility(View.VISIBLE);
+        } else {
+            noEntriesText.setVisibility(View.GONE);
+        }
         drawImage(bucket.imagePath);
     }
 

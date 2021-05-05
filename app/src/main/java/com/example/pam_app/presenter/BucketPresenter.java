@@ -71,7 +71,7 @@ public class BucketPresenter {
     }
 
     public void onDelete() {
-        if (bucketView.get() != null){
+        if (bucketView.get() != null) {
             disposable.add(
                     Completable.fromAction(() -> bucketRepository.delete(id))
                             .subscribeOn(schedulerProvider.io())

@@ -19,7 +19,7 @@ public class AddIncomeBucketEntryFragment extends AddBucketEntryFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_add_income, container, false);
     }
@@ -30,8 +30,8 @@ public class AddIncomeBucketEntryFragment extends AddBucketEntryFragment {
     }
 
     public static AddIncomeBucketEntryFragment newInstance(final Integer counter) {
-        AddIncomeBucketEntryFragment fragment = new AddIncomeBucketEntryFragment();
-        Bundle args = new Bundle();
+        final AddIncomeBucketEntryFragment fragment = new AddIncomeBucketEntryFragment();
+        final Bundle args = new Bundle();
         args.putInt(ARG_OBJECT, counter);
         fragment.setArguments(args);
         return fragment;

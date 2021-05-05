@@ -1,4 +1,4 @@
-package com.example.pam_app.activity;
+package com.example.pam_app.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -26,7 +26,6 @@ import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
-import com.example.pam_app.view.BucketListView;
 
 import java.util.List;
 
@@ -86,17 +85,17 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     private void setUpAddBucketButton() {
-        Button addBucketButton = findViewById(R.id.add_bucket_button);
+        final Button addBucketButton = findViewById(R.id.add_bucket_button);
         addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
     }
 
     private void setUpSpendingCard() {
-        CardView spendingCard = findViewById(R.id.spending_buckets_card);
+        final CardView spendingCard = findViewById(R.id.spending_buckets_card);
         spendingCard.setOnClickListener(v -> presenter.OnSpendingCardClicked());
     }
 
     private void setUpSavingsCard() {
-        CardView savingsCard = findViewById(R.id.savings_buckets_card);
+        final CardView savingsCard = findViewById(R.id.savings_buckets_card);
         savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
     }
 

@@ -9,14 +9,13 @@
         android:roundIcon="@mipmap/ic_wally_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="locale">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.FTUActivity" />
         <activity android:name=".activity.BucketActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
