@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     protected void onResume() {
         super.onResume();
         homeView.onViewResumed();
+        bucketListView.onViewResume();
     }
 
     @Override

@@ -26,6 +26,8 @@ public interface BucketListView {
 
     void onViewStop();
 
+    void onViewResume();
+
     void setIsSpendingListEmpty(boolean isEmpty);
 
     void setIsSavingsListEmpty(boolean isEmpty);

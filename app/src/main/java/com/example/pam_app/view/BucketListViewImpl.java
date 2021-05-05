@@ -131,6 +131,11 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
+    public void onViewResume() {
+        presenter.onViewResume();
+    }
+
+    @Override
     public void setIsSpendingListEmpty(boolean isEmpty) {
         isSpendingListEmpty = isEmpty;
     }

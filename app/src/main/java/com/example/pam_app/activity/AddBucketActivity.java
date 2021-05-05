@@ -44,6 +44,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
 
     private ImageView imageView;
     private String imagePath;
+    private Calendar date;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
 
@@ -61,6 +62,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         final Button loadImage = findViewById(R.id.button_load_image);
         loadImage.setOnClickListener(view -> presenter.onClickLoadImage());
         this.imageView = findViewById(R.id.image_view);
+        this.date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         this.galleryResultLauncher = registerForActivityResult(
                 new GalleryContract(),
@@ -84,12 +86,11 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         super.onStart();
         final EditText title = findViewById(R.id.title);
         final EditText dueDate = findViewById(R.id.due_date);
-        final Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
         final EditText target = findViewById(R.id.target);
 
-        setDatePicker(dueDate, selectedDate);
-        saveBucket(title, target, dueDate, selectedDate, bucketType);
+        setDatePicker(dueDate, date);
+        saveBucket(title, target, dueDate, date, bucketType);
         setBucketTypeValues(bucketType);
     }
 
