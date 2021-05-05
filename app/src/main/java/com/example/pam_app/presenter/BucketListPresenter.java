@@ -25,6 +25,10 @@ public class BucketListPresenter {
     }
 
     public void onViewAttached() {
+
+    }
+
+    public void onViewResume() {
         disposable = repository.getList()
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
