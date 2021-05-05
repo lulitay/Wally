@@ -25,4 +25,8 @@ public interface BucketListView {
               ClickableWithParameter launchBucketDetailActivity);
 
     void onViewStop();
+
+    void setIsSpendingListEmpty(boolean isEmpty);
+
+    void setIsSavingsListEmpty(boolean isEmpty);
 }

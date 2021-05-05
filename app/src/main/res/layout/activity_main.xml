@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,19 +9,22 @@
     <ViewSwitcher
         android:id="@+id/switcher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.example.pam_app.view.HomeViewImpl
             android:id="@+id/home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity"/>
+            tools:context=".MainActivity" />
 
         <com.example.pam_app.activity.BucketListViewImpl
             android:id="@+id/buckets"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity"/>
+            tools:context=".MainActivity" />
 
     </ViewSwitcher>
 
@@ -32,11 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="@string/add_bucket_entry"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="@id/bottom_navigation"
-        android:contentDescription="@string/add_bucket_entry" />
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@android:color/white" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

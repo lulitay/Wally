@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +35,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
 
-    private BucketListPresenter presenter;
+    private final BucketListPresenter presenter;
     private BucketListAdapter spendingAdapter;
     private BucketListAdapter savingsAdapter;
 
@@ -42,6 +44,8 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     private boolean isSpendingListExpanded = false;
     private boolean isSavingsListExpanded = false;
+    private boolean isSpendingListEmpty = true;
+    private boolean isSavingsListEmpty = true;
 
     public BucketListViewImpl(Context context) {
         this(context, null);
@@ -82,7 +86,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     private void setUpAddBucketButton() {
-        Button addBucketButton = findViewById(R.id.add_entry_button);
+        Button addBucketButton = findViewById(R.id.add_bucket_button);
         addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
     }
 
@@ -100,21 +104,41 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
         spendingBuckets = findViewById(R.id.spending_buckets);
         spendingAdapter = new BucketListAdapter();
         spendingBuckets.setAdapter(spendingAdapter);
-        spendingBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        spendingBuckets.setLayoutManager(layoutManager);
         spendingAdapter.setOnClickListener(this);
+
+        final DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(spendingBuckets.getContext(),
+                layoutManager.getOrientation());
+        spendingBuckets.addItemDecoration(dividerItemDecoration);
     }
 
     private void setUpSavingsList(final Context context) {
         savingsBuckets = findViewById(R.id.savings_buckets);
         savingsAdapter = new BucketListAdapter();
         savingsBuckets.setAdapter(savingsAdapter);
-        savingsBuckets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        savingsBuckets.setLayoutManager(layoutManager);
         savingsAdapter.setOnClickListener(this);
+
+        final DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(savingsBuckets.getContext(),
+                layoutManager.getOrientation());
+        savingsBuckets.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
     public void onViewStop() {
         presenter.onViewDetached();
+    }
+
+    @Override
+    public void setIsSpendingListEmpty(boolean isEmpty) {
+        isSpendingListEmpty = isEmpty;
+    }
+
+    @Override
+    public void setIsSavingsListEmpty(boolean isEmpty) {
+        isSavingsListEmpty = isEmpty;
     }
 
     @Override
@@ -140,12 +164,22 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     @Override
     public void collapseSpendingBuckets() {
         ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
-        if(isSpendingListExpanded) {
+        LinearLayout header = findViewById(R.id.spending_header);
+        TextView bucketsUnavailable = findViewById(R.id.spending_buckets_unavailable);
+
+        if (isSpendingListExpanded) {
+            bucketsUnavailable.setVisibility(View.GONE);
             spendingBuckets.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
             isSpendingListExpanded = false;
             indicator.setRotation(0);
         } else {
-            spendingBuckets.setVisibility(View.VISIBLE);
+            if (isSpendingListEmpty) {
+                bucketsUnavailable.setVisibility(View.VISIBLE);
+            } else {
+                spendingBuckets.setVisibility(View.VISIBLE);
+                header.setVisibility(View.VISIBLE);
+            }
             isSpendingListExpanded = true;
             indicator.setRotation(180);
         }
@@ -154,12 +188,22 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     @Override
     public void collapseSavingsBuckets() {
         ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
-        if(isSavingsListExpanded) {
+        LinearLayout header = findViewById(R.id.savings_header);
+        TextView bucketsUnavailable = findViewById(R.id.savings_buckets_unavailable);
+
+        if (isSavingsListExpanded) {
+            bucketsUnavailable.setVisibility(View.GONE);
             savingsBuckets.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
             isSavingsListExpanded = false;
             indicator.setRotation(0);
         } else {
-            savingsBuckets.setVisibility(View.VISIBLE);
+            if (isSavingsListEmpty) {
+                bucketsUnavailable.setVisibility(View.VISIBLE);
+            } else {
+                savingsBuckets.setVisibility(View.VISIBLE);
+                header.setVisibility(View.VISIBLE);
+            }
             isSavingsListExpanded = true;
             indicator.setRotation(180);
         }

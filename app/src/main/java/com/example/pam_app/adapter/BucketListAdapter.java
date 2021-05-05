@@ -65,7 +65,8 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
             final TextView target = itemView.findViewById(R.id.bucket_target);
 
             title.setText(bucket.title);
-            target.setText(String.valueOf(bucket.target));
+            target.setText(new StringBuilder().append("$").append(bucket.target));
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClick(bucket.id);
