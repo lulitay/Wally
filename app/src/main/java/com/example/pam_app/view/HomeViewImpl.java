@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryAdapter;
 import com.example.pam_app.db.WallyDatabase;
-import com.example.pam_app.listener.Clickable;
+import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.HomePresenter;
 import com.example.pam_app.repository.BucketMapper;

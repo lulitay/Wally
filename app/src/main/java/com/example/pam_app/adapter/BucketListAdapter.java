@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
-import com.example.pam_app.listener.ClickableWithParameter;
+import com.example.pam_app.utils.listener.ClickableWithParameter;
 import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;

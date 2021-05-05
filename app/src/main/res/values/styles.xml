@@ -8,6 +8,10 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryAccent</item>
     </style>
 
+    <style name="ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">#000000</item>
+    </style>
+
     <style name="FormInputs" parent="AppTheme">
         <item name="android:layout_marginBottom">@dimen/form_margin</item>
     </style>

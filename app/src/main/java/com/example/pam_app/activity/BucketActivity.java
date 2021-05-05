@@ -1,6 +1,9 @@
 package com.example.pam_app.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +35,9 @@ import com.example.pam_app.presenter.BucketPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
+import com.example.pam_app.utils.listener.Clickable;
+import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -54,7 +60,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
                 WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
                 new BucketMapper()
             );
-        bucketPresenter = new BucketPresenter(id, this, bucketRepository);
+        SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        bucketPresenter = new BucketPresenter(id, this, bucketRepository, schedulerProvider);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
         binding.setLifecycleOwner(this);
 
@@ -66,7 +73,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (!isGranted) {
-                        Toast.makeText(getApplicationContext(), "You will not be able to see the buckets pictures", Toast.LENGTH_LONG).show();
+                        Context context = getApplicationContext();
+                        Toast.makeText(context, context.getString(R.string.warning_bucket), Toast.LENGTH_LONG).show();
                     }
                     readExternalStorage = isGranted;
                 });
@@ -134,6 +142,46 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         startActivity(intent);
     }
 
+    @Override
+    public void showGetBucketError() {
+        Context context = getApplicationContext();
+        Toast.makeText(context, context.getString(R.string.error_get_bucket), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDeleteBucketError() {
+        Context context = getApplicationContext();
+        Toast.makeText(context, context.getString(R.string.error_delete_bucket), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDeleteBucketSuccess() {
+        Context context = getApplicationContext();
+        Toast.makeText(context, context.getString(R.string.success_delete_bucket), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSureDialog(Clickable clickable) {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    clickable.onClick();
+                    dialog.dismiss();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    break;
+            }
+        };
+        Context context = getApplicationContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(BucketActivity.this);
+        builder.setMessage(context.getString(R.string.are_you_sure))
+                .setPositiveButton(context.getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(context.getString(R.string.no), dialogClickListener)
+                .show();
+    }
+
     private void drawImage(String imagePath) {
         final AppCompatImageView imageView = findViewById(R.id.image_view);
         boolean renderDefault = true;
@@ -146,7 +194,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
                 renderDefault = false;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                Context context = getApplicationContext();
+                Toast.makeText(context, context.getString(R.string.error), Toast.LENGTH_LONG).show();
             }
         }
 
@@ -181,4 +230,5 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> bucketPresenter.onAddEntryClick());
     }
+
 }
