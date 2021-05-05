@@ -42,4 +42,12 @@
     <string name="English">English</string>
     <string name="Language">Language</string>
     <string name="image">Image</string>
+    <string name="error">Something went wrong</string>
+    <string name="error_get_bucket">Error showing bucket</string>
+    <string name="error_delete_bucket">Error deleting bucket</string>
+    <string name="success_delete_bucket">Success deleting bucket</string>
+    <string name="warning_bucket">You will not be able to see the buckets pictures</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

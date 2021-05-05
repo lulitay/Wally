@@ -1,4 +1,4 @@
-package com.example.pam_app.listener;
+package com.example.pam_app.utils.listener;
 
 public interface Clickable {
 

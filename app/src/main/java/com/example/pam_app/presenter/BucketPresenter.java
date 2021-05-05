@@ -2,15 +2,14 @@ package com.example.pam_app.presenter;
 
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketView;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 
 import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class BucketPresenter {
 
@@ -18,12 +17,15 @@ public class BucketPresenter {
     private final WeakReference<BucketView> bucketView;
     private final BucketRepository bucketRepository;
     private CompositeDisposable disposable;
+    private final SchedulerProvider schedulerProvider;
 
     public BucketPresenter(final int id, final BucketView bucketView,
-                           final BucketRepository bucketRepository) {
+                           final BucketRepository bucketRepository,
+                           final SchedulerProvider schedulerProvider) {
         this.id = id;
         this.bucketView = new WeakReference<>(bucketView);
         this.bucketRepository = bucketRepository;
+        this.schedulerProvider = schedulerProvider;
     }
 
     public void onViewAttach() {
@@ -33,14 +35,18 @@ public class BucketPresenter {
     public void onViewResume() {
         disposable.add(
             bucketRepository.get(this.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribe((Bucket b) -> {
                     if (bucketView.get() != null) {
                         Collections.sort(b.entries, (e1, e2) -> (int) Math.signum(e1.date.getTime() - e2.date.getTime()));
                         bucketView.get().bind(b);
                     }
-                })//TODO handle error
+                }, (throwable) -> {
+                    if (bucketView.get() != null) {
+                        bucketView.get().showGetBucketError();
+                    }
+                })
         );
     }
 
@@ -59,12 +65,26 @@ public class BucketPresenter {
     }
 
     public void onDeleteSelected() {
+        if (bucketView.get() != null) {
+            bucketView.get().showSureDialog(this::onDelete);
+        }
+    }
+
+    public void onDelete() {
         if (bucketView.get() != null){
             disposable.add(
-                Completable.fromRunnable(() -> bucketRepository.delete(id))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()//TODO handle error
+                    Completable.fromAction(() -> bucketRepository.delete(id))
+                            .subscribeOn(schedulerProvider.io())
+                            .observeOn(schedulerProvider.ui())
+                            .subscribe(() -> {
+                                if (bucketView.get() != null) {
+                                    bucketView.get().showDeleteBucketSuccess();
+                                }
+                            }, (throwable) -> {
+                                if (bucketView.get() != null) {
+                                    bucketView.get().showDeleteBucketError();
+                                }
+                            })
             );
             bucketView.get().back();
         }
