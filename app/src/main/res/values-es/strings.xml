@@ -36,4 +36,11 @@
     <string name="no_savings_buckets_available">No hay buckets de ahorros</string>
     <string name="load_image">Cargar imagen</string>
     <string name="image">Imagen</string>
+    <string name="entry_saving_failed">No se pudo guardar la entrada</string>
+    <string name="entry_saving_success">Entrada %1$s guardada</string>
+    <string name="error_empty">No puede estar vacío</string>
+    <string name="pick_a_date">Elegir fecha</string>
+    <string name="Spanish">Español</string>
+    <string name="English">Inglés</string>
+    <string name="Language">Idioma</string>
 </resources>

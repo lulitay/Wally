@@ -18,7 +18,7 @@ public class AddSavingBucketEntryFragment extends AddBucketEntryFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_add_saving, container, false);
     }
@@ -29,8 +29,8 @@ public class AddSavingBucketEntryFragment extends AddBucketEntryFragment {
     }
 
     public static AddSavingBucketEntryFragment newInstance(Integer counter) {
-        AddSavingBucketEntryFragment fragment = new AddSavingBucketEntryFragment();
-        Bundle args = new Bundle();
+        final AddSavingBucketEntryFragment fragment = new AddSavingBucketEntryFragment();
+        final Bundle args = new Bundle();
         args.putInt(ARG_OBJECT, counter);
         fragment.setArguments(args);
         return fragment;

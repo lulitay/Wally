@@ -18,7 +18,7 @@ public class AddSpendingBucketEntryFragment extends AddBucketEntryFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_add_spending, container, false);
     }
@@ -29,8 +29,8 @@ public class AddSpendingBucketEntryFragment extends AddBucketEntryFragment {
     }
 
     public static AddSpendingBucketEntryFragment newInstance(int counter) {
-        AddSpendingBucketEntryFragment fragment = new AddSpendingBucketEntryFragment();
-        Bundle args = new Bundle();
+        final AddSpendingBucketEntryFragment fragment = new AddSpendingBucketEntryFragment();
+        final Bundle args = new Bundle();
         args.putInt(ARG_OBJECT, counter);
         fragment.setArguments(args);
         return fragment;

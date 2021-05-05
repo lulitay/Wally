@@ -1,4 +1,4 @@
-package com.example.pam_app.activity;
+package com.example.pam_app.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -26,7 +26,6 @@ import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
-import com.example.pam_app.view.BucketListView;
 
 import java.util.List;
 

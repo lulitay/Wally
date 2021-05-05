@@ -70,7 +70,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     public void onErrorSavingBucketEntry() {
         Toast.makeText(
                 getContext(),
-                "Entry could not be saved",
+                getString(R.string.entry_saving_failed),
                 Toast.LENGTH_LONG
         ).show();
     }
@@ -79,7 +79,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     public void onSuccessSavingBucketEntry(final String description) {
         Toast.makeText(
                 getContext(),
-                "Entry " + description + " saved",
+                getString(R.string.entry_saving_success, description),
                 Toast.LENGTH_LONG
         ).show();
     }
@@ -113,19 +113,19 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
             final AutoCompleteTextView bucket
     ) {
         if (description.length() == 0) {
-            description.setError("Can't be empty");
+            description.setError(getString(R.string.error_empty));
             return false;
         }
         if (amount.length() == 0) {
-            amount.setError("Can't be empty");
+            amount.setError(getString(R.string.error_empty));
             return false;
         }
         if (date.length() == 0) {
-            date.setError("Can't be empty");
+            date.setError(getString(R.string.error_empty));
             return false;
         }
         if (bucket.length() == 0) {
-            bucket.setError("Can't be empty");
+            bucket.setError(getString(R.string.error_empty));
             return false;
         }
         return true;
@@ -133,7 +133,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
 
     void setDatePicker(final EditText date, final Calendar selectedDate) {
         final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Pick a date").build();
+                .setTitleText(getString(R.string.pick_a_date)).build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
             date.setText(datePicker.getHeaderText());

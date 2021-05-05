@@ -42,6 +42,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Subtitles2" parent="AppTheme">
+        <item name="android:layout_marginBottom">@dimen/form_margin</item>
+        <item name="android:layout_marginTop">@dimen/form_margin</item>
+        <item name="android:textSize">@dimen/subtitle2_text_size</item>
+    </style>
+
     <style name="ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="colorButtonNormal">#f50057</item>
         <item name="colorControlActivated">#33691e</item>
