@@ -12,7 +12,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ViewFlipper;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pam_app.activity.AddBucketActivity;
@@ -42,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     private ProfileView profileView;
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,29 +121,32 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     }
 
     private void setSharedPreferencesListener(final SharedPreferences sharedPreferences) {
-        final SharedPreferences.OnSharedPreferenceChangeListener listener =
-                (sharedPreferences1, key) -> {
+        this.onSharedPreferenceChangeListener =
+                (sp, key) -> {
                     if (key.equals(KEY_PREF_LANGUAGE)) {
-                        String languagePref_ID = sharedPreferences1.getString(KEY_PREF_LANGUAGE, "");
-                        switch (languagePref_ID) {
+                        final String languagePref = sp.getString(KEY_PREF_LANGUAGE, "");
+                        switch (languagePref) {
                             case "en":
                                 Locale localeEN = new Locale("en");
-                                updateLocale(localeEN);
+                                MainActivity.this.updateLocale(localeEN);
                                 break;
                             case "es":
                                 Locale localeES = new Locale("es");
-                                updateLocale(localeES);
+                                MainActivity.this.updateLocale(localeES);
                                 break;
 
                         }
                     }
                 };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
 
     private void updateLocale(final Locale locale) {
         setLocale(locale);
-        startActivity(new Intent(this, MainActivity.class));
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
     }
 
     private void setLocale(final Locale locale) {
@@ -170,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     protected void onStop() {
         super.onStop();
         homeView.onViewStopped();
+        bucketListView.onViewStop();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
 
     @Override
@@ -183,11 +188,5 @@ public class MainActivity extends AppCompatActivity implements Clickable {
         super.onPause();
         homeView.onViewPaused();
 
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        setUpViews();
-        super.onConfigurationChanged(newConfig);
     }
 }
