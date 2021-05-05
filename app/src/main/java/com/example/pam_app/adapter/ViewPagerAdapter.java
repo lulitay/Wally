@@ -19,17 +19,17 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch(position) {
+            case 0:
+                return AddSpendingBucketEntryFragment.newInstance(position);
             case 1:
                 return AddSavingBucketEntryFragment.newInstance(position);
-            case 2:
-                return AddIncomeBucketEntryFragment.newInstance(position);
             default:
-                return AddSpendingBucketEntryFragment.newInstance(position);
+                return AddIncomeBucketEntryFragment.newInstance(position);
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 2;
     }
 }
