@@ -60,7 +60,7 @@ public class BucketEntryHomeAdapter extends RecyclerView.Adapter<BucketEntryHome
             final TextView date = itemView.findViewById(R.id.date);
 
             comment.setText(entry.getComment());
-            amount.setText(new StringBuilder().append("$").append(entry.getAmountString()).toString());
+            amount.setText(entry.getAmountString());
             date.setText(entry.getDateString());
         }
     }

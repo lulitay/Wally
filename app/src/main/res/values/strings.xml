@@ -50,4 +50,8 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="no_entries_available">No entries available</string>
+    <string name="error_future_date">Can\'t set future date</string>
+    <string name="max_amount">Max amount is %1$d</string>
+    <string name="max_characters">Max characters is %1$d</string>
 </resources>

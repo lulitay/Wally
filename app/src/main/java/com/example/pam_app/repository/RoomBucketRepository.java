@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class RoomBucketRepository implements BucketRepository {
 
@@ -48,7 +49,7 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public Flowable<Bucket> get(final String title) {
+    public Single<Bucket> get(final String title) {
         return this.bucketDao.getBucket(title).map(bucketMapper::toModel);
     }
 
@@ -64,9 +65,8 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void addEntry(BucketEntry entry, final String bucketTitle) {
-        final Bucket bucket = get(bucketTitle).blockingFirst();
-        bucketDao.addEntry(bucketMapper.toEntity(entry, bucket.id));
+    public void addEntry(BucketEntry entry, final int bucketId) {
+        bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId));
     }
 
     @Override

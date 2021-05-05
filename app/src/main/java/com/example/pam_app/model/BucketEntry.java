@@ -25,7 +25,7 @@ public class BucketEntry {
     }
 
     public String getAmountString() {
-        return "" + amount;
+        return "$" + amount;
     }
 
     public String getComment() {

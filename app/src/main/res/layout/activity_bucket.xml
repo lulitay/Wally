@@ -110,6 +110,15 @@
                             android:text="@string/entries"
                             style="@style/Subtitles" />
 
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/entries_unavailable"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="20dp"
+                            android:gravity="center"
+                            android:text="@string/no_entries_available"
+                            android:visibility="gone" />
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/bucket_entries"
                             android:layout_width="match_parent"

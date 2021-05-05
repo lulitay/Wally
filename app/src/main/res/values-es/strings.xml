@@ -51,4 +51,8 @@
     <string name="are_you_sure">¿Estás seguro?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="no_entries_available">No hay entradas en la cuenta</string>
+    <string name="error_future_date">No se puede elegir una fecha futura</string>
+    <string name="max_amount">Cantidad máxima es %1$d</string>
+    <string name="max_characters">Caracteres máximos son %1$d</string>
 </resources>

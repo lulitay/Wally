@@ -9,6 +9,7 @@ import androidx.room.Transaction;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 @Dao
 public interface BucketDao {
@@ -34,7 +35,7 @@ public interface BucketDao {
 
     @Transaction
     @Query("SELECT * FROM buckets WHERE title=:title")
-    Flowable<BucketEntity> getBucket(final String title);
+    Single<BucketEntity> getBucket(final String title);
 
     @Insert
     void addEntry(final BucketEntryEntity entry);
