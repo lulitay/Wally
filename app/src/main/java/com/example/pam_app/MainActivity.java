@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pam_app.activity.AddBucketActivity;
 import com.example.pam_app.activity.AddBucketEntryActivity;
-import com.example.pam_app.listener.Clickable;
+import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

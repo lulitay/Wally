@@ -1,6 +1,6 @@
 package com.example.pam_app.view;
 
-import com.example.pam_app.listener.Clickable;
+import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.model.BucketEntry;
 
 import java.util.List;

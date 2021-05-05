@@ -36,4 +36,12 @@
     <string name="no_savings_buckets_available">No hay buckets de ahorros</string>
     <string name="load_image">Cargar imagen</string>
     <string name="image">Imagen</string>
+    <string name="error">Algo salio mal</string>
+    <string name="error_get_bucket">Error mostrando balde</string>
+    <string name="error_delete_bucket">Error borrando balde</string>
+    <string name="success_delete_bucket">El balde se elimino exitosamente</string>
+    <string name="warning_bucket">No podras ver las imagenes de los baldes</string>
+    <string name="are_you_sure">¿Estas seguro?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
 </resources>
