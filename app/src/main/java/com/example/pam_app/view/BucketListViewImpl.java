@@ -41,8 +41,8 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private Clickable onAddBucketClickedListener;
     private ClickableWithParameter onBucketClickedListener;
 
-    private boolean isSpendingListExpanded = false;
-    private boolean isSavingsListExpanded = false;
+    private boolean isSpendingListExpanded = true;
+    private boolean isSavingsListExpanded = true;
     private boolean isSpendingListEmpty = true;
     private boolean isSavingsListEmpty = true;
 
@@ -126,6 +126,38 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
+    public void drawSpendingBucketList(){
+        TextView bucketsUnavailable = findViewById(R.id.spending_buckets_unavailable);
+        LinearLayout header = findViewById(R.id.spending_header);
+        ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
+
+        if (isSpendingListEmpty) {
+            bucketsUnavailable.setVisibility(View.VISIBLE);
+        } else {
+            spendingBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
+        }
+        isSpendingListExpanded = true;
+        indicator.setRotation(180);
+    }
+
+    @Override
+    public void drawSavingsBucketList(){
+        TextView bucketsUnavailable = findViewById(R.id.savings_buckets_unavailable);
+        LinearLayout header = findViewById(R.id.savings_header);
+        ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
+
+        if (isSavingsListEmpty) {
+            bucketsUnavailable.setVisibility(View.VISIBLE);
+        } else {
+            savingsBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
+        }
+        isSavingsListExpanded = true;
+        indicator.setRotation(180);
+    }
+
+    @Override
     public void onViewStop() {
         presenter.onViewDetached();
     }
@@ -173,14 +205,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
             isSpendingListExpanded = false;
             indicator.setRotation(0);
         } else {
-            if (isSpendingListEmpty) {
-                bucketsUnavailable.setVisibility(View.VISIBLE);
-            } else {
-                spendingBuckets.setVisibility(View.VISIBLE);
-                header.setVisibility(View.VISIBLE);
-            }
-            isSpendingListExpanded = true;
-            indicator.setRotation(180);
+            drawSpendingBucketList();
         }
     }
 
@@ -197,14 +222,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
             isSavingsListExpanded = false;
             indicator.setRotation(0);
         } else {
-            if (isSavingsListEmpty) {
-                bucketsUnavailable.setVisibility(View.VISIBLE);
-            } else {
-                savingsBuckets.setVisibility(View.VISIBLE);
-                header.setVisibility(View.VISIBLE);
-            }
-            isSavingsListExpanded = true;
-            indicator.setRotation(180);
+            drawSavingsBucketList();
         }
     }
 

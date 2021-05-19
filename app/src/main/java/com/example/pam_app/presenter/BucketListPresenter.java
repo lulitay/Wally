@@ -48,6 +48,8 @@ public class BucketListPresenter {
             view.get().bindSavingsBuckets(savingsBuckets);
             view.get().setIsSpendingListEmpty(spendingBuckets.isEmpty());
             view.get().setIsSavingsListEmpty(savingsBuckets.isEmpty());
+            view.get().drawSpendingBucketList();
+            view.get().drawSavingsBucketList();
         }
     }
 
