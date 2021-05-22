@@ -24,6 +24,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketEntryView;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -148,7 +149,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
             isCorrect = false;
         }
         if (bucket.length() == 0) {
-            bucket.setError(getString(R.string.error_empty));
+            TextInputLayout dropdown = createdView.findViewById(R.id.bucket_dropdown);
+            dropdown.setError(getString(R.string.error_empty));
             isCorrect = false;
         }
         return isCorrect;
