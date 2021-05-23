@@ -1,5 +1,6 @@
 package com.example.pam_app.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
@@ -61,6 +63,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         final EditText date = view.findViewById(R.id.date);
         final Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final AutoCompleteTextView bucket = view.findViewById(R.id.bucket);
+
+        bucket.setText(getArguments().getString("bucket_name"), false);
 
         setDatePicker(date, selectedDate);
         saveEntry(description, amount, date, selectedDate, bucket);

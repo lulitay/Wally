@@ -6,7 +6,7 @@ import com.example.pam_app.utils.listener.Clickable;
 public interface BucketView {
     void bind(Bucket bucket);
     void back();
-    void goToAddEntry();
+    void goToAddEntry(String bucketName);
     void showGetBucketError();
     void showDeleteBucketError();
     void showDeleteBucketSuccess();

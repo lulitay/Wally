@@ -1,5 +1,6 @@
 package com.example.pam_app.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,8 +23,14 @@ public class AddBucketEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
 
+        Uri uri = getIntent().getData();
+        String defaultBucket = null;
+        if(uri != null) {
+            defaultBucket = uri.getQueryParameter("bucket_name");
+        }
+
         setUpToolbar();
-        setUpTabs();
+        setUpTabs(defaultBucket);
     }
 
     private void setUpToolbar() {
@@ -39,8 +46,8 @@ public class AddBucketEntryActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpTabs() {
-        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
+    private void setUpTabs(String defaultBucket) {
+        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, defaultBucket);
         final TabLayout tabLayout = findViewById(R.id.add_entry_tabs);
         final ViewPager2 viewPager = findViewById(R.id.add_entry_view_pager);
         final Map<Integer, String> titles = new HashMap<Integer, String>() {
