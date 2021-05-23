@@ -32,8 +32,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
@@ -188,8 +190,13 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     }
 
     private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
-        final ArrayAdapter<BucketType> adapter = new ArrayAdapter<>(
-                getApplicationContext(), R.layout.list_item, BucketType.values()
+        ArrayList<String> bucketTypeResources = new ArrayList<>();
+        for(BucketType type : BucketType.values()){
+            bucketTypeResources.add(getString(type.getStringResource()));
+        }
+
+        final ArrayAdapter adapter = new ArrayAdapter(
+                getApplicationContext(), R.layout.list_item, bucketTypeResources
         );
         bucketType.setAdapter(adapter);
     }

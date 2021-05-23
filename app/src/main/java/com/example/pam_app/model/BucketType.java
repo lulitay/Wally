@@ -1,18 +1,19 @@
 package com.example.pam_app.model;
 
+import com.example.pam_app.R;
+
 public enum BucketType {
-    SPENDING("Spending"),
-    SAVING("Saving");
-    // INCOME("Income");
+    SPENDING(R.string.spending),
+    SAVING(R.string.saving);
+    // INCOME("Income", R.string.income);
 
-    private final String name;
+    private final int stringResource;
 
-    BucketType(final String name) {
-        this.name = name;
+    BucketType(int stringResource) {
+        this.stringResource = stringResource;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public int getStringResource(){
+        return stringResource;
     }
 }
