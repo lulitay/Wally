@@ -63,11 +63,12 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         final EditText date = view.findViewById(R.id.date);
         final Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final AutoCompleteTextView bucket = view.findViewById(R.id.bucket);
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
 
         bucket.setText(getArguments().getString("bucket_name"), false);
 
-        setDatePicker(date, selectedDate);
-        saveEntry(description, amount, date, selectedDate, bucket);
+        setDatePicker(date, selectedDate, datePicker);
+        saveEntry(description, amount, date, selectedDate, datePicker, bucket);
     }
 
     @Override
@@ -106,11 +107,12 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
                    final EditText amount,
                    final EditText date,
                    final Calendar selectedDate,
+                   final MaterialDatePicker<Long> datePicker,
                    final AutoCompleteTextView bucket
     ) {
         final Button saveEntry = createdView.findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(description, amount, date, selectedDate, bucket);
+            final boolean fields = checkFields(description, amount, date, selectedDate, datePicker, bucket);
             if (fields) {
                 presenter.saveBucketEntry(
                         Double.parseDouble(amount.getText().toString()),
@@ -128,6 +130,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
             final EditText amount,
             final EditText date,
             final Calendar selectedDate,
+            final MaterialDatePicker<Long> datePicker,
             final AutoCompleteTextView bucket
     ) {
         boolean isCorrect = true;
@@ -146,9 +149,13 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
             isCorrect = false;
         }
         if (selectedDate == null) {
+            date.requestFocus();
+            getParentFragmentManager().beginTransaction().remove(datePicker).commit();
             date.setError(getString(R.string.error_empty));
             isCorrect = false;
         } else if (selectedDate.getTimeInMillis() > new Date().getTime()) {
+            date.requestFocus();
+            getParentFragmentManager().beginTransaction().remove(datePicker).commit();
             date.setError(getString(R.string.error_future_date));
             isCorrect = false;
         }
@@ -160,14 +167,18 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         return isCorrect;
     }
 
-    void setDatePicker(final EditText date, final Calendar selectedDate) {
-        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.pick_a_date)).build();
-
+    void setDatePicker(final EditText date, final Calendar selectedDate, final MaterialDatePicker<Long> datePicker) {
         datePicker.addOnPositiveButtonClickListener(selection -> {
             date.setText(datePicker.getHeaderText());
             selectedDate.setTimeInMillis(selection);
         });
+
+        date.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker.isAdded()) {
+                datePicker.show(getParentFragmentManager(), "date_picker");
+            }
+        });
+
         date.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getParentFragmentManager(), "date_picker");

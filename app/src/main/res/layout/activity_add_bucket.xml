@@ -48,9 +48,9 @@
         android:hint="@string/due_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
+        android:clickable="true"
         style="@style/FormInputs"
-        android:focusable="false" />
+        android:focusable="true" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_load_image"

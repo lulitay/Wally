@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -90,9 +91,10 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         final Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
         final EditText target = findViewById(R.id.target);
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
 
-        setDatePicker(dueDate, selectedDate);
-        saveBucket(title, target, dueDate, selectedDate, bucketType);
+        setDatePicker(dueDate, selectedDate, datePicker);
+        saveBucket(title, target, dueDate, selectedDate, datePicker, bucketType);
         setBucketTypeValues(bucketType);
     }
 
@@ -106,8 +108,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imageView.setImageBitmap(selectedImage);
                 imagePath = imageUri.toString();
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
             }
@@ -118,10 +119,11 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                             final EditText target,
                             final EditText dueDate,
                             final Calendar selectedDate,
+                            MaterialDatePicker<Long> datePicker,
                             final AutoCompleteTextView bucketType) {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, selectedDate, bucketType, imagePath);
+            final boolean fields = checkFields(title, target, dueDate, selectedDate, datePicker, bucketType, imagePath);
             if (fields) {
                 presenter.saveBucket(
                         title.getText().toString(),
@@ -141,6 +143,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             final EditText target,
             final EditText dueDate,
             final Calendar selectedDate,
+            MaterialDatePicker<Long> datePicker,
             final AutoCompleteTextView bucketType,
             final String imagePath
     ) {
@@ -160,9 +163,13 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             isCorrect = false;
         }
         if (selectedDate == null) {
+            dueDate.requestFocus();
+            getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
             dueDate.setError(getString(R.string.error_empty));
             isCorrect = false;
         } else if (selectedDate.getTimeInMillis() < new Date().getTime()) {
+            dueDate.requestFocus();
+            getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
             dueDate.setError(getString(R.string.error_past_date));
             isCorrect = false;
         }
@@ -174,17 +181,21 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         return isCorrect;
     }
 
-    private void setDatePicker(final EditText date, final Calendar selectedDate) {
-        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.pick_a_date)).build();
-
+    private void setDatePicker(final EditText date, final Calendar selectedDate, MaterialDatePicker<Long> datePicker) {
         datePicker.addOnPositiveButtonClickListener(selection -> {
             date.setText(datePicker.getHeaderText());
             selectedDate.setTimeInMillis(selection);
         });
+
+        date.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker.isAdded()) {
+                datePicker.show(AddBucketActivity.this.getSupportFragmentManager(), "date_picker");
+            }
+        });
+
         date.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
-                datePicker.show(getSupportFragmentManager(), "date_picker");
+                datePicker.show(AddBucketActivity.this.getSupportFragmentManager(), "date_picker");
             }
         });
     }
