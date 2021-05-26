@@ -71,7 +71,8 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     public void bind(
             final Context context,
             final Clickable onAddBucketClickedListener,
-            final ClickableWithParameter onBucketClickedListener
+            final ClickableWithParameter onBucketClickedListener,
+            final List<Bucket> bucketList
     ) {
         setUpAddBucketButton();
         setUpSpendingCard();
@@ -81,7 +82,8 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
         this.onAddBucketClickedListener = onAddBucketClickedListener;
         this.onBucketClickedListener = onBucketClickedListener;
-        presenter.onViewAttached();
+        presenter.onBucketsReceived(bucketList);
+        //presenter.onViewAttached();
     }
 
     private void setUpAddBucketButton() {

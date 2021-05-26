@@ -16,13 +16,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pam_app.activity.AddBucketActivity;
 import com.example.pam_app.activity.AddBucketEntryActivity;
+import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.Bucket;
+import com.example.pam_app.presenter.MainPresenter;
+import com.example.pam_app.repository.BucketMapper;
+import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.listener.Clickable;
+import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
+import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
 import com.example.pam_app.view.ProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements Clickable {
@@ -43,9 +52,18 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
+    private MainPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(this.getApplicationContext()).bucketDao(),
+                new BucketMapper()
+        );
+        final SchedulerProvider provider = new AndroidSchedulerProvider();
+        presenter = new MainPresenter(bucketRepository, this, provider);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setSharedPreferencesListener(sharedPreferences);
@@ -95,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     }
 
     private void setUpBucketListView() {
+        presenter.getBucketListViewBuckets();
         bucketListView = findViewById(R.id.buckets);
-        bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity);
     }
 
     private void setUpProfileView() {
@@ -110,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     }
 
     public void launchBucketDetailActivity(int bucketId) {
-        String uri = "wally://bucket/detail?id=" + bucketId;
+        final String uri = "wally://bucket/detail?id=" + bucketId;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
     }
@@ -118,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     public void launchAddBucketActivity() {
         final Intent intent = new Intent(this, AddBucketActivity.class);
         startActivity(intent);
+    }
+
+    public void onBucketListViewReceived(final List<Bucket> bucketList) {
+        bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity, bucketList);
     }
 
     private void setSharedPreferencesListener(final SharedPreferences sharedPreferences) {
@@ -172,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     @Override
     protected void onStop() {
         super.onStop();
+        presenter.onViewStop();
         homeView.onViewStopped();
         bucketListView.onViewStop();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);

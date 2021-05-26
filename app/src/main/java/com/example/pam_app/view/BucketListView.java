@@ -22,7 +22,7 @@ public interface BucketListView {
     void collapseSavingsBuckets();
 
     void bind(Context context, Clickable launchAddBucketActivity,
-              ClickableWithParameter launchBucketDetailActivity);
+              ClickableWithParameter launchBucketDetailActivity, final List<Bucket> bucketList);
 
     void onViewStop();
 
