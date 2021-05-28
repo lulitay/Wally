@@ -1,6 +1,5 @@
 package com.example.pam_app.repository;
 
-import com.example.pam_app.db.BucketEntity;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 
@@ -14,6 +13,8 @@ public interface BucketRepository {
     Flowable<List<Bucket>> getList();
 
     Flowable<List<Bucket>> getList(final boolean type, final Date date);
+
+    void update(final Bucket bucket);
 
     void create(final Bucket bucket);
 

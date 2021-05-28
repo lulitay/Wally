@@ -46,6 +46,11 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
+    public void update(Bucket bucket) {
+        bucketDao.update(bucketMapper.toEntity(bucket));
+    }
+
+    @Override
     public void create(Bucket bucket) {
         bucketDao.create(bucketMapper.toEntity(bucket));
     }
