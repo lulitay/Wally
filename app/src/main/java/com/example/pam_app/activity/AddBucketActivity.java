@@ -28,6 +28,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -88,10 +89,18 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         final EditText dueDate = findViewById(R.id.due_date);
         final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
         final EditText target = findViewById(R.id.target);
+        final SwitchMaterial isRecurrent = findViewById(R.id.switch_recurrent_bucket);
 
         setDatePicker(dueDate, date);
-        saveBucket(title, target, dueDate, date, bucketType);
+        saveBucket(title, target, dueDate, date, bucketType, isRecurrent);
         setBucketTypeValues(bucketType);
+        setIsRecurrentSwitch(isRecurrent);
+    }
+
+    private void setIsRecurrentSwitch(final SwitchMaterial isRecurrent) {
+        isRecurrent.setOnClickListener(v -> {
+            presenter.onIsRecurrentSwitchChange(isRecurrent.isChecked());
+        });
     }
 
     @Override
@@ -116,17 +125,20 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                             final EditText target,
                             final EditText dueDate,
                             final Calendar selectedDate,
-                            final AutoCompleteTextView bucketType) {
+                            final AutoCompleteTextView bucketType,
+                            final SwitchMaterial isRecurrent) {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, selectedDate, bucketType, imagePath);
+            final boolean fields = checkFields(title, target, dueDate, selectedDate, bucketType,
+                    imagePath, isRecurrent.isChecked());
             if (fields) {
                 presenter.saveBucket(
                         title.getText().toString(),
                         selectedDate.getTime(),
                         BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
                         Double.parseDouble(target.getText().toString()),
-                        imagePath
+                        imagePath,
+                        isRecurrent.isChecked()
                 );
             }
         });
@@ -140,7 +152,8 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             final EditText dueDate,
             final Calendar selectedDate,
             final AutoCompleteTextView bucketType,
-            final String imagePath
+            final String imagePath,
+            final boolean isRecurrent
     ) {
         boolean isCorrect = true;
         if (title.length() == 0) {
@@ -157,10 +170,10 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             target.setError(getString(R.string.max_amount, MAX_AMOUNT));
             isCorrect = false;
         }
-        if (selectedDate == null) {
+        if (!isRecurrent && selectedDate == null) {
             dueDate.setError(getString(R.string.error_empty));
             isCorrect = false;
-        } else if (selectedDate.getTimeInMillis() < new Date().getTime()) {
+        } else if (!isRecurrent && selectedDate.getTimeInMillis() < new Date().getTime()) {
             dueDate.setError(getString(R.string.error_past_date));
             isCorrect = false;
         }
@@ -215,6 +228,12 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     public void goToLoadImage() {
         galleryResultLauncher.launch("image/*");
+    }
+
+    @Override
+    public void changeDatePickerState(boolean state) {
+        final EditText dueDate = findViewById(R.id.due_date);
+        dueDate.setEnabled(state);
     }
 
     @Override

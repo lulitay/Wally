@@ -5,7 +5,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.TypeConverters;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -16,6 +18,10 @@ public interface BucketDao {
 
     @Query("SELECT * FROM buckets")
     Flowable<List<BucketEntity>> getList();
+
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM buckets WHERE isRecurrent=:type AND dueDate<:date")
+    Flowable<List<BucketEntity>> getList(final boolean type, final Date date);
 
     @Query("SELECT title FROM buckets WHERE bucketType=:type")
     Flowable<List<String>> getTitleListByType(final int type);

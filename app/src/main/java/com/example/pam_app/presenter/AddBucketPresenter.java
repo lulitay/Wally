@@ -12,6 +12,11 @@ import java.util.Date;
 import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
 
+import java.util.Calendar;
+
+import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_MONTH;
+
 public class AddBucketPresenter {
 
     private final WeakReference<AddBucketView> addBucketView;
@@ -30,8 +35,9 @@ public class AddBucketPresenter {
     }
 
     public void saveBucket(final String name, final Date dueDate, final BucketType bucketType,
-                           final double target, final String imagePath) {
-        final Bucket bucket = new Bucket(name, dueDate, bucketType, target, imagePath);
+                           final double target, final String imagePath, final boolean isRecurrent) {
+        final Date date = isRecurrent ? getFirstDayOfNextMonth() : dueDate;
+        final Bucket bucket = new Bucket(name, date, bucketType, target, imagePath, isRecurrent);
         disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -55,5 +61,21 @@ public class AddBucketPresenter {
         if (disposable != null) {
             disposable.dispose();
         }
+    }
+
+    public void onIsRecurrentSwitchChange(final boolean isRecurrent) {
+        if (addBucketView.get() != null) {
+            addBucketView.get().changeDatePickerState(!isRecurrent);
+        }
+    }
+
+    private Date getFirstDayOfNextMonth() {
+        Calendar today = getInstance();
+        Calendar next = getInstance();
+        next.clear();
+        next.set(YEAR, today.get(YEAR));
+        next.set(MONTH, today.get(MONTH) + 1);
+        next.set(DAY_OF_MONTH, 1);
+        return next.getTime();
     }
 }

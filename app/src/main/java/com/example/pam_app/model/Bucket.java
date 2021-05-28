@@ -20,9 +20,10 @@ public class Bucket {
     public final List<BucketEntry> entries;
     public final Integer id;
     public final String imagePath;
+    public final boolean isRecurrent;
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries) {
+                  List<BucketEntry> entries, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
@@ -30,10 +31,11 @@ public class Bucket {
         this.entries = entries;
         this.id = null;
         this.imagePath = null;
+        this.isRecurrent = isRecurrent;
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries, int id, String imagePath) {
+                  List<BucketEntry> entries, int id, String imagePath, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
@@ -41,9 +43,10 @@ public class Bucket {
         this.entries = entries;
         this.id = id;
         this.imagePath = imagePath;
+        this.isRecurrent = isRecurrent;
     }
 
-    public Bucket(String title, Date dueDate, BucketType bucketType, double target) {
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
@@ -51,9 +54,10 @@ public class Bucket {
         this.entries = new LinkedList<>();
         this.id = null;
         this.imagePath = null;
+        this.isRecurrent = isRecurrent;
     }
 
-    public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath) {
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
@@ -61,6 +65,7 @@ public class Bucket {
         this.entries = new LinkedList<>();
         this.id = null;
         this.imagePath = imagePath;
+        this.isRecurrent = isRecurrent;
     }
 
     public int getProgress() {

@@ -7,4 +7,6 @@ public interface AddBucketView {
     void onSuccessSavingBucket(final String text);
 
     void goToLoadImage();
+
+    void changeDatePickerState(final boolean state);
 }
