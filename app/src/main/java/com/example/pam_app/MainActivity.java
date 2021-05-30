@@ -21,6 +21,8 @@ import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.LanguagesRepository;
+import com.example.pam_app.repository.LanguagesRepositoryImpl;
 import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.contracts.BucketContract;
 import com.example.pam_app.utils.listener.Clickable;
@@ -38,8 +40,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements Clickable, MainView {
 
-    public static final String KEY_PREF_LANGUAGE = "pref_language";
-
     private static final int HOME_VIEW = 0;
     private static final int BUCKETS_VIEW = 1;
     private static final int PROFILE_VIEW = 2;
@@ -52,35 +52,29 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     private ProfileView profileView;
 
     private ActivityResultLauncher<String> addBucketResultLauncher;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
     private MainPresenter presenter;
+    private LanguagesRepository languagesRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final BucketRepository bucketRepository = new RoomBucketRepository(
                 WallyDatabase.getInstance(this.getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
-
         final SchedulerProvider provider = new AndroidSchedulerProvider();
-        presenter = new MainPresenter(bucketRepository, this, provider);
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        setSharedPreferencesListener(sharedPreferences);
-        setUpChosenLanguage();
-
+        languagesRepository = new LanguagesRepositoryImpl(sharedPreferences);
+        presenter = new MainPresenter(bucketRepository, this, provider, languagesRepository);
         setContentView(R.layout.activity_main);
 
+        setUpChosenLanguage();
         setUpViews();
         setUpBottomNavigation();
         setUpActivityResultLauncher();
-
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this::addEntry);
+        setUpFAB();
     }
 
     @Override
@@ -94,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         presenter.onViewStop();
         homeView.onViewStopped();
         bucketListView.onViewStop();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        languagesRepository.unregisterOnSharedPreferencesListener();
     }
 
     @Override
@@ -115,13 +109,21 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         super.onStart();
         presenter.onViewAttached();
         homeView.bind();
-        profileView.bind(sharedPreferences);
-
+        profileView.bind(languagesRepository);
     }
 
     @Override
     public void onBucketListViewReceived(final List<Bucket> bucketList) {
         bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity, bucketList);
+    }
+
+    @Override
+    public void updateLocale(final Locale locale) {
+        setLocale(locale);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -169,33 +171,9 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         addBucketResultLauncher.launch("addBucket");
     }
 
-    private void setSharedPreferencesListener(final SharedPreferences sharedPreferences) {
-        this.onSharedPreferenceChangeListener =
-            (sp, key) -> {
-                if (key.equals(KEY_PREF_LANGUAGE)) {
-                    final String languagePref = sp.getString(KEY_PREF_LANGUAGE, "");
-                    switch (languagePref) {
-                        case "en":
-                            Locale localeEN = new Locale("en");
-                            MainActivity.this.updateLocale(localeEN);
-                            break;
-                        case "es":
-                            Locale localeES = new Locale("es");
-                            MainActivity.this.updateLocale(localeES);
-                            break;
-
-                    }
-                }
-            };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
-    }
-
-    private void updateLocale(final Locale locale) {
-        setLocale(locale);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(getIntent());
-        overridePendingTransition(0, 0);
+    private void setUpFAB() {
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this::addEntry);
     }
 
     private void setLocale(final Locale locale) {
@@ -208,8 +186,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void setUpChosenLanguage() {
-        final Locale locale = new Locale(sharedPreferences.getString(KEY_PREF_LANGUAGE, "en"));
-        setLocale(locale);
+        setLocale(languagesRepository.getCurrentLocale());
     }
 
     private void setUpActivityResultLauncher() {
