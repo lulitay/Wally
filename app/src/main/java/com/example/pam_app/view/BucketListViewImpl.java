@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
 import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.BucketType;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.listener.ClickableWithParameter;
 import com.example.pam_app.model.Bucket;
@@ -145,6 +146,15 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     @Override
     public void setIsSavingsListEmpty(boolean isEmpty) {
         isSavingsListEmpty = isEmpty;
+    }
+
+    @Override
+    public void onBucketAdded(final Bucket bucket) {
+        if (bucket.bucketType.equals(BucketType.SAVING)) {
+            savingsAdapter.showNewBucket(bucket);
+        } else {
+            spendingAdapter.showNewBucket(bucket);
+        }
     }
 
     @Override

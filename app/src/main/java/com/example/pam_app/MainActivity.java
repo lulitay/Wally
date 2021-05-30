@@ -12,9 +12,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ViewFlipper;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.pam_app.activity.AddBucketActivity;
 import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
@@ -22,11 +22,13 @@ import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.RoomBucketRepository;
+import com.example.pam_app.utils.contracts.BucketContract;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
+import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.ProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,7 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements Clickable {
+public class MainActivity extends AppCompatActivity implements Clickable, MainView {
 
     public static final String KEY_PREF_LANGUAGE = "pref_language";
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
     private BucketListView bucketListView;
     private ProfileView profileView;
 
+    private ActivityResultLauncher<String> addBucketResultLauncher;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements Clickable {
                 WallyDatabase.getInstance(this.getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
+
         final SchedulerProvider provider = new AndroidSchedulerProvider();
         presenter = new MainPresenter(bucketRepository, this, provider);
 
@@ -73,9 +77,51 @@ public class MainActivity extends AppCompatActivity implements Clickable {
 
         setUpViews();
         setUpBottomNavigation();
+        setUpActivityResultLauncher();
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this::addEntry);
+    }
+
+    @Override
+    public void onClick() {
+        addBucketResultLauncher.launch("addBucket");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onViewStop();
+        homeView.onViewStopped();
+        bucketListView.onViewStop();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeView.onViewResumed();
+        bucketListView.onViewResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        homeView.onViewPaused();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.onViewAttached();
+        homeView.bind();
+        profileView.bind(sharedPreferences);
+
+    }
+
+    @Override
+    public void onBucketListViewReceived(final List<Bucket> bucketList) {
+        bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity, bucketList);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -102,64 +148,45 @@ public class MainActivity extends AppCompatActivity implements Clickable {
 
     private void setUpViews() {
         viewFlipper = findViewById(R.id.switcher);
-        setUpHomeView();
-        setUpBucketListView();
-        setUpProfileView();
-    }
-
-    private void setUpHomeView() {
         homeView = findViewById(R.id.home);
-        homeView.bind();
-    }
-
-    private void setUpBucketListView() {
-        presenter.getBucketListViewBuckets();
         bucketListView = findViewById(R.id.buckets);
-    }
-
-    private void setUpProfileView() {
         profileView = findViewById(R.id.profile);
-        profileView.bind(sharedPreferences);
     }
 
-    public void addEntry(final View view) {
+
+    private void addEntry(final View view) {
         final Intent intent = new Intent(this, AddBucketEntryActivity.class);
         startActivity(intent);
     }
 
-    public void launchBucketDetailActivity(int bucketId) {
+    private void launchBucketDetailActivity(int bucketId) {
         final String uri = "wally://bucket/detail?id=" + bucketId;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
     }
 
-    public void launchAddBucketActivity() {
-        final Intent intent = new Intent(this, AddBucketActivity.class);
-        startActivity(intent);
-    }
-
-    public void onBucketListViewReceived(final List<Bucket> bucketList) {
-        bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity, bucketList);
+    private void launchAddBucketActivity() {
+        addBucketResultLauncher.launch("addBucket");
     }
 
     private void setSharedPreferencesListener(final SharedPreferences sharedPreferences) {
         this.onSharedPreferenceChangeListener =
-                (sp, key) -> {
-                    if (key.equals(KEY_PREF_LANGUAGE)) {
-                        final String languagePref = sp.getString(KEY_PREF_LANGUAGE, "");
-                        switch (languagePref) {
-                            case "en":
-                                Locale localeEN = new Locale("en");
-                                MainActivity.this.updateLocale(localeEN);
-                                break;
-                            case "es":
-                                Locale localeES = new Locale("es");
-                                MainActivity.this.updateLocale(localeES);
-                                break;
+            (sp, key) -> {
+                if (key.equals(KEY_PREF_LANGUAGE)) {
+                    final String languagePref = sp.getString(KEY_PREF_LANGUAGE, "");
+                    switch (languagePref) {
+                        case "en":
+                            Locale localeEN = new Locale("en");
+                            MainActivity.this.updateLocale(localeEN);
+                            break;
+                        case "es":
+                            Locale localeES = new Locale("es");
+                            MainActivity.this.updateLocale(localeES);
+                            break;
 
-                        }
                     }
-                };
+                }
+            };
         sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
 
@@ -185,32 +212,10 @@ public class MainActivity extends AppCompatActivity implements Clickable {
         setLocale(locale);
     }
 
-    @Override
-    public void onClick() {
-        final Intent intent = new Intent(this, AddBucketActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.onViewStop();
-        homeView.onViewStopped();
-        bucketListView.onViewStop();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        homeView.onViewResumed();
-        bucketListView.onViewResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        homeView.onViewPaused();
-
+    private void setUpActivityResultLauncher() {
+        addBucketResultLauncher = registerForActivityResult(
+                new BucketContract(),
+                result -> bucketListView.onBucketAdded(result)
+        );
     }
 }

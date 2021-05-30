@@ -31,4 +31,6 @@ public interface BucketListView {
     void setIsSpendingListEmpty(boolean isEmpty);
 
     void setIsSavingsListEmpty(boolean isEmpty);
+
+    void onBucketAdded(final Bucket bucket);
 }

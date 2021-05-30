@@ -3,7 +3,6 @@ package com.example.pam_app.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
 import com.example.pam_app.presenter.AddBucketPresenter;
 import com.example.pam_app.repository.BucketMapper;
@@ -64,21 +64,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         this.imageView = findViewById(R.id.image_view);
         this.date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
-        this.galleryResultLauncher = registerForActivityResult(
-                new GalleryContract(),
-                result -> {
-                    if (result != null) {
-                        try {
-                            final InputStream imageStream = getContentResolver().openInputStream(result);
-                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                            imageView.setImageBitmap(selectedImage);
-                            imagePath = result.toString();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+        registerImageActivityResult();
     }
 
     @Override
@@ -89,41 +75,22 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
         final EditText target = findViewById(R.id.target);
 
-        setDatePicker(dueDate, date);
-        saveBucket(title, target, dueDate, date, bucketType);
+        setDatePicker(dueDate);
+        saveBucket(title, target, dueDate, bucketType);
         setBucketTypeValues(bucketType);
-    }
-
-    @Override
-    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
-        super.onActivityResult(reqCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            final Uri imageUri = data.getData();
-            try {
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                imageView.setImageBitmap(selectedImage);
-                imagePath = imageUri.toString();
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private void saveBucket(final EditText title,
                             final EditText target,
                             final EditText dueDate,
-                            final Calendar selectedDate,
                             final AutoCompleteTextView bucketType) {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, selectedDate, bucketType, imagePath);
+            final boolean fields = checkFields(title, target, dueDate, bucketType, imagePath);
             if (fields) {
                 presenter.saveBucket(
                         title.getText().toString(),
-                        selectedDate.getTime(),
+                        date.getTime(),
                         BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
                         Double.parseDouble(target.getText().toString()),
                         imagePath
@@ -138,7 +105,6 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             final EditText title,
             final EditText target,
             final EditText dueDate,
-            final Calendar selectedDate,
             final AutoCompleteTextView bucketType,
             final String imagePath
     ) {
@@ -157,10 +123,10 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
             target.setError(getString(R.string.max_amount, MAX_AMOUNT));
             isCorrect = false;
         }
-        if (selectedDate == null) {
+        if (date == null) {
             dueDate.setError(getString(R.string.error_empty));
             isCorrect = false;
-        } else if (selectedDate.getTimeInMillis() < new Date().getTime()) {
+        } else if (date.getTimeInMillis() < new Date().getTime()) {
             dueDate.setError(getString(R.string.error_past_date));
             isCorrect = false;
         }
@@ -171,15 +137,15 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         return isCorrect;
     }
 
-    private void setDatePicker(final EditText date, final Calendar selectedDate) {
+    private void setDatePicker(final EditText editTextDate) {
         final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.pick_a_date)).build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            date.setText(datePicker.getHeaderText());
-            selectedDate.setTimeInMillis(selection);
+            editTextDate.setText(datePicker.getHeaderText());
+            date.setTimeInMillis(selection);
         });
-        date.setOnClickListener(v -> {
+        editTextDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
@@ -193,6 +159,24 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         bucketType.setAdapter(adapter);
     }
 
+    private void registerImageActivityResult() {
+        this.galleryResultLauncher = registerForActivityResult(
+            new GalleryContract(),
+            result -> {
+                if (result != null) {
+                    try {
+                        final InputStream imageStream = getContentResolver().openInputStream(result);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        imageView.setImageBitmap(selectedImage);
+                        imagePath = result.toString();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+    }
+
     @Override
     public void onErrorSavingBucket() {
         Toast.makeText(
@@ -203,13 +187,16 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     }
 
     @Override
-    public void onSuccessSavingBucket(final String title) {
+    public void onSuccessSavingBucket(final Bucket bucket) {
         Toast.makeText(
                 getApplicationContext(),
-                getString(R.string.bucket_saved, title),
+                getString(R.string.bucket_saved, bucket.title),
                 Toast.LENGTH_LONG
         ).show();
-        onBackPressed();
+        final Intent result = new Intent();
+        result.putExtra("bucket", bucket);
+        setResult(RESULT_OK, result);
+        finish();
     }
 
     @Override
