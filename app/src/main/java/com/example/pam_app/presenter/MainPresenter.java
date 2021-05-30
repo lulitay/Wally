@@ -45,8 +45,4 @@ public class MainPresenter {
     public void onViewStop() {
         disposable.dispose();
     }
-
-    public void onViewResume() {
-        //disposable
-    }
 }
