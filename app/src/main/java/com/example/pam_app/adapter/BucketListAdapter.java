@@ -35,6 +35,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
         notifyDataSetChanged();
     }
 
+    public void showNewBucket(final Bucket bucket) {
+        bucketList.add(bucket);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public BucketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

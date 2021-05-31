@@ -1,5 +1,6 @@
 package com.example.pam_app.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Math.sqrt;
-
-public class Bucket {
+public class Bucket implements Serializable {
     public final String title;
     public final Date dueDate;
     public final BucketType bucketType;
