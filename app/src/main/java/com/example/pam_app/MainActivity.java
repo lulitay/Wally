@@ -30,6 +30,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
+import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.IncomeView;
 import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.ProfileView;
