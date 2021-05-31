@@ -84,7 +84,6 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
         this.onAddBucketClickedListener = onAddBucketClickedListener;
         this.onBucketClickedListener = onBucketClickedListener;
         presenter.onBucketsReceived(bucketList);
-        //presenter.onViewAttached();
     }
 
     private void setUpAddBucketButton() {
