@@ -1,12 +1,12 @@
 package com.example.pam_app.model;
 
-public enum BucketType {
-    SPENDING("Spending"),
-    SAVING("Saving");
+public enum IncomeType {
+    MONTHLY("Monthly"),
+    EXTRA("Extra");
 
     private final String name;
 
-    BucketType(final String name) {
+    IncomeType(final String name) {
         this.name = name;
     }
 

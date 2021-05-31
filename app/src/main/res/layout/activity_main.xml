@@ -26,6 +26,12 @@
             android:layout_height="match_parent"
             tools:context=".MainActivity" />
 
+        <com.example.pam_app.view.IncomeViewImpl
+            android:id="@+id/income"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity" />
+
         <com.example.pam_app.view.ProfileViewImpl
             android:id="@+id/profile"
             android:layout_width="match_parent"

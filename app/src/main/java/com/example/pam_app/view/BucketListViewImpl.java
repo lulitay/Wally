@@ -57,7 +57,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     public BucketListViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
-        inflate(context, R.layout.activity_bucket_list, this);
+        inflate(context, R.layout.view_bucket_list, this);
         setOrientation(VERTICAL);
 
         final BucketRepository bucketRepository = new RoomBucketRepository(

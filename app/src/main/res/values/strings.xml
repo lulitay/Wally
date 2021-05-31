@@ -57,4 +57,5 @@
     <string name="error_past_date">Can\'t be a past date</string>
     <string name="error_saving_bucket">Error saving bucket</string>
     <string name="bucket_saved">Bucket %1$s saved</string>
+    <string name="monthly_income">Monthly income</string>
 </resources>

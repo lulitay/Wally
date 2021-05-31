@@ -39,7 +39,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     public HomeViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
 
-        inflate(context, R.layout.home_view, this);
+        inflate(context, R.layout.view_home, this);
         setGravity(CENTER);
         setOrientation(VERTICAL);
 
@@ -58,7 +58,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     }
 
     @Override
-    public void onViewStopped() {
+    public void onViewStop() {
         homePresenter.onViewDetached();
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 public interface HomeView {
 
     void bind();
-    void onViewStopped();
+    void onViewStop();
     void onViewResumed();
     void onViewPaused();
     void showEntries(final List<BucketEntry> entries);

@@ -30,6 +30,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
+import com.example.pam_app.view.IncomeView;
 import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.ProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,13 +43,15 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
 
     private static final int HOME_VIEW = 0;
     private static final int BUCKETS_VIEW = 1;
-    private static final int PROFILE_VIEW = 2;
+    private static final int INCOME_VIEW = 2;
+    private static final int PROFILE_VIEW = 3;
 
     private BottomNavigationView navigationView;
     private ViewFlipper viewFlipper;
 
     private HomeView homeView;
     private BucketListView bucketListView;
+    private IncomeView incomeView;
     private ProfileView profileView;
 
     private ActivityResultLauncher<String> addBucketResultLauncher;
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     protected void onStop() {
         super.onStop();
         presenter.onViewStop();
-        homeView.onViewStopped();
+        homeView.onViewStop();
         bucketListView.onViewStop();
         languagesRepository.unregisterOnSharedPreferencesListener();
     }
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     private void setUpBottomNavigation() {
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelectedItemId(R.id.home);
-
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
@@ -138,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
                     return true;
                 case R.id.buckets:
                     viewFlipper.setDisplayedChild(BUCKETS_VIEW);
+                    return true;
+                case R.id.income:
+                    viewFlipper.setDisplayedChild(INCOME_VIEW);
                     return true;
                 case R.id.profile:
                     viewFlipper.setDisplayedChild(PROFILE_VIEW);
@@ -152,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         viewFlipper = findViewById(R.id.switcher);
         homeView = findViewById(R.id.home);
         bucketListView = findViewById(R.id.buckets);
+        incomeView = findViewById(R.id.income);
         profileView = findViewById(R.id.profile);
     }
 
