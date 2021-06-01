@@ -13,17 +13,35 @@ import android.view.View;
 import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.pam_app.activity.AddBucketActivity;
 import com.example.pam_app.activity.AddBucketEntryActivity;
+import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.repository.BucketMapper;
+import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.listener.Clickable;
+import com.example.pam_app.utils.workers.RecurrentBucketWorker;
+import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
 import com.example.pam_app.view.ProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.Calendar.DAY_OF_MONTH;
 
 public class MainActivity extends AppCompatActivity implements Clickable {
 
@@ -58,6 +76,39 @@ public class MainActivity extends AppCompatActivity implements Clickable {
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this::addEntry);
+
+        setUpRecurrentBucketWorker();
+    }
+
+    private void setUpRecurrentBucketWorker() {
+        BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
+                new BucketMapper()
+        );
+        androidx.work.Configuration myConfig = new androidx.work.Configuration.Builder()
+                .setMinimumLoggingLevel(android.util.Log.INFO)
+                .setWorkerFactory(new RecurrentBucketWorkerFactory(bucketRepository))
+                .build();
+        WorkManager.initialize(this, myConfig);
+
+        WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+
+        Calendar currentDate = Calendar.getInstance();
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.set(Calendar.HOUR_OF_DAY, 1);
+        dueDate.set(Calendar.MINUTE, 0);
+        dueDate.set(Calendar.SECOND, 0);
+        dueDate.set(Calendar.DAY_OF_MONTH, currentDate.get(DAY_OF_MONTH) + 1);
+
+        long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        PeriodicWorkRequest bucketRecurrent =
+                new PeriodicWorkRequest.Builder(RecurrentBucketWorker.class,
+                        1, TimeUnit.DAYS,
+                        30, TimeUnit.MINUTES)
+                        .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+                        .build();
+        workManager.enqueueUniquePeriodicWork("recurrent_bucket",
+                ExistingPeriodicWorkPolicy.REPLACE, bucketRecurrent);
     }
 
     @SuppressLint("NonConstantResourceId")

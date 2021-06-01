@@ -25,7 +25,7 @@ public interface BucketDao {
     Flowable<List<BucketEntity>> getList(final boolean type, final Date date);
 
     @Update
-    public void update(final BucketEntity bucket);
+    void update(final BucketEntity bucket);
 
     @Query("SELECT title FROM buckets WHERE bucketType=:type")
     Flowable<List<String>> getTitleListByType(final int type);

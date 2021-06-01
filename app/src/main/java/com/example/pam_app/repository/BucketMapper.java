@@ -36,7 +36,7 @@ public class BucketMapper {
 
     public BucketEntity toEntity(final Bucket bucket) {
         return new BucketEntity(bucket.title, bucket.dueDate, bucket.bucketType.ordinal(),
-                bucket.target, bucket.imagePath, bucket.isRecurrent);
+                bucket.target, bucket.imagePath, bucket.isRecurrent, bucket.id);
     }
 
     public BucketEntry toModel(final BucketEntryEntity bucketEntryEntity) {

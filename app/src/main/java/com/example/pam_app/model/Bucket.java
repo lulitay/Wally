@@ -35,7 +35,7 @@ public class Bucket {
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries, int id, String imagePath, boolean isRecurrent) {
+                  List<BucketEntry> entries, Integer id, String imagePath, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
@@ -96,6 +96,11 @@ public class Bucket {
             return "" + diff.get(TimeUnit.DAYS) + "D " + diff.get(TimeUnit.HOURS) + "Hs";
         }
         return "0D 0Hs";
+    }
+
+    public Bucket setDueDate(final Date newDueDate) {
+        return new Bucket(title, newDueDate, bucketType, target,
+                entries, id, imagePath, isRecurrent);
     }
 
     private Map<TimeUnit,Long> computeDiff(Date date1, Date date2) {

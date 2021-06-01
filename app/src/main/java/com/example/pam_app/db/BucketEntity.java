@@ -19,12 +19,15 @@ public class BucketEntity {
     public final boolean isRecurrent;
 
     public BucketEntity(String title, Date dueDate, int bucketType, double target, String imagePath,
-                        boolean isRecurrent) {
+                        boolean isRecurrent, Integer id) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
         this.imagePath = imagePath;
         this.isRecurrent = isRecurrent;
+        if (id != null) {
+            this.id = id;
+        }
     }
 }
