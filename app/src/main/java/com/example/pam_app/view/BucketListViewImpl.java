@@ -128,7 +128,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
-    public void drawSpendingBucketList(){
+    public void drawSpendingBucketList() {
         TextView bucketsUnavailable = findViewById(R.id.spending_buckets_unavailable);
         LinearLayout header = findViewById(R.id.spending_header);
         ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
@@ -144,7 +144,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
-    public void drawSavingsBucketList(){
+    public void drawSavingsBucketList() {
         TextView bucketsUnavailable = findViewById(R.id.savings_buckets_unavailable);
         LinearLayout header = findViewById(R.id.savings_header);
         ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
@@ -181,10 +181,12 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     @Override
     public void onBucketAdded(final Bucket bucket) {
-        if (bucket.bucketType.equals(BucketType.SAVING)) {
-            savingsAdapter.showNewBucket(bucket);
-        } else {
-            spendingAdapter.showNewBucket(bucket);
+        if (bucket != null) {
+            if (bucket.bucketType.equals(BucketType.SAVING)) {
+                savingsAdapter.showNewBucket(bucket);
+            } else {
+                spendingAdapter.showNewBucket(bucket);
+            }
         }
     }
 
