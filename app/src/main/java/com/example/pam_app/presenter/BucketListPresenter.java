@@ -25,13 +25,14 @@ public class BucketListPresenter {
     }
 
     public void onViewAttached() {
-        disposable = repository.getList()
-                .subscribeOn(schedulerProvider.computation())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(this::onBucketsReceived, this::onBucketsError);
+
     }
 
-    private void onBucketsReceived(final List<Bucket> model) {
+    public void onViewResume() {
+
+    }
+
+    public void onBucketsReceived(final List<Bucket> model) {
         final List<Bucket> spendingBuckets = new ArrayList<>();
         final List<Bucket> savingsBuckets = new ArrayList<>();
 
@@ -58,7 +59,7 @@ public class BucketListPresenter {
     }
 
     public void onViewDetached() {
-        disposable.dispose();
+        //disposable.dispose();
     }
 
     public void onBucketClicked(int bucketId) {

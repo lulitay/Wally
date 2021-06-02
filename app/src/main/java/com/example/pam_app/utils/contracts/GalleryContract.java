@@ -16,8 +16,7 @@ public class GalleryContract extends ActivityResultContract<String, Uri> {
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, @NonNull String input) {
-        return new Intent(Intent.ACTION_PICK)
-                .setType(input);
+        return new Intent(Intent.ACTION_PICK).setType(input);
     }
 
     @Nullable
@@ -30,7 +29,9 @@ public class GalleryContract extends ActivityResultContract<String, Uri> {
     @Nullable
     @Override
     public final Uri parseResult(int resultCode, @Nullable Intent intent) {
-        if (intent == null || resultCode != Activity.RESULT_OK) return null;
+        if (intent == null || resultCode != Activity.RESULT_OK) {
+            return null;
+        }
         return intent.getData();
     }
 }

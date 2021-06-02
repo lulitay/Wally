@@ -1,8 +1,8 @@
 package com.example.pam_app.view;
 
-import android.content.SharedPreferences;
+import com.example.pam_app.repository.LanguagesRepository;
 
 public interface ProfileView {
 
-    void bind(final SharedPreferences sharedPreferences);
+    void bind(final LanguagesRepository languagesRepository);
 }
