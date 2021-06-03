@@ -70,8 +70,8 @@ public class AddBucketPresenter {
     }
 
     private Date getFirstDayOfNextMonth() {
-        Calendar today = getInstance();
-        Calendar next = getInstance();
+        final Calendar today = getInstance();
+        final Calendar next = getInstance();
         next.clear();
         next.set(YEAR, today.get(YEAR));
         next.set(MONTH, today.get(MONTH) + 1);

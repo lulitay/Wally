@@ -127,14 +127,14 @@ public class Bucket implements Serializable {
         return result;
     }
 
-    private void initEntries(List<BucketEntry> entries) {
+    private void initEntries(final List<BucketEntry> entries) {
         if (entries != null) {
-            Calendar currentDate = Calendar.getInstance();
+            final Calendar currentDate = Calendar.getInstance();
             currentDate.set(Calendar.HOUR_OF_DAY, 0);
             currentDate.set(Calendar.MINUTE, 0);
             currentDate.set(Calendar.SECOND, 0);
             currentDate.set(Calendar.DAY_OF_MONTH, 1);
-            Date firstDayOfMonth = currentDate.getTime();
+            final Date firstDayOfMonth = currentDate.getTime();
             for (BucketEntry e : entries) {
                 if (this.isRecurrent && e.date.before(firstDayOfMonth)) {
                     this.oldEntries.add(e);

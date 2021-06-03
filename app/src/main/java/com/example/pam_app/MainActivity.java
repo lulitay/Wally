@@ -140,27 +140,27 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void setUpRecurrentBucketWorker() {
-        BucketRepository bucketRepository = new RoomBucketRepository(
+        final BucketRepository bucketRepository = new RoomBucketRepository(
                 WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
-        androidx.work.Configuration myConfig = new androidx.work.Configuration.Builder()
+        final androidx.work.Configuration myConfig = new androidx.work.Configuration.Builder()
                 .setMinimumLoggingLevel(android.util.Log.INFO)
                 .setWorkerFactory(new RecurrentBucketWorkerFactory(bucketRepository))
                 .build();
         WorkManager.initialize(this, myConfig);
 
-        WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+        final WorkManager workManager = WorkManager.getInstance(getApplicationContext());
 
-        Calendar currentDate = Calendar.getInstance();
-        Calendar dueDate = Calendar.getInstance();
+        final Calendar currentDate = Calendar.getInstance();
+        final Calendar dueDate = Calendar.getInstance();
         dueDate.set(Calendar.HOUR_OF_DAY, 1);
         dueDate.set(Calendar.MINUTE, 0);
         dueDate.set(Calendar.SECOND, 0);
         dueDate.set(Calendar.DAY_OF_MONTH, currentDate.get(DAY_OF_MONTH) + 1);
 
-        long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
-        PeriodicWorkRequest bucketRecurrent =
+        final long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        final PeriodicWorkRequest bucketRecurrent =
                 new PeriodicWorkRequest.Builder(RecurrentBucketWorker.class,
                         1, TimeUnit.DAYS,
                         30, TimeUnit.MINUTES)
