@@ -30,7 +30,7 @@ import com.example.pam_app.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
 
-public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter {
+public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter<Integer> {
 
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
@@ -40,7 +40,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private BucketListAdapter savingsAdapter;
 
     private Clickable onAddBucketClickedListener;
-    private ClickableWithParameter onBucketClickedListener;
+    private ClickableWithParameter<Integer> onBucketClickedListener;
 
     private boolean isSpendingListExpanded = true;
     private boolean isSavingsListExpanded = true;
@@ -72,7 +72,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     public void bind(
             final Context context,
             final Clickable onAddBucketClickedListener,
-            final ClickableWithParameter onBucketClickedListener,
+            final ClickableWithParameter<Integer> onBucketClickedListener,
             final List<Bucket> bucketList
     ) {
         setUpAddBucketButton();
@@ -245,7 +245,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
-    public void onClick(int bucketId) {
+    public void onClick(Integer bucketId) {
         presenter.onBucketClicked(bucketId);
     }
 }
