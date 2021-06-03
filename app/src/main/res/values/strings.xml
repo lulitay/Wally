@@ -58,4 +58,5 @@
     <string name="error_saving_bucket">Error saving bucket</string>
     <string name="bucket_saved">Bucket %1$s saved</string>
     <string name="recurrent_bucket">Recurrent bucket in a month</string>
+    <string name="entries_old">History</string>
 </resources>

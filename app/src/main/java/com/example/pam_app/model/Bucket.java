@@ -1,6 +1,8 @@
 package com.example.pam_app.model;
 
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -11,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.sqrt;
+import static java.util.Calendar.DAY_OF_MONTH;
 
 public class Bucket {
     public final String title;
@@ -18,6 +21,7 @@ public class Bucket {
     public final BucketType bucketType;
     public final double target;
     public final List<BucketEntry> entries;
+    public final List<BucketEntry> oldEntries;
     public final Integer id;
     public final String imagePath;
     public final boolean isRecurrent;
@@ -28,7 +32,8 @@ public class Bucket {
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
-        this.entries = entries;
+        this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = null;
         this.isRecurrent = isRecurrent;
@@ -40,10 +45,12 @@ public class Bucket {
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
-        this.entries = entries;
+        this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = id;
         this.imagePath = imagePath;
         this.isRecurrent = isRecurrent;
+        initEntries(entries);
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target, boolean isRecurrent) {
@@ -52,9 +59,11 @@ public class Bucket {
         this.bucketType = bucketType;
         this.target = target;
         this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = null;
         this.isRecurrent = isRecurrent;
+        initEntries(entries);
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath, boolean isRecurrent) {
@@ -63,6 +72,7 @@ public class Bucket {
         this.bucketType = bucketType;
         this.target = target;
         this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = imagePath;
         this.isRecurrent = isRecurrent;
@@ -118,5 +128,23 @@ public class Bucket {
         }
 
         return result;
+    }
+
+    private void initEntries(List<BucketEntry> entries) {
+        if (entries != null) {
+            Calendar currentDate = Calendar.getInstance();
+            currentDate.set(Calendar.HOUR_OF_DAY, 0);
+            currentDate.set(Calendar.MINUTE, 0);
+            currentDate.set(Calendar.SECOND, 0);
+            currentDate.set(Calendar.DAY_OF_MONTH, 1);
+            Date firstDayOfMonth = currentDate.getTime();
+            for (BucketEntry e : entries) {
+                if (this.isRecurrent && e.date.before(firstDayOfMonth)) {
+                    this.oldEntries.add(e);
+                } else {
+                    this.entries.add(e);
+                }
+            }
+        }
     }
 }

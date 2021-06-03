@@ -6,6 +6,7 @@
     <data>
         <variable name="bucket" type="com.example.pam_app.model.Bucket"/>
         <import type="com.example.pam_app.model.BucketType"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,8 +117,8 @@
                             android:layout_height="match_parent"
                             android:layout_margin="20dp"
                             android:gravity="center"
-                            android:text="@string/no_entries_available"
-                            android:visibility="gone" />
+                            android:visibility="@{bucket.entries.size() == 0 ? View.VISIBLE : View.GONE}"
+                            android:text="@string/no_entries_available" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/bucket_entries"
@@ -125,6 +126,30 @@
                             android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             app:data="@{bucket.entries}">
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/entries_old"
+                            android:visibility="@{bucket.isRecurrent ? View.VISIBLE : View.GONE}"
+                            style="@style/Subtitles" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/entries_unavailable_old"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="20dp"
+                            android:gravity="center"
+                            android:visibility="@{(bucket.isRecurrent &amp;&amp; bucket.oldEntries.size() == 0) ? View.VISIBLE : View.GONE}"
+                            android:text="@string/no_entries_available" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/bucket_entries_old"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:data="@{bucket.oldEntries}">
                         </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>

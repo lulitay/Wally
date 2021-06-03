@@ -59,4 +59,5 @@
     <string name="error_saving_bucket">Error guardando cuenta</string>
     <string name="bucket_saved">Cuenta %1$s guardada</string>
     <string name="recurrent_bucket">Cuenta recurrente en un mes</string>
+    <string name="entries_old">Historial</string>
 </resources>
