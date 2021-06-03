@@ -1,7 +1,6 @@
 package com.example.pam_app.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -10,14 +9,14 @@ import android.widget.RadioGroup;
 import androidx.annotation.Nullable;
 
 import com.example.pam_app.R;
+import com.example.pam_app.repository.LanguagesRepository;
 
 import static android.view.Gravity.CENTER_HORIZONTAL;
-import static com.example.pam_app.MainActivity.KEY_PREF_LANGUAGE;
 
 public class ProfileViewImpl extends LinearLayout implements ProfileView {
 
-    final RadioGroup languageRadioGroup;
-    SharedPreferences sharedPreferences;
+    private final RadioGroup languageRadioGroup;
+    private LanguagesRepository languagesRepository;
 
     public ProfileViewImpl(Context context) {
         this(context, null);
@@ -42,19 +41,18 @@ public class ProfileViewImpl extends LinearLayout implements ProfileView {
             final int index = languageRadioGroup.indexOfChild(button);
             switch (index) {
                 case 0:
-                    sharedPreferences.edit().putString(KEY_PREF_LANGUAGE, "es").apply();
+                    languagesRepository.changeLanguage("es");
                     break;
                 case 1:
-                    sharedPreferences.edit().putString(KEY_PREF_LANGUAGE, "en").apply();
+                    languagesRepository.changeLanguage("en");
                     break;
             }
         });
     }
 
-
     @Override
-    public void bind(final SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public void bind(final LanguagesRepository languagesRepository) {
+        this.languagesRepository = languagesRepository;
         setUpLanguageRadioButtonGroup();
     }
 }

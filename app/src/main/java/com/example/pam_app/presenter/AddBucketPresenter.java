@@ -43,7 +43,7 @@ public class AddBucketPresenter {
                 .observeOn(schedulerProvider.ui())
                 .subscribe(() -> {
                     if (addBucketView.get() != null) {
-                        addBucketView.get().onSuccessSavingBucket(name);
+                        addBucketView.get().onSuccessSavingBucket(bucket);
                     }
                 }, (throwable) -> {
                     if (addBucketView.get() != null) {

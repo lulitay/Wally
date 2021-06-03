@@ -1,6 +1,6 @@
 package com.example.pam_app.model;
 
-import java.time.Month;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Math.sqrt;
-import static java.util.Calendar.DAY_OF_MONTH;
-
-public class Bucket {
+public class Bucket implements Serializable {
     public final String title;
     public final Date dueDate;
     public final BucketType bucketType;
@@ -37,6 +34,7 @@ public class Bucket {
         this.id = null;
         this.imagePath = null;
         this.isRecurrent = isRecurrent;
+        initEntries(entries);
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
@@ -63,7 +61,6 @@ public class Bucket {
         this.id = null;
         this.imagePath = null;
         this.isRecurrent = isRecurrent;
-        initEntries(entries);
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath, boolean isRecurrent) {
