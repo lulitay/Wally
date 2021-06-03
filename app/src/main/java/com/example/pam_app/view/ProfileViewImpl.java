@@ -48,11 +48,9 @@ public class ProfileViewImpl extends LinearLayout implements ProfileView {
             final int index = languageRadioGroup.indexOfChild(button);
             switch (index) {
                 case 0:
-                    //languagesRepository.changeLanguage("es");
                     currentLanguage = "es";
                     break;
                 case 1:
-                    //languagesRepository.changeLanguage("en");
                     currentLanguage = "en";
                     break;
             }
