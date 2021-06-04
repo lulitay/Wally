@@ -64,7 +64,6 @@ public class ProfileViewImpl extends LinearLayout implements ProfileView {
         setUpApplyChangesButton();
         this.onApplyChangesClickedListener = applyChanges;
         currentLanguage = languagesRepository.getCurrentLocale().toString();
-        System.out.println(currentLanguage);
     }
 
     @Override
