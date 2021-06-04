@@ -97,7 +97,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 presenter.saveBucket(
                         title.getText().toString(),
                         date.getTime(),
-                        BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
+                        BucketType.getBucketType(bucketType.getText().toString()),
                         Double.parseDouble(target.getText().toString()),
                         imagePath
                 );
