@@ -1,5 +1,6 @@
 package com.example.pam_app.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.AddBucketEntryPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
@@ -29,6 +31,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class AddBucketEntryFragment extends Fragment implements AddBucketEntryView {
 
@@ -82,13 +86,16 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     }
 
     @Override
-    public void onSuccessSavingBucketEntry(final String description) {
+    public void onSuccessSavingBucketEntry(final BucketEntry entry) {
         Toast.makeText(
                 getContext(),
-                getString(R.string.entry_saving_success, description),
+                getString(R.string.entry_saving_success, entry.getComment()),
                 Toast.LENGTH_LONG
         ).show();
-        requireActivity().onBackPressed();
+        final Intent result = new Intent();
+        result.putExtra("entry", entry);
+        requireActivity().setResult(RESULT_OK, result);
+        requireActivity().finish();
     }
 
     @Override

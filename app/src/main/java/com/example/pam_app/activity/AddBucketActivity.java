@@ -32,11 +32,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
-
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
 
 public class AddBucketActivity extends AppCompatActivity implements AddBucketView {
 
@@ -45,6 +41,10 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     private ImageView imageView;
     private String imagePath;
     private Calendar date;
+    private EditText title;
+    private EditText dueDate;
+    private AutoCompleteTextView bucketType;
+    private EditText target;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
 
@@ -70,71 +70,59 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     protected void onStart() {
         super.onStart();
-        final EditText title = findViewById(R.id.title);
-        final EditText dueDate = findViewById(R.id.due_date);
-        final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
-        final EditText target = findViewById(R.id.target);
+        title = findViewById(R.id.title);
+        dueDate = findViewById(R.id.due_date);
+        bucketType = findViewById(R.id.bucket_type);
+        target = findViewById(R.id.target);
 
         setDatePicker(dueDate);
-        saveBucket(title, target, dueDate, bucketType);
+        saveBucket(title, target, bucketType);
         setBucketTypeValues(bucketType);
     }
 
     private void saveBucket(final EditText title,
                             final EditText target,
-                            final EditText dueDate,
                             final AutoCompleteTextView bucketType) {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, bucketType, imagePath);
-            if (fields) {
-                presenter.saveBucket(
-                        title.getText().toString(),
-                        date.getTime(),
-                        BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
-                        Double.parseDouble(target.getText().toString()),
-                        imagePath
-                );
-            }
+            presenter.saveBucket(
+                    title.getText().toString(),
+                    date.getTime(),
+                    BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
+                    Double.parseDouble(target.getText().toString()),
+                    imagePath
+            );
+
         });
 
     }
 
-    //TODO improve this
-    private boolean checkFields(
-            final EditText title,
-            final EditText target,
-            final EditText dueDate,
-            final AutoCompleteTextView bucketType,
-            final String imagePath
-    ) {
-        boolean isCorrect = true;
-        if (title.length() == 0) {
-            title.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (title.getText().length() > MAX_CHARACTERS) {
-            title.setError(getString(R.string.max_characters, MAX_CHARACTERS));
-            isCorrect = false;
+    @Override
+    public void showTitleError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            title.setError(getString(error));
+        } else {
+            title.setError(getString(error, parameter));
         }
-        if (target.length() == 0) {
-            target.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (Double.parseDouble(target.getText().toString()) >= MAX_AMOUNT) {
-            target.setError(getString(R.string.max_amount, MAX_AMOUNT));
-            isCorrect = false;
+    }
+
+    @Override
+    public void showTargetError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            target.setError(getString(error));
+        } else {
+            target.setError(getString(error, parameter));
         }
-        if (date == null) {
-            dueDate.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (date.getTimeInMillis() < new Date().getTime()) {
-            dueDate.setError(getString(R.string.error_past_date));
-            isCorrect = false;
-        }
-        if (bucketType.length() == 0) {
-            bucketType.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        }
-        return isCorrect;
+    }
+
+    @Override
+    public void showDateError(final int error) {
+        dueDate.setError(getString(error));
+    }
+
+    @Override
+    public void showBucketTypeError(int error) {
+        bucketType.setError(getString(error));
     }
 
     private void setDatePicker(final EditText editTextDate) {
@@ -150,31 +138,6 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
         });
-    }
-
-    private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
-        final ArrayAdapter<BucketType> adapter = new ArrayAdapter<>(
-                getApplicationContext(), R.layout.list_item, BucketType.values()
-        );
-        bucketType.setAdapter(adapter);
-    }
-
-    private void registerImageActivityResult() {
-        this.galleryResultLauncher = registerForActivityResult(
-            new GalleryContract(),
-            result -> {
-                if (result != null) {
-                    try {
-                        final InputStream imageStream = getContentResolver().openInputStream(result);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageView.setImageBitmap(selectedImage);
-                        imagePath = result.toString();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
     }
 
     @Override
@@ -208,5 +171,30 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     protected void onStop() {
         super.onStop();
         presenter.onDetachView();
+    }
+
+    private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
+        final ArrayAdapter<BucketType> adapter = new ArrayAdapter<>(
+                getApplicationContext(), R.layout.list_item, BucketType.values()
+        );
+        bucketType.setAdapter(adapter);
+    }
+
+    private void registerImageActivityResult() {
+        this.galleryResultLauncher = registerForActivityResult(
+                new GalleryContract(),
+                result -> {
+                    if (result != null) {
+                        try {
+                            final InputStream imageStream = getContentResolver().openInputStream(result);
+                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            imageView.setImageBitmap(selectedImage);
+                            imagePath = result.toString();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }

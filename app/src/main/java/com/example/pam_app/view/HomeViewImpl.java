@@ -10,14 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryHomeAdapter;
-import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.HomePresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
 
@@ -42,39 +36,20 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         inflate(context, R.layout.view_home, this);
         setGravity(CENTER);
         setOrientation(VERTICAL);
-
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(context).bucketDao(),
-                new BucketMapper()
-        );
-        final SchedulerProvider provider = new AndroidSchedulerProvider();
-        homePresenter = new HomePresenter(bucketRepository, this, provider);
+        homePresenter = new HomePresenter(this);
         setUpList();
     }
 
     @Override
-    public void bind() {
-        homePresenter.onViewAttached();
+    public void bind(final List<BucketEntry> entryList) {
+        adapter.update(entryList);
     }
 
     @Override
-    public void onViewStop() {
-        homePresenter.onViewDetached();
-    }
-
-    @Override
-    public void onViewResumed() {
-        homePresenter.onViewResume();
-    }
-
-    @Override
-    public void onViewPaused() {
-        //homePresenter.onViewPause();
-    }
-
-    @Override
-    public void showEntries(final List<BucketEntry> entries) {
-        adapter.update(entries);
+    public void onBucketEntryAdded(final BucketEntry bucketEntry) {
+        if (bucketEntry != null) {
+            adapter.showNewBucket(bucketEntry);
+        }
     }
 
     private void setUpList() {

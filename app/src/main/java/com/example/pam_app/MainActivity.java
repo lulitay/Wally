@@ -15,22 +15,25 @@ import android.widget.ViewFlipper;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
+import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
+import com.example.pam_app.repository.IncomeMapper;
+import com.example.pam_app.repository.IncomeRepository;
 import com.example.pam_app.repository.LanguagesRepository;
 import com.example.pam_app.repository.LanguagesRepositoryImpl;
 import com.example.pam_app.repository.RoomBucketRepository;
+import com.example.pam_app.repository.RoomIncomeRepository;
 import com.example.pam_app.utils.contracts.BucketContract;
+import com.example.pam_app.utils.contracts.EntryContract;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
-import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.IncomeView;
 import com.example.pam_app.view.MainView;
 import com.example.pam_app.view.ProfileView;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     private ProfileView profileView;
 
     private ActivityResultLauncher<String> addBucketResultLauncher;
+    private ActivityResultLauncher<String> addBucketEntryResultLauncher;
 
     private MainPresenter presenter;
     private LanguagesRepository languagesRepository;
@@ -67,17 +71,22 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
                 WallyDatabase.getInstance(this.getApplicationContext()).bucketDao(),
                 new BucketMapper()
         );
+        final IncomeRepository incomeRepository = new RoomIncomeRepository(
+                WallyDatabase.getInstance(this.getApplicationContext()).incomeDao(),
+                new IncomeMapper()
+        );
         final SchedulerProvider provider = new AndroidSchedulerProvider();
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         languagesRepository = new LanguagesRepositoryImpl(sharedPreferences);
-        presenter = new MainPresenter(bucketRepository, this, provider, languagesRepository);
+        presenter = new MainPresenter(bucketRepository, incomeRepository, this, provider, languagesRepository);
         setContentView(R.layout.activity_main);
 
         setUpChosenLanguage();
         setUpViews();
         setUpBottomNavigation();
-        setUpActivityResultLauncher();
+        setUpAddBucketResultLauncher();
+        setUpAddBucketEntryResultLauncher();
         setUpFAB();
     }
 
@@ -90,35 +99,34 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     protected void onStop() {
         super.onStop();
         presenter.onViewStop();
-        homeView.onViewStop();
-        bucketListView.onViewStop();
         languagesRepository.unregisterOnSharedPreferencesListener();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        homeView.onViewResumed();
-        bucketListView.onViewResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        homeView.onViewPaused();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         presenter.onViewAttached();
-        homeView.bind();
         profileView.bind(languagesRepository);
     }
 
     @Override
     public void onBucketListViewReceived(final List<Bucket> bucketList) {
         bucketListView.bind(this, this::launchAddBucketActivity, this::launchBucketDetailActivity, bucketList);
+    }
+
+    @Override
+    public void onEntriesReceived(final List<BucketEntry> entryList) {
+        homeView.bind(entryList);
     }
 
     @Override
@@ -162,10 +170,8 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         profileView = findViewById(R.id.profile);
     }
 
-
-    private void addEntry(final View view) {
-        final Intent intent = new Intent(this, AddBucketEntryActivity.class);
-        startActivity(intent);
+    private void launchAddBucketEntryActivity(final View view) {
+        addBucketEntryResultLauncher.launch("addEntry");
     }
 
     private void launchBucketDetailActivity(int bucketId) {
@@ -180,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
 
     private void setUpFAB() {
         final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this::addEntry);
+        fab.setOnClickListener(this::launchAddBucketEntryActivity);
     }
 
     private void setLocale(final Locale locale) {
@@ -196,10 +202,17 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         setLocale(languagesRepository.getCurrentLocale());
     }
 
-    private void setUpActivityResultLauncher() {
+    private void setUpAddBucketResultLauncher() {
         addBucketResultLauncher = registerForActivityResult(
                 new BucketContract(),
                 result -> bucketListView.onBucketAdded(result)
+        );
+    }
+
+    private void setUpAddBucketEntryResultLauncher() {
+        addBucketEntryResultLauncher = registerForActivityResult(
+                new EntryContract(),
+                result -> homeView.onBucketEntryAdded(result)
         );
     }
 }

@@ -56,7 +56,7 @@ public class AddBucketEntryPresenter {
                         .observeOn(schedulerProvider.ui())
                         .subscribe(() -> {
                             if (addBucketEntryView.get() != null) {
-                                addBucketEntryView.get().onSuccessSavingBucketEntry(description);
+                                addBucketEntryView.get().onSuccessSavingBucketEntry(entry);
                             } }, (throwable) -> {
                             if (addBucketEntryView.get() != null) {
                                 addBucketEntryView.get().onErrorSavingBucketEntry();
