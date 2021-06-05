@@ -10,4 +10,12 @@ public interface AddBucketEntryView {
     void setDropDownOptions(final List<String> buckets);
     void onErrorSavingBucketEntry();
     void onSuccessSavingBucketEntry(final BucketEntry bucketEntry);
+
+    void showDescriptionError(int error, Integer parameter);
+
+    void showAmountError(int error, Integer parameter);
+
+    void showDateError(int error);
+
+    void showBucketTitleError(int error);
 }

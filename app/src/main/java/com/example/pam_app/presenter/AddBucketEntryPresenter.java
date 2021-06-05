@@ -1,5 +1,6 @@
 package com.example.pam_app.presenter;
 
+import com.example.pam_app.R;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.repository.BucketRepository;
@@ -13,6 +14,9 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
+
 public class AddBucketEntryPresenter {
 
     private final WeakReference<AddBucketEntryView> addBucketEntryView;
@@ -23,7 +27,8 @@ public class AddBucketEntryPresenter {
     public AddBucketEntryPresenter(
             final AddBucketEntryView addBucketEntryView,
             final BucketRepository bucketRepository,
-            final SchedulerProvider schedulerProvider) {
+            final SchedulerProvider schedulerProvider
+    ) {
         this.addBucketEntryView = new WeakReference<>(addBucketEntryView);
         this.bucketRepository = bucketRepository;
         this.schedulerProvider = schedulerProvider;
@@ -45,28 +50,67 @@ public class AddBucketEntryPresenter {
 
     public void saveBucketEntry(final double amount, final Date date, final String description,
                                 final String bucketTitle) {
-        final BucketEntry entry = new BucketEntry(amount, date, description);
-        disposable.add(
-                bucketRepository.get(bucketTitle)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe((Bucket bucket) -> disposable.add(
-                        Completable.fromAction(() ->  bucketRepository.addEntry(entry, bucket.id))
-                        .subscribeOn(schedulerProvider.io())
-                        .observeOn(schedulerProvider.ui())
-                        .subscribe(() -> {
-                            if (addBucketEntryView.get() != null) {
-                                addBucketEntryView.get().onSuccessSavingBucketEntry(entry);
-                            } }, (throwable) -> {
-                            if (addBucketEntryView.get() != null) {
-                                addBucketEntryView.get().onErrorSavingBucketEntry();
-                            }
-                        })
-                ), (throwable) -> {
-                    if (addBucketEntryView.get() != null) {
-                        addBucketEntryView.get().onErrorSavingBucketEntry();
-                    }
-                })
-        );
+        final boolean fields = checkFields(amount, date, description, bucketTitle);
+        if (fields) {
+            final BucketEntry entry = new BucketEntry(amount, date, description);
+            disposable.add(
+                    bucketRepository.get(bucketTitle)
+                            .subscribeOn(schedulerProvider.io())
+                            .observeOn(schedulerProvider.ui())
+                            .subscribe((Bucket bucket) -> disposable.add(
+                                    Completable.fromAction(() -> bucketRepository.addEntry(entry, bucket.id))
+                                            .subscribeOn(schedulerProvider.io())
+                                            .observeOn(schedulerProvider.ui())
+                                            .subscribe(() -> {
+                                                if (addBucketEntryView.get() != null) {
+                                                    addBucketEntryView.get().onSuccessSavingBucketEntry(entry);
+                                                }
+                                            }, (throwable) -> {
+                                                if (addBucketEntryView.get() != null) {
+                                                    addBucketEntryView.get().onErrorSavingBucketEntry();
+                                                }
+                                            })
+                            ), (throwable) -> {
+                                if (addBucketEntryView.get() != null) {
+                                    addBucketEntryView.get().onErrorSavingBucketEntry();
+                                }
+                            })
+            );
+        }
+    }
+
+    private boolean checkFields(
+            final Double amount,
+            final Date date,
+            final String description,
+            final String bucket
+    ) {
+        boolean isCorrect = true;
+        if (description.length() == 0) {
+            addBucketEntryView.get().showDescriptionError(R.string.error_empty, null);
+            isCorrect = false;
+        } else if (description.length() > MAX_CHARACTERS) {
+            addBucketEntryView.get().showDescriptionError(R.string.max_characters, MAX_CHARACTERS);
+            isCorrect = false;
+        }
+        if (amount == null) {
+            addBucketEntryView.get().showAmountError(R.string.error_empty, null);
+            isCorrect = false;
+        } else if (amount >= MAX_AMOUNT) {
+            addBucketEntryView.get().showAmountError(R.string.max_amount, MAX_AMOUNT);
+            isCorrect = false;
+        }
+        if (date == null) {
+            addBucketEntryView.get().showDateError(R.string.error_empty);
+            isCorrect = false;
+        } else if (date.getTime() < new Date().getTime()) {
+            addBucketEntryView.get().showDateError(R.string.error_past_date);
+            isCorrect = false;
+        }
+        if (bucket == null) {
+            addBucketEntryView.get().showBucketTitleError(R.string.error_empty);
+            isCorrect = false;
+        }
+        return isCorrect;
     }
 }

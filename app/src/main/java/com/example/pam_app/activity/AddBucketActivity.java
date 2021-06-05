@@ -75,14 +75,12 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         bucketType = findViewById(R.id.bucket_type);
         target = findViewById(R.id.target);
 
-        setDatePicker(dueDate);
-        saveBucket(title, target, bucketType);
-        setBucketTypeValues(bucketType);
+        setDatePicker();
+        setSaveBucketListener();
+        setBucketTypeValues();
     }
 
-    private void saveBucket(final EditText title,
-                            final EditText target,
-                            final AutoCompleteTextView bucketType) {
+    private void setSaveBucketListener() {
         final Button saveEntry = findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> {
             presenter.saveBucket(
@@ -125,15 +123,15 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         bucketType.setError(getString(error));
     }
 
-    private void setDatePicker(final EditText editTextDate) {
+    private void setDatePicker() {
         final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.pick_a_date)).build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            editTextDate.setText(datePicker.getHeaderText());
+            dueDate.setText(datePicker.getHeaderText());
             date.setTimeInMillis(selection);
         });
-        editTextDate.setOnClickListener(v -> {
+        dueDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
@@ -173,7 +171,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         presenter.onDetachView();
     }
 
-    private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
+    private void setBucketTypeValues() {
         final ArrayAdapter<BucketType> adapter = new ArrayAdapter<>(
                 getApplicationContext(), R.layout.list_item, BucketType.values()
         );
