@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,17 +68,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         this.setUpToolBar();
         this.setUpList();
         this.setUpAddEntryButton();
-
-        ActivityResultLauncher<String> permissionResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (!isGranted) {
-                        Context context = getApplicationContext();
-                        Toast.makeText(context, context.getString(R.string.warning_bucket), Toast.LENGTH_LONG).show();
-                    }
-                    readExternalStorage = isGranted;
-                });
-        permissionResultLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        readExternalStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

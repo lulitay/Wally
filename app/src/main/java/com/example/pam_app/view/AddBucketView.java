@@ -8,5 +8,5 @@ public interface AddBucketView {
 
     void onSuccessSavingBucket(final Bucket bucket);
 
-    void goToLoadImage();
+    void requestStoragePermission();
 }

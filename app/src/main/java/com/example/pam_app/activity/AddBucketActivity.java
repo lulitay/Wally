@@ -1,10 +1,11 @@
 package com.example.pam_app.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -13,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
@@ -36,13 +39,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
 
-public class AddBucketActivity extends AppCompatActivity implements AddBucketView {
+public class AddBucketActivity extends AppCompatActivity implements AddBucketView, ActivityCompat.OnRequestPermissionsResultCallback {
+    private static final int REQUEST_EXTERNAL_STORAGE = 0;
 
     private AddBucketPresenter presenter;
 
@@ -51,6 +54,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     private Calendar date;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,7 +174,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
 
     private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
         ArrayList<String> bucketTypeResources = new ArrayList<>();
-        for(BucketType type : BucketType.values()){
+        for (BucketType type : BucketType.values()) {
             bucketTypeResources.add(getString(type.getStringResource()));
         }
 
@@ -182,20 +186,20 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
 
     private void registerImageActivityResult() {
         this.galleryResultLauncher = registerForActivityResult(
-            new GalleryContract(),
-            result -> {
-                if (result != null) {
-                    try {
-                        final InputStream imageStream = getContentResolver().openInputStream(result);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageView.setImageBitmap(selectedImage);
-                        imagePath = result.toString();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                new GalleryContract(),
+                result -> {
+                    if (result != null) {
+                        try {
+                            final InputStream imageStream = getContentResolver().openInputStream(result);
+                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            imageView.setImageBitmap(selectedImage);
+                            imagePath = result.toString();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
+                });
     }
 
     @Override
@@ -221,13 +225,30 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     }
 
     @Override
-    public void goToLoadImage() {
-        galleryResultLauncher.launch("image/*");
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         presenter.onDetachView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadImage();
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.warning_bucket), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void loadImage() {
+        galleryResultLauncher.launch("image/*");
     }
 }

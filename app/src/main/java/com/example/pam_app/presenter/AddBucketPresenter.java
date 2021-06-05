@@ -47,7 +47,7 @@ public class AddBucketPresenter {
 
     public void onClickLoadImage() {
         if (addBucketView.get() != null) {
-            addBucketView.get().goToLoadImage();
+            addBucketView.get().requestStoragePermission();
         }
     }
 
