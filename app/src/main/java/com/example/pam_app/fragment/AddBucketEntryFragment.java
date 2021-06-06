@@ -73,7 +73,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         bucket = view.findViewById(R.id.bucket);
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
-        dropdown = createdView.findViewById(R.id.bucket_dropdown);
+        dropdown = view.findViewById(R.id.bucket_dropdown);
 
         bucket.setText(getArguments().getString("bucket_name"), false);
 
@@ -143,7 +143,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
 
     @Override
     public void showBucketTitleError(int error) {
-        bucket.setError(getString(error));
+        dropdown.setError(getString(error));
     }
 
 
