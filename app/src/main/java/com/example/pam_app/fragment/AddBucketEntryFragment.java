@@ -46,7 +46,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     private EditText selectedDate;
     private Calendar date;
     private AutoCompleteTextView bucket;
-    TextInputLayout dropdown;
+    private TextInputLayout dropdown;
     private MaterialDatePicker<Long> datePicker;
 
     @Nullable
@@ -73,7 +73,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         bucket = view.findViewById(R.id.bucket);
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
-        dropdown = createdView.findViewById(R.id.bucket_dropdown);
+        dropdown = view.findViewById(R.id.bucket_dropdown);
 
         bucket.setText(getArguments().getString("bucket_name"), false);
 
@@ -150,7 +150,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     private void setSaveEntryListener() {
         final Button saveEntry = createdView.findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> presenter.saveBucketEntry(
-                Double.parseDouble(amount.getText().toString()),
+                amount.getText().toString(),
                 date.getTime(),
                 description.getText().toString(),
                 bucket.getText().toString()

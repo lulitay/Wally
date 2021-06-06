@@ -52,8 +52,8 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     private EditText dueDate;
     private AutoCompleteTextView bucketType;
     private EditText target;
-    MaterialDatePicker<Long> datePicker;
-    TextInputLayout dropdown;
+    private MaterialDatePicker<Long> datePicker;
+    private TextInputLayout dropdown;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
 
@@ -83,6 +83,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         dueDate = findViewById(R.id.due_date);
         bucketType = findViewById(R.id.bucket_type);
         target = findViewById(R.id.target);
+        dropdown = findViewById(R.id.bucket_type_dropdown);
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
 
         setDatePicker();
@@ -97,7 +98,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 title.getText().toString(),
                 date.getTime(),
                 BucketType.getBucketType(bucketType.getText().toString()),
-                Double.parseDouble(target.getText().toString()),
+                target.getText().toString(),
                 imagePath
         ));
 
