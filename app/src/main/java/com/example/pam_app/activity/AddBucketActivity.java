@@ -38,13 +38,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
-
-public class AddBucketActivity extends AppCompatActivity implements AddBucketView, ActivityCompat.OnRequestPermissionsResultCallback {
+public class AddBucketActivity extends AppCompatActivity implements AddBucketView, ActivityCompat.OnRequestPermissionsResultCallback  {
     private static final int REQUEST_EXTERNAL_STORAGE = 0;
 
     private AddBucketPresenter presenter;
@@ -52,9 +48,14 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     private ImageView imageView;
     private String imagePath;
     private Calendar date;
+    private EditText title;
+    private EditText dueDate;
+    private AutoCompleteTextView bucketType;
+    private EditText target;
+    MaterialDatePicker<Long> datePicker;
+    TextInputLayout dropdown;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,107 +79,86 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     protected void onStart() {
         super.onStart();
-        final EditText title = findViewById(R.id.title);
-        final EditText dueDate = findViewById(R.id.due_date);
-        final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
-        final EditText target = findViewById(R.id.target);
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
+        title = findViewById(R.id.title);
+        dueDate = findViewById(R.id.due_date);
+        bucketType = findViewById(R.id.bucket_type);
+        target = findViewById(R.id.target);
+        datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
 
-        setDatePicker(dueDate, datePicker);
-        saveBucket(title, target, dueDate, datePicker, bucketType);
-        setBucketTypeValues(bucketType);
+        setDatePicker();
+        setSaveBucketListener();
+        setBucketTypeValues();
     }
 
-    private void saveBucket(final EditText title,
-                            final EditText target,
-                            final EditText dueDate,
-                            MaterialDatePicker<Long> datePicker,
-                            final AutoCompleteTextView bucketType) {
+    private void setSaveBucketListener() {
         final Button saveEntry = findViewById(R.id.save);
-        saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, datePicker, bucketType, imagePath);
-            if (fields) {
+        saveEntry.setOnClickListener(v ->
                 presenter.saveBucket(
-                        title.getText().toString(),
-                        date.getTime(),
-                        BucketType.getBucketType(bucketType.getText().toString()),
-                        Double.parseDouble(target.getText().toString()),
-                        imagePath
-                );
-            }
-        });
+                title.getText().toString(),
+                date.getTime(),
+                BucketType.getBucketType(bucketType.getText().toString()),
+                Double.parseDouble(target.getText().toString()),
+                imagePath
+        ));
 
     }
 
-    //TODO improve this
-    private boolean checkFields(
-            final EditText title,
-            final EditText target,
-            final EditText dueDate,
-            MaterialDatePicker<Long> datePicker,
-            final AutoCompleteTextView bucketType,
-            final String imagePath
-    ) {
-        boolean isCorrect = true;
-        if (title.length() == 0) {
-            title.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (title.getText().length() > MAX_CHARACTERS) {
-            title.setError(getString(R.string.max_characters, MAX_CHARACTERS));
-            isCorrect = false;
+    @Override
+    public void showTitleError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            title.setError(getString(error));
+        } else {
+            title.setError(getString(error, parameter));
         }
-        if (target.length() == 0) {
-            target.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (Double.parseDouble(target.getText().toString()) >= MAX_AMOUNT) {
-            target.setError(getString(R.string.max_amount, MAX_AMOUNT));
-            isCorrect = false;
-        }
-        if (date == null) {
-            dueDate.requestFocus();
-            getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
-            dueDate.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (date.getTimeInMillis() < new Date().getTime()) {
-            dueDate.requestFocus();
-            getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
-            dueDate.setError(getString(R.string.error_past_date));
-            isCorrect = false;
-        }
-        if (bucketType.length() == 0) {
-            TextInputLayout dropdown = findViewById(R.id.bucket_type_dropdown);
-            dropdown.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        }
-        return isCorrect;
     }
 
-    private void setDatePicker(final EditText editTextDate, MaterialDatePicker<Long> datePicker) {
+    @Override
+    public void showTargetError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            target.setError(getString(error));
+        } else {
+            target.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showDateError(final int error) {
+        dueDate.requestFocus();
+        getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
+        dueDate.setError(getString(error));
+    }
+
+    @Override
+    public void showBucketTypeError(int error) {
+        dropdown.setError(getString(error));
+    }
+
+    private void setDatePicker() {
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            editTextDate.setText(datePicker.getHeaderText());
+            dueDate.setText(datePicker.getHeaderText());
             date.setTimeInMillis(selection);
         });
 
-        editTextDate.setOnFocusChangeListener((v, hasFocus) -> {
+        dueDate.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus && !datePicker.isAdded()) {
                 datePicker.show(AddBucketActivity.this.getSupportFragmentManager(), "date_picker");
             }
         });
 
-        editTextDate.setOnClickListener(v -> {
+        dueDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
         });
     }
 
-    private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
+    private void setBucketTypeValues() {
         ArrayList<String> bucketTypeResources = new ArrayList<>();
         for (BucketType type : BucketType.values()) {
             bucketTypeResources.add(getString(type.getStringResource()));
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(), R.layout.list_item, bucketTypeResources
         );
         bucketType.setAdapter(adapter);

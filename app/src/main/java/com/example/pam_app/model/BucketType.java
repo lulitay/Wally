@@ -5,7 +5,6 @@ import com.example.pam_app.R;
 public enum BucketType {
     SPENDING(R.string.spending),
     SAVING(R.string.saving);
-    // INCOME("Income", R.string.income);
 
     private final int stringResource;
 
@@ -24,9 +23,6 @@ public enum BucketType {
         } else if(string.equals("SAVING") || string.equals("AHORRO")) {
             return SAVING;
         }
-//      else if(string.equals("INCOME") || string.equals("INGRESO")) {
-//            return INCOME:
-//        }
         return null; // TODO: improve this
     }
 }

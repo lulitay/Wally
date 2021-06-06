@@ -54,7 +54,6 @@ public class AddBucketEntryActivity extends AppCompatActivity {
             {
                 put(0, getString(R.string.spending));
                 put(1, getString(R.string.saving));
-                // put(2, getString(R.string.income));
             }
         };
 

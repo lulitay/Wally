@@ -35,7 +35,7 @@ public class ProfileViewImpl extends LinearLayout implements ProfileView {
     public ProfileViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
 
-        inflate(context, R.layout.profile_view, this);
+        inflate(context, R.layout.view_profile, this);
         setGravity(CENTER_HORIZONTAL);
         setOrientation(VERTICAL);
         languageRadioGroup = findViewById(R.id.language);

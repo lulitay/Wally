@@ -1,10 +1,11 @@
 package com.example.pam_app.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BucketEntry {
+public class BucketEntry implements Serializable {
     public final double amount;
     public final Date date;
     public final String comment;

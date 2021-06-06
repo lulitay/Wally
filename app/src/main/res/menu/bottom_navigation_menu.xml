@@ -10,6 +10,12 @@
         android:enabled="true"
         android:icon="@drawable/ic_wallet"
         android:title="@string/Buckets"/>
+
+    <item
+        android:id="@+id/income"
+        android:enabled="true"
+        android:icon="@drawable/ic_income"
+        android:title="@string/income"/>
     <item
         android:id="@+id/profile"
         android:enabled="true"
