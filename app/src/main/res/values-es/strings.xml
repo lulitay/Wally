@@ -55,6 +55,7 @@
     <string name="error_future_date">No se puede elegir una fecha futura</string>
     <string name="max_amount">Cantidad máxima es %1$d</string>
     <string name="max_characters">Caracteres máximos son %1$d</string>
+    <string name="apply_changes">Aplicar cambios</string>
     <string name="error_past_date">No puede ser una fecha pasada</string>
     <string name="error_saving_bucket">Error guardando cuenta</string>
     <string name="bucket_saved">Cuenta %1$s guardada</string>

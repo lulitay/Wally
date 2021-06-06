@@ -12,6 +12,7 @@ import com.example.pam_app.R;
 
 public class AddSpendingBucketEntryFragment extends AddBucketEntryFragment {
     public static final String ARG_OBJECT = "object";
+    public static final String ARG_BUCKET = "bucket_name";
 
     public AddSpendingBucketEntryFragment() {
     }
@@ -28,10 +29,13 @@ public class AddSpendingBucketEntryFragment extends AddBucketEntryFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public static AddSpendingBucketEntryFragment newInstance(int counter) {
+    public static AddSpendingBucketEntryFragment newInstance(int counter, String defaultBucket) {
         final AddSpendingBucketEntryFragment fragment = new AddSpendingBucketEntryFragment();
         final Bundle args = new Bundle();
         args.putInt(ARG_OBJECT, counter);
+        if(defaultBucket != null) {
+            args.putString(ARG_BUCKET, defaultBucket);
+        }
         fragment.setArguments(args);
         return fragment;
     }

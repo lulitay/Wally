@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     protected void onStart() {
         super.onStart();
         presenter.onViewAttached();
-        profileView.bind(languagesRepository);
+        profileView.bind(languagesRepository, this::applyChanges);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         addBucketEntryResultLauncher.launch("addEntry");
     }
 
-    private void launchBucketDetailActivity(int bucketId) {
+    private void launchBucketDetailActivity(Integer bucketId) {
         final String uri = "wally://bucket/detail?id=" + bucketId;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
@@ -214,5 +214,9 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
                 new EntryContract(),
                 result -> homeView.onBucketEntryAdded(result)
         );
+    }
+
+    private void applyChanges(String language) {
+        languagesRepository.changeLanguage(language);
     }
 }

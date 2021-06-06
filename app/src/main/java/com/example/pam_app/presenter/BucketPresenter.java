@@ -18,6 +18,7 @@ public class BucketPresenter {
     private final BucketRepository bucketRepository;
     private CompositeDisposable disposable;
     private final SchedulerProvider schedulerProvider;
+    private Bucket currentBucket;
 
     public BucketPresenter(final int id, final BucketView bucketView,
                            final BucketRepository bucketRepository,
@@ -41,6 +42,7 @@ public class BucketPresenter {
                     if (bucketView.get() != null) {
                         Collections.sort(b.entries, (e1, e2) -> (int) Math.signum(e1.date.getTime() - e2.date.getTime()));
                         bucketView.get().bind(b);
+                        currentBucket = b;
                     }
                 }, (throwable) -> {
                     if (bucketView.get() != null) {
@@ -92,7 +94,7 @@ public class BucketPresenter {
 
     public void onAddEntryClick() {
         if (bucketView.get() != null){
-            bucketView.get().goToAddEntry();
+            bucketView.get().goToAddEntry(currentBucket.title);
         }
     }
 }

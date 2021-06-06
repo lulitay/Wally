@@ -22,11 +22,15 @@ public interface BucketListView {
     void collapseSavingsBuckets();
 
     void bind(Context context, Clickable launchAddBucketActivity,
-              ClickableWithParameter launchBucketDetailActivity, final List<Bucket> bucketList);
+              ClickableWithParameter<Integer> launchBucketDetailActivity, final List<Bucket> bucketList);
 
     void setIsSpendingListEmpty(boolean isEmpty);
 
     void setIsSavingsListEmpty(boolean isEmpty);
 
     void onBucketAdded(final Bucket bucket);
+
+    void drawSpendingBucketList();
+
+    void drawSavingsBucketList();
 }

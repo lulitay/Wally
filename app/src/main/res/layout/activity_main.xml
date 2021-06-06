@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:paddingBottom="70dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -36,12 +37,12 @@
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity"
-            android:layout_margin="@dimen/form_margin"/>
+            android:layout_margin="@dimen/form_margin"
+            tools:context=".MainActivity" />
 
     </ViewFlipper>
 
-    <include layout="@layout/fab"/>
+    <include layout="@layout/fab" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

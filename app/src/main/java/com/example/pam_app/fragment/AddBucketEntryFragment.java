@@ -26,6 +26,7 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketEntryView;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.List;
@@ -45,6 +46,8 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     private EditText selectedDate;
     private Calendar date;
     private AutoCompleteTextView bucket;
+    TextInputLayout dropdown;
+    private MaterialDatePicker<Long> datePicker;
 
     @Nullable
     @Override
@@ -69,6 +72,10 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         selectedDate = view.findViewById(R.id.date);
         date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         bucket = view.findViewById(R.id.bucket);
+        datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
+        dropdown = createdView.findViewById(R.id.bucket_dropdown);
+
+        bucket.setText(getArguments().getString("bucket_name"), false);
 
         setDatePicker();
         setSaveEntryListener();
@@ -129,12 +136,14 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
 
     @Override
     public void showDateError(final int error) {
+        selectedDate.requestFocus();
+        getParentFragmentManager().beginTransaction().remove(datePicker).commit();
         selectedDate.setError(getString(error));
     }
 
     @Override
     public void showBucketTitleError(int error) {
-        bucket.setError(getString(error));
+        dropdown.setError(getString(error));
     }
 
 
@@ -149,13 +158,17 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     }
 
     private void setDatePicker() {
-        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.pick_a_date)).build();
-
         datePicker.addOnPositiveButtonClickListener(selection -> {
             selectedDate.setText(datePicker.getHeaderText());
             date.setTimeInMillis(selection);
         });
+
+        selectedDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker.isAdded()) {
+                datePicker.show(getParentFragmentManager(), "date_picker");
+            }
+        });
+
         selectedDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getParentFragmentManager(), "date_picker");

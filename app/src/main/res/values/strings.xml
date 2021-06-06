@@ -58,4 +58,5 @@
     <string name="error_saving_bucket">Error saving bucket</string>
     <string name="bucket_saved">Bucket %1$s saved</string>
     <string name="monthly_income">Monthly income</string>
+    <string name="apply_changes">Apply changes</string>
 </resources>
