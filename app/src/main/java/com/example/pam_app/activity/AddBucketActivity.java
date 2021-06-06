@@ -97,7 +97,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 title.getText().toString(),
                 date.getTime(),
                 BucketType.getBucketType(bucketType.getText().toString()),
-                Double.parseDouble(target.getText().toString()),
+                target.getText().toString(),
                 imagePath
         ));
 
@@ -130,7 +130,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
 
     @Override
     public void showBucketTypeError(int error) {
-        dropdown.setError(getString(error));
+        bucketType.setError(getString(error));
     }
 
     private void setDatePicker() {

@@ -48,11 +48,11 @@ public class AddBucketEntryPresenter {
         disposable.dispose();
     }
 
-    public void saveBucketEntry(final double amount, final Date date, final String description,
+    public void saveBucketEntry(final String amount, final Date date, final String description,
                                 final String bucketTitle) {
         final boolean fields = checkFields(amount, date, description, bucketTitle);
         if (fields) {
-            final BucketEntry entry = new BucketEntry(amount, date, description);
+            final BucketEntry entry = new BucketEntry(Double.parseDouble(amount), date, description);
             disposable.add(
                     bucketRepository.get(bucketTitle)
                             .subscribeOn(schedulerProvider.io())
@@ -80,7 +80,7 @@ public class AddBucketEntryPresenter {
     }
 
     private boolean checkFields(
-            final Double amount,
+            final String amount,
             final Date date,
             final String description,
             final String bucket
@@ -93,10 +93,10 @@ public class AddBucketEntryPresenter {
             addBucketEntryView.get().showDescriptionError(R.string.max_characters, MAX_CHARACTERS);
             isCorrect = false;
         }
-        if (amount == null) {
+        if (amount.length() == 0) {
             addBucketEntryView.get().showAmountError(R.string.error_empty, null);
             isCorrect = false;
-        } else if (amount >= MAX_AMOUNT) {
+        } else if (Double.parseDouble(amount) >= MAX_AMOUNT) {
             addBucketEntryView.get().showAmountError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;
         }

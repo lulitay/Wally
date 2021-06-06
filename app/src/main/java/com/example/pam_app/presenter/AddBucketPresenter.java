@@ -37,12 +37,12 @@ public class AddBucketPresenter {
             final String title,
             final Date dueDate,
             final BucketType bucketType,
-            final Double target,
+            final String target,
             final String imagePath
     ) {
         final boolean fields = checkFields(title, dueDate, bucketType, target);
         if (fields) {
-            final Bucket bucket = new Bucket(title, dueDate, bucketType, target, imagePath);
+            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath);
             disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
@@ -62,7 +62,7 @@ public class AddBucketPresenter {
             final String title,
             final Date dueDate,
             final BucketType bucketType,
-            final Double target
+            final String target
     ) {
         boolean isCorrect = true;
         if (title.length() == 0) {
@@ -72,10 +72,10 @@ public class AddBucketPresenter {
             addBucketView.get().showTitleError(R.string.max_characters, MAX_CHARACTERS);
             isCorrect = false;
         }
-        if (target == null) {
+        if (target.length() == 0) {
             addBucketView.get().showTargetError(R.string.error_empty, null);
             isCorrect = false;
-        } else if (target >= MAX_AMOUNT) {
+        } else if (Double.parseDouble(target) >= MAX_AMOUNT) {
             addBucketView.get().showTargetError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;
         }
