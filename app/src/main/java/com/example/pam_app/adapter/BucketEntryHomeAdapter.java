@@ -40,12 +40,16 @@ public class BucketEntryHomeAdapter extends RecyclerView.Adapter<BucketEntryHome
         return bucketEntryList.size();
     }
 
+    public void showNewBucket(final BucketEntry entry) {
+        bucketEntryList.add(entry);
+        notifyDataSetChanged();
+    }
+
     public void update(final List<BucketEntry> newBucketEntryList) {
-        bucketEntryList.clear();
         if (newBucketEntryList != null) {
             bucketEntryList.addAll(newBucketEntryList);
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     public static class BucketEntryViewHolder extends RecyclerView.ViewHolder {

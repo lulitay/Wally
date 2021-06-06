@@ -58,4 +58,5 @@
     <string name="error_past_date">No puede ser una fecha pasada</string>
     <string name="error_saving_bucket">Error guardando cuenta</string>
     <string name="bucket_saved">Cuenta %1$s guardada</string>
+    <string name="monthly_income">Ingresos mensuales</string>
 </resources>

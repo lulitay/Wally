@@ -24,10 +24,6 @@ public interface BucketListView {
     void bind(Context context, Clickable launchAddBucketActivity,
               ClickableWithParameter launchBucketDetailActivity, final List<Bucket> bucketList);
 
-    void onViewStop();
-
-    void onViewResume();
-
     void setIsSpendingListEmpty(boolean isEmpty);
 
     void setIsSavingsListEmpty(boolean isEmpty);
