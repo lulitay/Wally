@@ -5,17 +5,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.pam_app.fragment.AddIncomeBucketEntryFragment;
+import com.example.pam_app.fragment.AddIncomeFragment;
 import com.example.pam_app.fragment.AddSavingBucketEntryFragment;
 import com.example.pam_app.fragment.AddSpendingBucketEntryFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
     String defaultBucket;
-
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
-    }
 
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, String defaultBucket) {
         super(fragmentActivity);
@@ -30,13 +26,15 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 return AddSpendingBucketEntryFragment.newInstance(position ,defaultBucket);
             case 1:
                 return AddSavingBucketEntryFragment.newInstance(position, defaultBucket);
+            case 2:
+                return AddIncomeFragment.newInstance(position, defaultBucket);
             default:
-                return AddIncomeBucketEntryFragment.newInstance(position, defaultBucket);
+                return null;
         }
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

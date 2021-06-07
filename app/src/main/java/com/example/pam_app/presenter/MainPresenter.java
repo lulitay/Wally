@@ -4,6 +4,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Income;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.IncomeRepository;
 import com.example.pam_app.repository.LanguagesRepository;
@@ -61,6 +62,11 @@ public class MainPresenter {
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onEntriesReceived);
+
+        disposable = incomeRepository.getList()
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::onIncomesReceived);
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
@@ -73,6 +79,10 @@ public class MainPresenter {
 
     private void onBucketsError(Throwable throwable) {
         //TODO: throw error
+    }
+
+    private void onIncomesReceived(final List<Income> incomeList) {
+        mainView.get().onIncomesReceived(incomeList);
     }
 
     public void onViewStop() {

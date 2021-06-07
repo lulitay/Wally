@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
@@ -130,6 +131,11 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     @Override
+    public void onIncomesReceived(final List<Income> incomeList) {
+        incomeView.bind(incomeList);
+    }
+
+    @Override
     public void updateLocale(final Locale locale) {
         setLocale(locale);
         finish();
@@ -212,7 +218,13 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     private void setUpAddBucketEntryResultLauncher() {
         addBucketEntryResultLauncher = registerForActivityResult(
                 new EntryContract(),
-                result -> homeView.onBucketEntryAdded(result)
+                (result) -> {
+                    if (result instanceof BucketEntry) {
+                        homeView.onBucketEntryAdded((BucketEntry) result);
+                    } else {
+                        incomeView.onIncomeAdded((Income) result);
+                    }
+                }
         );
     }
 

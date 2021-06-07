@@ -221,7 +221,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
-    public void onClick(Integer bucketId) {
+    public void onClick(final Integer bucketId) {
         presenter.onBucketClicked(bucketId);
     }
 }
