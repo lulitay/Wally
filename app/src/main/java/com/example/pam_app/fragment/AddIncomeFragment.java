@@ -17,8 +17,11 @@ import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.AddIncomePresenter;
+import com.example.pam_app.repository.BucketMapper;
+import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.IncomeMapper;
 import com.example.pam_app.repository.IncomeRepository;
+import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.repository.RoomIncomeRepository;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
@@ -56,6 +59,10 @@ public class AddIncomeFragment extends Fragment implements AddIncomeView {
         final IncomeRepository incomeRepository = new RoomIncomeRepository(
                 WallyDatabase.getInstance(requireActivity().getApplicationContext()).incomeDao(),
                 new IncomeMapper()
+        );
+        final BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(requireActivity().getApplicationContext()).bucketDao(),
+                new BucketMapper()
         );
         final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
         presenter = new AddIncomePresenter(this, incomeRepository, schedulerProvider);

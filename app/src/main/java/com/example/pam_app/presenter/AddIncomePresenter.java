@@ -36,17 +36,17 @@ public class AddIncomePresenter {
     ) {
         final Income income = new Income(description, Double.parseDouble(amount), IncomeType.MONTHLY, date);
         disposable = Completable.fromAction(() -> incomeRepository.create(income))
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(() -> {
-                    if (addIncomeView.get() != null) {
-                        addIncomeView.get().onSuccessSavingIncome(income);
-                    }
-                }, (throwable) -> {
-                    if (addIncomeView.get() != null) {
-                        addIncomeView.get().onErrorSavingIncome();
-                    }
-                });
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe(() -> {
+                if (addIncomeView.get() != null) {
+                    addIncomeView.get().onSuccessSavingIncome(income);
+                }
+            }, (throwable) -> {
+                if (addIncomeView.get() != null) {
+                    addIncomeView.get().onErrorSavingIncome();
+                }
+            });
     }
 
     public void onViewDetached() {

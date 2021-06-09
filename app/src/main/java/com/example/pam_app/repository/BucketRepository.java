@@ -21,6 +21,8 @@ public interface BucketRepository {
 
     Flowable<List<BucketEntry>> getEntryList();
 
+    Flowable<List<Double>> getSpendingTotal();
+
     void addEntry(final BucketEntry entry, final int bucketId);
 
     void removeEntry(final BucketEntry entry, final int idBucket);

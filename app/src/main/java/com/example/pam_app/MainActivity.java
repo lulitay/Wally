@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     @Override
-    public void onIncomesReceived(final List<Income> incomeList) {
-        incomeView.bind(incomeList);
+    public void onIncomeDataReceived(final List<Income> incomeList, final Double incomeLeft) {
+        incomeView.bind(incomeList, incomeLeft);
     }
 
     @Override

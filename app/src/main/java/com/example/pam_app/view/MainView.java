@@ -11,6 +11,6 @@ public interface MainView {
 
     void onBucketListViewReceived(final List<Bucket> bucketList);
     void onEntriesReceived(final List<BucketEntry> entryList);
-    void onIncomesReceived(final List<Income> incomeList);
+    void onIncomeDataReceived(final List<Income> incomeList, final Double incomeLeft);
     void updateLocale(final Locale locale);
 }

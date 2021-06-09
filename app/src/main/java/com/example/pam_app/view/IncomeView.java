@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IncomeView {
 
-    void bind(final List<Income> incomeList);
+    void bind(final List<Income> incomeList, final Double incomeLeft);
     void onIncomeAdded(final Income income);
+    void setUpIncomeLeftText(final boolean isPositive);
 }
