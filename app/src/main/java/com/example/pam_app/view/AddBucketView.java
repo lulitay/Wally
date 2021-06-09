@@ -11,6 +11,5 @@ public interface AddBucketView {
     void showDateError(final int error);
     void showBucketTypeError(final int error);
     void requestStoragePermission();
-    void goToLoadImage();
     void changeDatePickerState(final boolean state);
 }
