@@ -4,6 +4,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Income;
 import com.example.pam_app.repository.BucketRepository;
 import com.example.pam_app.repository.IncomeRepository;
 import com.example.pam_app.repository.LanguagesRepository;
@@ -13,7 +14,6 @@ import com.example.pam_app.view.MainView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 

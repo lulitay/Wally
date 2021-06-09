@@ -12,7 +12,9 @@ import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.model.Income;
 
-public class EntryContract extends ActivityResultContract<String, BucketEntry> {
+import java.io.Serializable;
+
+public class EntryContract extends ActivityResultContract<String, Serializable> {
 
     @NonNull
     @Override

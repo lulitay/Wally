@@ -1,8 +1,11 @@
 package com.example.pam_app.model;
 
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Income {
+public class Income implements Serializable {
     public final Integer id;
     private final String title;
     private final double amount;
@@ -35,6 +38,15 @@ public class Income {
 
     public double getAmount() {
         return amount;
+    }
+
+    public String getAmountString() {
+        return "$" + amount;
+    }
+
+    public String getDateString() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        return dateFormat.format(date);
     }
 
     public IncomeType getIncomeType() {
