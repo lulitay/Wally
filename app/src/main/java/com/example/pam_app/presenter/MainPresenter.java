@@ -30,6 +30,9 @@ public class MainPresenter {
     private final LanguagesRepository languagesRepository;
     private Disposable disposable;
 
+    private Double totalIncome = null;
+    private Double totalSpending = null;
+
     public MainPresenter(
             final BucketRepository bucketRepository,
             final IncomeRepository incomeRepository,
@@ -53,14 +56,19 @@ public class MainPresenter {
             .subscribe(this::onBucketsReceived, this::onBucketsError);
 
         disposable = bucketRepository.getEntryList()
-                .map(unsortedList -> {
-                    List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
-                    Collections.sort(sortedList, new BucketEntryComparator());
-                    return sortedList;
-                })
-                .subscribeOn(schedulerProvider.computation())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(this::onEntriesReceived);
+            .map(unsortedList -> {
+                List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
+                sortedList.sort(new BucketEntryComparator());
+                return sortedList;
+            })
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe(this::onEntriesReceived);
+
+        disposable = incomeRepository.getList()
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe(this::onIncomesReceived);
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
@@ -68,11 +76,21 @@ public class MainPresenter {
     }
 
     private void onEntriesReceived(final List<BucketEntry> entries) {
-        mainView.get().onEntriesReceived(entries);
+        this.totalSpending = entries.stream().mapToDouble(BucketEntry::getAmount).sum();
+        if (mainView.get() != null) {
+            mainView.get().onEntriesReceived(entries);
+        }
     }
 
     private void onBucketsError(Throwable throwable) {
         //TODO: throw error
+    }
+
+    private void onIncomesReceived(final List<Income> incomeList) {
+        this.totalIncome = incomeList.stream().mapToDouble(Income::getAmount).sum();
+        if (this.totalSpending != null) {
+            mainView.get().onIncomeDataReceived(incomeList, (totalIncome - totalSpending));
+        }
     }
 
     public void onViewStop() {

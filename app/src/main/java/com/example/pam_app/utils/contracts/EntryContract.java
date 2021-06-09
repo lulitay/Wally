@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.example.pam_app.activity.AddBucketEntryActivity;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Income;
 
 public class EntryContract extends ActivityResultContract<String, BucketEntry> {
 
@@ -20,9 +21,12 @@ public class EntryContract extends ActivityResultContract<String, BucketEntry> {
     }
 
     @Override
-    public BucketEntry parseResult(int resultCode, @Nullable Intent intent) {
+    public Serializable parseResult(int resultCode, @Nullable Intent intent) {
         if (resultCode == Activity.RESULT_OK && intent != null) {
-            return (BucketEntry) intent.getSerializableExtra("entry");
+            if (intent.getSerializableExtra("entry") == null) {
+                return intent.getSerializableExtra("income");
+            }
+            return intent.getSerializableExtra("entry");
         }
         return null;
     }
