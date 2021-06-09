@@ -14,6 +14,12 @@ import android.widget.ViewFlipper;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
@@ -33,6 +39,8 @@ import com.example.pam_app.utils.contracts.EntryContract;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
+import com.example.pam_app.utils.workers.RecurrentBucketWorker;
+import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory;
 import com.example.pam_app.view.BucketListView;
 import com.example.pam_app.view.HomeView;
 import com.example.pam_app.view.IncomeView;
@@ -43,7 +51,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.Calendar.DAY_OF_MONTH;
 
 public class MainActivity extends AppCompatActivity implements Clickable, MainView {
 
@@ -90,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         setUpAddBucketResultLauncher();
         setUpAddEntryResultLauncher();
         setUpFAB();
+        setUpRecurrentBucketWorker();
     }
 
     @Override
@@ -143,6 +156,37 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         overridePendingTransition(0, 0);
         startActivity(getIntent());
         overridePendingTransition(0, 0);
+    }
+
+    private void setUpRecurrentBucketWorker() {
+        final BucketRepository bucketRepository = new RoomBucketRepository(
+                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
+                new BucketMapper()
+        );
+        final androidx.work.Configuration myConfig = new androidx.work.Configuration.Builder()
+                .setMinimumLoggingLevel(android.util.Log.INFO)
+                .setWorkerFactory(new RecurrentBucketWorkerFactory(bucketRepository))
+                .build();
+        WorkManager.initialize(this, myConfig);
+
+        final WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+
+        final Calendar currentDate = Calendar.getInstance();
+        final Calendar dueDate = Calendar.getInstance();
+        dueDate.set(Calendar.HOUR_OF_DAY, 1);
+        dueDate.set(Calendar.MINUTE, 0);
+        dueDate.set(Calendar.SECOND, 0);
+        dueDate.set(Calendar.DAY_OF_MONTH, currentDate.get(DAY_OF_MONTH) + 1);
+
+        final long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        final PeriodicWorkRequest bucketRecurrent =
+                new PeriodicWorkRequest.Builder(RecurrentBucketWorker.class,
+                        1, TimeUnit.DAYS,
+                        30, TimeUnit.MINUTES)
+                        .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+                        .build();
+        workManager.enqueueUniquePeriodicWork("recurrent_bucket",
+                ExistingPeriodicWorkPolicy.REPLACE, bucketRecurrent);
     }
 
     @SuppressLint("NonConstantResourceId")

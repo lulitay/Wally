@@ -16,6 +16,11 @@ import io.reactivex.disposables.Disposable;
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
 
+import java.util.Calendar;
+
+import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_MONTH;
+
 public class AddBucketPresenter {
 
     private final WeakReference<AddBucketView> addBucketView;
@@ -38,11 +43,13 @@ public class AddBucketPresenter {
             final Date dueDate,
             final BucketType bucketType,
             final String target,
-            final String imagePath
+            final String imagePath,
+            final boolean isRecurrent
     ) {
-        final boolean fields = checkFields(title, dueDate, bucketType, target);
+        final Date date = isRecurrent ? getFirstDayOfNextMonth() : dueDate;
+        final boolean fields = checkFields(title, date, bucketType, target, isRecurrent);
         if (fields) {
-            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath);
+            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
             disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
@@ -62,7 +69,8 @@ public class AddBucketPresenter {
             final String title,
             final Date dueDate,
             final BucketType bucketType,
-            final String target
+            final String target,
+            final boolean isRecurrent
     ) {
         boolean isCorrect = true;
         if (title.length() == 0) {
@@ -79,10 +87,10 @@ public class AddBucketPresenter {
             addBucketView.get().showTargetError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;
         }
-        if (dueDate == null) {
+        if (!isRecurrent && dueDate == null) {
             addBucketView.get().showDateError(R.string.error_empty);
             isCorrect = false;
-        } else if (dueDate.getTime() < new Date().getTime()) {
+        } else if (!isRecurrent && dueDate.getTime() < new Date().getTime()) {
             addBucketView.get().showDateError(R.string.error_past_date);
             isCorrect = false;
         }
@@ -103,5 +111,21 @@ public class AddBucketPresenter {
         if (disposable != null) {
             disposable.dispose();
         }
+    }
+
+    public void onIsRecurrentSwitchChange(final boolean isRecurrent) {
+        if (addBucketView.get() != null) {
+            addBucketView.get().changeDatePickerState(!isRecurrent);
+        }
+    }
+
+    private Date getFirstDayOfNextMonth() {
+        final Calendar today = getInstance();
+        final Calendar next = getInstance();
+        next.clear();
+        next.set(YEAR, today.get(YEAR));
+        next.set(MONTH, today.get(MONTH) + 1);
+        next.set(DAY_OF_MONTH, 1);
+        return next.getTime();
     }
 }

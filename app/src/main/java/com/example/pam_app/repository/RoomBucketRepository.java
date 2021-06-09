@@ -7,6 +7,7 @@ import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -33,6 +34,22 @@ public class RoomBucketRepository implements BucketRepository {
             }
             return buckets;
         });
+    }
+
+    @Override
+    public Flowable<List<Bucket>> getList(boolean type, Date date) {
+        return this.bucketDao.getList(type, date).map(bucketEntityList -> {
+            final List<Bucket> buckets = new ArrayList<>();
+            for (final BucketEntity be: bucketEntityList) {
+                buckets.add(bucketMapper.toModel(be));
+            }
+            return buckets;
+        });
+    }
+
+    @Override
+    public void update(Bucket bucket) {
+        bucketDao.update(bucketMapper.toEntity(bucket));
     }
 
     @Override

@@ -118,12 +118,6 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     @Override
     public void bind(final Bucket bucket) {
         this.binding.setBucket(bucket);
-        final MaterialTextView noEntriesText = findViewById(R.id.entries_unavailable);
-        if (bucket.entries.isEmpty()) {
-            noEntriesText.setVisibility(View.VISIBLE);
-        } else {
-            noEntriesText.setVisibility(View.GONE);
-        }
         drawImage(bucket.imagePath);
     }
 
@@ -209,6 +203,10 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     private void setUpList() {
         RecyclerView listView = findViewById(R.id.bucket_entries);
         BucketEntryAdapter adapter = new BucketEntryAdapter();
+        listView.setAdapter(adapter);
+        ViewCompat.setNestedScrollingEnabled(listView, false);
+        listView = findViewById(R.id.bucket_entries_old);
+        adapter = new BucketEntryAdapter();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }

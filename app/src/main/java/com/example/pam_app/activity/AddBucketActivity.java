@@ -33,6 +33,7 @@ import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -54,6 +55,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     private EditText target;
     private MaterialDatePicker<Long> datePicker;
     private TextInputLayout dropdown;
+    private SwitchMaterial isRecurrent;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
 
@@ -85,10 +87,16 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         target = findViewById(R.id.target);
         dropdown = findViewById(R.id.bucket_type_dropdown);
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
+        isRecurrent = findViewById(R.id.switch_recurrent_bucket);
 
         setDatePicker();
         setSaveBucketListener();
         setBucketTypeValues();
+        setIsRecurrentSwitch();
+    }
+
+    private void setIsRecurrentSwitch() {
+        isRecurrent.setOnClickListener(v -> presenter.onIsRecurrentSwitchChange(isRecurrent.isChecked()));
     }
 
     private void setSaveBucketListener() {
@@ -99,7 +107,8 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
                 date.getTime(),
                 BucketType.getBucketType(bucketType.getText().toString()),
                 target.getText().toString(),
-                imagePath
+                imagePath,
+                isRecurrent.isChecked()
         ));
 
     }
@@ -208,6 +217,12 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     public void requestStoragePermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void changeDatePickerState(boolean state) {
+        final EditText dueDate = findViewById(R.id.due_date);
+        dueDate.setEnabled(state);
     }
 
     @Override
