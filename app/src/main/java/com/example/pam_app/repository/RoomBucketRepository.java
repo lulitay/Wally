@@ -13,6 +13,8 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
+import static com.example.pam_app.model.BucketType.SPENDING;
+
 public class RoomBucketRepository implements BucketRepository {
 
     private final BucketDao bucketDao;
@@ -79,6 +81,11 @@ public class RoomBucketRepository implements BucketRepository {
             }
             return entries;
         });
+    }
+
+    @Override
+    public Flowable<List<Double>> getSpendingTotal() {
+        return bucketDao.getTotalAmountByType(SPENDING.ordinal());
     }
 
     @Override

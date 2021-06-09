@@ -59,4 +59,9 @@
     <string name="bucket_saved">Bucket %1$s saved</string>
     <string name="recurrent_bucket">Recurrent bucket in a month</string>
     <string name="entries_old">History</string>
+    <string name="monthly_income">Monthly income</string>
+    <string name="apply_changes">Apply changes</string>
+    <string name="error_saving_income">Income could not be saved</string>
+    <string name="income_saving_success">Income %1$s saved</string>
+    <string name="money_display">$%1$.2f</string>
 </resources>

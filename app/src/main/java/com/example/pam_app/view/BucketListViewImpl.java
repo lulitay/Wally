@@ -16,21 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketListAdapter;
-import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
+import com.example.pam_app.presenter.BucketListPresenter;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.listener.ClickableWithParameter;
-import com.example.pam_app.model.Bucket;
-import com.example.pam_app.presenter.BucketListPresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
 
-public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter {
+public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter<Integer> {
 
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
@@ -40,10 +34,10 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private BucketListAdapter savingsAdapter;
 
     private Clickable onAddBucketClickedListener;
-    private ClickableWithParameter onBucketClickedListener;
+    private ClickableWithParameter<Integer> onBucketClickedListener;
 
-    private boolean isSpendingListExpanded = false;
-    private boolean isSavingsListExpanded = false;
+    private boolean isSpendingListExpanded = true;
+    private boolean isSavingsListExpanded = true;
     private boolean isSpendingListEmpty = true;
     private boolean isSavingsListEmpty = true;
 
@@ -57,22 +51,16 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     public BucketListViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
-        inflate(context, R.layout.activity_bucket_list, this);
+        inflate(context, R.layout.view_bucket_list, this);
         setOrientation(VERTICAL);
-
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(context).bucketDao(),
-                new BucketMapper()
-        );
-        final SchedulerProvider provider = new AndroidSchedulerProvider();
-        presenter = new BucketListPresenter(bucketRepository, this, provider);
+        presenter = new BucketListPresenter(this);
     }
 
     @Override
     public void bind(
             final Context context,
             final Clickable onAddBucketClickedListener,
-            final ClickableWithParameter onBucketClickedListener,
+            final ClickableWithParameter<Integer> onBucketClickedListener,
             final List<Bucket> bucketList
     ) {
         setUpAddBucketButton();
@@ -88,17 +76,17 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     private void setUpAddBucketButton() {
         final Button addBucketButton = findViewById(R.id.add_bucket_button);
-        addBucketButton.setOnClickListener(v -> presenter.OnAddBucketClicked());
+        addBucketButton.setOnClickListener(v -> presenter.onAddBucketClicked());
     }
 
     private void setUpSpendingCard() {
         final CardView spendingCard = findViewById(R.id.spending_buckets_card);
-        spendingCard.setOnClickListener(v -> presenter.OnSpendingCardClicked());
+        spendingCard.setOnClickListener(v -> presenter.onSpendingCardClicked());
     }
 
     private void setUpSavingsCard() {
         final CardView savingsCard = findViewById(R.id.savings_buckets_card);
-        savingsCard.setOnClickListener(v -> presenter.OnSavingsCardClicked());
+        savingsCard.setOnClickListener(v -> presenter.onSavingsCardClicked());
     }
 
     private void setUpSpendingList(final Context context) {
@@ -128,13 +116,35 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
-    public void onViewStop() {
-        presenter.onViewDetached();
+    public void drawSpendingBucketList() {
+        TextView bucketsUnavailable = findViewById(R.id.spending_buckets_unavailable);
+        LinearLayout header = findViewById(R.id.spending_header);
+        ImageView indicator = findViewById(R.id.spending_buckets_collapsed_indicator);
+
+        if (isSpendingListEmpty) {
+            bucketsUnavailable.setVisibility(View.VISIBLE);
+        } else {
+            spendingBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
+        }
+        isSpendingListExpanded = true;
+        indicator.setRotation(180);
     }
 
     @Override
-    public void onViewResume() {
-        presenter.onViewResume();
+    public void drawSavingsBucketList() {
+        TextView bucketsUnavailable = findViewById(R.id.savings_buckets_unavailable);
+        LinearLayout header = findViewById(R.id.savings_header);
+        ImageView indicator = findViewById(R.id.savings_buckets_collapsed_indicator);
+
+        if (isSavingsListEmpty) {
+            bucketsUnavailable.setVisibility(View.VISIBLE);
+        } else {
+            savingsBuckets.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE);
+        }
+        isSavingsListExpanded = true;
+        indicator.setRotation(180);
     }
 
     @Override
@@ -149,9 +159,9 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
 
     @Override
     public void onBucketAdded(final Bucket bucket) {
-        if (bucket.bucketType.equals(BucketType.SAVING)) {
+        if (bucket != null && bucket.bucketType.equals(BucketType.SAVING)) {
             savingsAdapter.showNewBucket(bucket);
-        } else {
+        } else if (bucket != null) {
             spendingAdapter.showNewBucket(bucket);
         }
     }
@@ -189,14 +199,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
             isSpendingListExpanded = false;
             indicator.setRotation(0);
         } else {
-            if (isSpendingListEmpty) {
-                bucketsUnavailable.setVisibility(View.VISIBLE);
-            } else {
-                spendingBuckets.setVisibility(View.VISIBLE);
-                header.setVisibility(View.VISIBLE);
-            }
-            isSpendingListExpanded = true;
-            indicator.setRotation(180);
+            drawSpendingBucketList();
         }
     }
 
@@ -213,19 +216,12 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
             isSavingsListExpanded = false;
             indicator.setRotation(0);
         } else {
-            if (isSavingsListEmpty) {
-                bucketsUnavailable.setVisibility(View.VISIBLE);
-            } else {
-                savingsBuckets.setVisibility(View.VISIBLE);
-                header.setVisibility(View.VISIBLE);
-            }
-            isSavingsListExpanded = true;
-            indicator.setRotation(180);
+            drawSavingsBucketList();
         }
     }
 
     @Override
-    public void onClick(int bucketId) {
+    public void onClick(final Integer bucketId) {
         presenter.onBucketClicked(bucketId);
     }
 }

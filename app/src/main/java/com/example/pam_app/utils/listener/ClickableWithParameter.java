@@ -1,7 +1,7 @@
 package com.example.pam_app.utils.listener;
 
-public interface ClickableWithParameter {
+public interface ClickableWithParameter<T> {
 
-    void onClick(int id);
+    void onClick(T id);
 }
 

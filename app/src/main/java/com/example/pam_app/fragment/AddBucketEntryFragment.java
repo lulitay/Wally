@@ -1,5 +1,6 @@
 package com.example.pam_app.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.AddBucketEntryPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
@@ -24,11 +26,13 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketEntryView;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class AddBucketEntryFragment extends Fragment implements AddBucketEntryView {
 
@@ -36,6 +40,14 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     public static final int MAX_CHARACTERS = 50;
     private AddBucketEntryPresenter presenter;
     private View createdView;
+
+    private EditText description;
+    private EditText amount;
+    private EditText selectedDate;
+    private Calendar date;
+    private AutoCompleteTextView bucket;
+    private TextInputLayout dropdown;
+    private MaterialDatePicker<Long> datePicker;
 
     @Nullable
     @Override
@@ -55,14 +67,18 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         createdView = view;
         presenter.onViewAttached();
 
-        final EditText description = view.findViewById(R.id.description);
-        final EditText amount = view.findViewById(R.id.amount);
-        final EditText date = view.findViewById(R.id.date);
-        final Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        final AutoCompleteTextView bucket = view.findViewById(R.id.bucket);
+        description = view.findViewById(R.id.description);
+        amount = view.findViewById(R.id.amount);
+        selectedDate = view.findViewById(R.id.date);
+        date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        bucket = view.findViewById(R.id.bucket);
+        datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
+        dropdown = view.findViewById(R.id.bucket_dropdown);
 
-        setDatePicker(date, selectedDate);
-        saveEntry(description, amount, date, selectedDate, bucket);
+        bucket.setText(getArguments().getString("bucket_name"), false);
+
+        setDatePicker();
+        setSaveEntryListener();
     }
 
     @Override
@@ -82,13 +98,16 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
     }
 
     @Override
-    public void onSuccessSavingBucketEntry(final String description) {
+    public void onSuccessSavingBucketEntry(final BucketEntry entry) {
         Toast.makeText(
                 getContext(),
-                getString(R.string.entry_saving_success, description),
+                getString(R.string.entry_saving_success, entry.getComment()),
                 Toast.LENGTH_LONG
         ).show();
-        requireActivity().onBackPressed();
+        final Intent result = new Intent();
+        result.putExtra("entry", entry);
+        requireActivity().setResult(RESULT_OK, result);
+        requireActivity().finish();
     }
 
     @Override
@@ -97,72 +116,60 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         presenter.onViewDetached();
     }
 
-    void saveEntry(final EditText description,
-                   final EditText amount,
-                   final EditText date,
-                   final Calendar selectedDate,
-                   final AutoCompleteTextView bucket
-    ) {
+    @Override
+    public void showDescriptionError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            description.setError(getString(error));
+        } else {
+            description.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showAmountError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            amount.setError(getString(error));
+        } else {
+            amount.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showDateError(final int error) {
+        selectedDate.requestFocus();
+        getParentFragmentManager().beginTransaction().remove(datePicker).commit();
+        selectedDate.setError(getString(error));
+    }
+
+    @Override
+    public void showBucketTitleError(int error) {
+        dropdown.setError(getString(error));
+    }
+
+
+    private void setSaveEntryListener() {
         final Button saveEntry = createdView.findViewById(R.id.save);
-        saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(description, amount, date, selectedDate, bucket);
-            if (fields) {
-                presenter.saveBucketEntry(
-                        Double.parseDouble(amount.getText().toString()),
-                        selectedDate.getTime(),
-                        description.getText().toString(),
-                        bucket.getText().toString()
-                );
+        saveEntry.setOnClickListener(v -> presenter.saveBucketEntry(
+                amount.getText().toString(),
+                date.getTime(),
+                description.getText().toString(),
+                bucket.getText().toString()
+        ));
+    }
+
+    private void setDatePicker() {
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            selectedDate.setText(datePicker.getHeaderText());
+            date.setTimeInMillis(selection);
+        });
+
+        selectedDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker.isAdded()) {
+                datePicker.show(getParentFragmentManager(), "date_picker");
             }
         });
-    }
 
-    // TODO improve this
-    boolean checkFields(
-            final EditText description,
-            final EditText amount,
-            final EditText date,
-            final Calendar selectedDate,
-            final AutoCompleteTextView bucket
-    ) {
-        boolean isCorrect = true;
-        if (description.length() == 0) {
-            description.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (description.getText().length() > MAX_CHARACTERS) {
-            description.setError(getString(R.string.max_characters, MAX_CHARACTERS));
-            isCorrect = false;
-        }
-        if (amount.length() == 0) {
-            amount.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (Double.parseDouble(amount.getText().toString()) >= MAX_AMOUNT) {
-            amount.setError(getString(R.string.max_amount, MAX_AMOUNT));
-            isCorrect = false;
-        }
-        if (selectedDate == null) {
-            date.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (selectedDate.getTimeInMillis() > new Date().getTime()) {
-            date.setError(getString(R.string.error_future_date));
-            isCorrect = false;
-        }
-        if (bucket.length() == 0) {
-            bucket.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        }
-        return isCorrect;
-    }
-
-    void setDatePicker(final EditText date, final Calendar selectedDate) {
-        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.pick_a_date)).build();
-
-        datePicker.addOnPositiveButtonClickListener(selection -> {
-            date.setText(datePicker.getHeaderText());
-            selectedDate.setTimeInMillis(selection);
-        });
-        date.setOnClickListener(v -> {
+        selectedDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getParentFragmentManager(), "date_picker");
             }

@@ -5,10 +5,12 @@ import com.example.pam_app.model.Bucket;
 public interface AddBucketView {
 
     void onErrorSavingBucket();
-
     void onSuccessSavingBucket(final Bucket bucket);
-
+    void showTitleError(final int error, final Integer parameter);
+    void showTargetError(final int error, final Integer parameter);
+    void showDateError(final int error);
+    void showBucketTypeError(final int error);
+    void requestStoragePermission();
     void goToLoadImage();
-
     void changeDatePickerState(final boolean state);
 }

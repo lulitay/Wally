@@ -39,6 +39,9 @@ public interface BucketDao {
     @Query("SELECT * FROM entries")
     Flowable<List<BucketEntryEntity>> getEntryList();
 
+    @Query("SELECT amount FROM entries JOIN buckets ON idBucket=id WHERE bucketType=:type")
+    Flowable<List<Double>> getTotalAmountByType(final int type);
+
     @Transaction
     @Query("SELECT * FROM buckets WHERE id=:id")
     Flowable<BucketWithEntriesEntity> get(final int id);

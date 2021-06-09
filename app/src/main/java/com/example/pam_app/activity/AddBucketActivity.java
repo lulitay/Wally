@@ -1,6 +1,8 @@
 package com.example.pam_app.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.pam_app.R;
 import com.example.pam_app.db.WallyDatabase;
@@ -28,24 +32,30 @@ import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
 import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
-import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
-
-public class AddBucketActivity extends AppCompatActivity implements AddBucketView {
+public class AddBucketActivity extends AppCompatActivity implements AddBucketView, ActivityCompat.OnRequestPermissionsResultCallback  {
+    private static final int REQUEST_EXTERNAL_STORAGE = 0;
 
     private AddBucketPresenter presenter;
 
     private ImageView imageView;
     private String imagePath;
     private Calendar date;
+    private EditText title;
+    private EditText dueDate;
+    private AutoCompleteTextView bucketType;
+    private EditText target;
+    private MaterialDatePicker<Long> datePicker;
+    private TextInputLayout dropdown;
+    private SwitchMaterial isRecurrent;
 
     private ActivityResultLauncher<String> galleryResultLauncher;
 
@@ -71,123 +81,115 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     protected void onStart() {
         super.onStart();
-        final EditText title = findViewById(R.id.title);
-        final EditText dueDate = findViewById(R.id.due_date);
-        final AutoCompleteTextView bucketType = findViewById(R.id.bucket_type);
-        final EditText target = findViewById(R.id.target);
-        final SwitchMaterial isRecurrent = findViewById(R.id.switch_recurrent_bucket);
+        title = findViewById(R.id.title);
+        dueDate = findViewById(R.id.due_date);
+        bucketType = findViewById(R.id.bucket_type);
+        target = findViewById(R.id.target);
+        dropdown = findViewById(R.id.bucket_type_dropdown);
+        datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
+        isRecurrent = findViewById(R.id.switch_recurrent_bucket);
 
-        setDatePicker(dueDate);
-        saveBucket(title, target, dueDate, bucketType, isRecurrent);
-        setBucketTypeValues(bucketType);
-        setIsRecurrentSwitch(isRecurrent);
+        setDatePicker();
+        setSaveBucketListener();
+        setBucketTypeValues();
+        setIsRecurrentSwitch();
     }
 
-    private void setIsRecurrentSwitch(final SwitchMaterial isRecurrent) {
-        isRecurrent.setOnClickListener(v -> {
-            presenter.onIsRecurrentSwitchChange(isRecurrent.isChecked());
-        });
+    private void setIsRecurrentSwitch() {
+        isRecurrent.setOnClickListener(v -> presenter.onIsRecurrentSwitchChange(isRecurrent.isChecked()));
     }
 
-    private void saveBucket(final EditText title,
-                            final EditText target,
-                            final EditText dueDate,
-                            final AutoCompleteTextView bucketType,
-                            final SwitchMaterial isRecurrent) {
+    private void setSaveBucketListener() {
         final Button saveEntry = findViewById(R.id.save);
-        saveEntry.setOnClickListener(v -> {
-            final boolean fields = checkFields(title, target, dueDate, bucketType, imagePath,
-                    isRecurrent.isChecked());
-            if (fields) {
+        saveEntry.setOnClickListener(v ->
                 presenter.saveBucket(
-                        title.getText().toString(),
-                        date.getTime(),
-                        BucketType.valueOf(bucketType.getText().toString().toUpperCase()),
-                        Double.parseDouble(target.getText().toString()),
-                        imagePath,
-                        isRecurrent.isChecked()
-                );
+                title.getText().toString(),
+                date.getTime(),
+                BucketType.getBucketType(bucketType.getText().toString()),
+                target.getText().toString(),
+                imagePath,
+                isRecurrent.isChecked()
+        ));
+
+    }
+
+    @Override
+    public void showTitleError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            title.setError(getString(error));
+        } else {
+            title.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showTargetError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            target.setError(getString(error));
+        } else {
+            target.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showDateError(final int error) {
+        dueDate.requestFocus();
+        getSupportFragmentManager().beginTransaction().remove(datePicker).commit();
+        dueDate.setError(getString(error));
+    }
+
+    @Override
+    public void showBucketTypeError(int error) {
+        dropdown.setError(getString(error));
+    }
+
+    private void setDatePicker() {
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            dueDate.setText(datePicker.getHeaderText());
+            date.setTimeInMillis(selection);
+        });
+
+        dueDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker.isAdded()) {
+                datePicker.show(AddBucketActivity.this.getSupportFragmentManager(), "date_picker");
             }
         });
 
-    }
-
-    //TODO improve this
-    private boolean checkFields(
-            final EditText title,
-            final EditText target,
-            final EditText dueDate,
-            final AutoCompleteTextView bucketType,
-            final String imagePath,
-            final boolean isRecurrent
-    ) {
-        boolean isCorrect = true;
-        if (title.length() == 0) {
-            title.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (title.getText().length() > MAX_CHARACTERS) {
-            title.setError(getString(R.string.max_characters, MAX_CHARACTERS));
-            isCorrect = false;
-        }
-        if (target.length() == 0) {
-            target.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (Double.parseDouble(target.getText().toString()) >= MAX_AMOUNT) {
-            target.setError(getString(R.string.max_amount, MAX_AMOUNT));
-            isCorrect = false;
-        }
-        if (!isRecurrent && date == null) {
-            dueDate.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        } else if (!isRecurrent && date.getTimeInMillis() < new Date().getTime()) {
-            dueDate.setError(getString(R.string.error_past_date));
-            isCorrect = false;
-        }
-        if (bucketType.length() == 0) {
-            bucketType.setError(getString(R.string.error_empty));
-            isCorrect = false;
-        }
-        return isCorrect;
-    }
-
-    private void setDatePicker(final EditText editTextDate) {
-        final MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.pick_a_date)).build();
-
-        datePicker.addOnPositiveButtonClickListener(selection -> {
-            editTextDate.setText(datePicker.getHeaderText());
-            date.setTimeInMillis(selection);
-        });
-        editTextDate.setOnClickListener(v -> {
+        dueDate.setOnClickListener(v -> {
             if (!datePicker.isAdded()) {
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
         });
     }
 
-    private void setBucketTypeValues(final AutoCompleteTextView bucketType) {
-        final ArrayAdapter<BucketType> adapter = new ArrayAdapter<>(
-                getApplicationContext(), R.layout.list_item, BucketType.values()
+    private void setBucketTypeValues() {
+        ArrayList<String> bucketTypeResources = new ArrayList<>();
+        for (BucketType type : BucketType.values()) {
+            bucketTypeResources.add(getString(type.getStringResource()));
+        }
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getApplicationContext(), R.layout.list_item, bucketTypeResources
         );
         bucketType.setAdapter(adapter);
     }
 
     private void registerImageActivityResult() {
         this.galleryResultLauncher = registerForActivityResult(
-            new GalleryContract(),
-            result -> {
-                if (result != null) {
-                    try {
-                        final InputStream imageStream = getContentResolver().openInputStream(result);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageView.setImageBitmap(selectedImage);
-                        imagePath = result.toString();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                new GalleryContract(),
+                result -> {
+                    if (result != null) {
+                        try {
+                            final InputStream imageStream = getContentResolver().openInputStream(result);
+                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            imageView.setImageBitmap(selectedImage);
+                            imagePath = result.toString();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
+                });
     }
 
     @Override
@@ -213,8 +215,8 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     }
 
     @Override
-    public void goToLoadImage() {
-        galleryResultLauncher.launch("image/*");
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -227,5 +229,22 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     protected void onStop() {
         super.onStop();
         presenter.onDetachView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadImage();
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.warning_bucket), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void loadImage() {
+        galleryResultLauncher.launch("image/*");
     }
 }

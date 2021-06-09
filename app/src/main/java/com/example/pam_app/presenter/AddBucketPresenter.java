@@ -1,5 +1,6 @@
 package com.example.pam_app.presenter;
 
+import com.example.pam_app.R;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
 import com.example.pam_app.repository.BucketRepository;
@@ -11,6 +12,9 @@ import java.util.Date;
 
 import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
+
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
+import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
 
 import java.util.Calendar;
 
@@ -34,26 +38,72 @@ public class AddBucketPresenter {
         this.schedulerProvider = schedulerProvider;
     }
 
-    public void saveBucket(final String name, final Date dueDate, final BucketType bucketType,
-                           final double target, final String imagePath, final boolean isRecurrent) {
+    public void saveBucket(
+            final String title,
+            final Date dueDate,
+            final BucketType bucketType,
+            final String target,
+            final String imagePath,
+            final boolean isRecurrent
+    ) {
         final Date date = isRecurrent ? getFirstDayOfNextMonth() : dueDate;
-        final Bucket bucket = new Bucket(name, date, bucketType, target, imagePath, isRecurrent);
-        disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(() -> {
-                    if (addBucketView.get() != null) {
-                        addBucketView.get().onSuccessSavingBucket(bucket);
-                    }
-                }, (throwable) -> {
-                    if (addBucketView.get() != null) {
-                        addBucketView.get().onErrorSavingBucket();                    }
-                });
+        final boolean fields = checkFields(title, date, bucketType, target);
+        if (fields) {
+            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath);
+            disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe(() -> {
+                        if (addBucketView.get() != null) {
+                            addBucketView.get().onSuccessSavingBucket(bucket);
+                        }
+                    }, (throwable) -> {
+                        if (addBucketView.get() != null) {
+                            addBucketView.get().onErrorSavingBucket();
+                        }
+                    });
+        }
+    }
+
+    private boolean checkFields(
+            final String title,
+            final Date dueDate,
+            final BucketType bucketType,
+            final String target,
+            final boolean isRecurrent
+    ) {
+        boolean isCorrect = true;
+        if (title.length() == 0) {
+            addBucketView.get().showTitleError(R.string.error_empty, null);
+            isCorrect = false;
+        } else if (title.length() > MAX_CHARACTERS) {
+            addBucketView.get().showTitleError(R.string.max_characters, MAX_CHARACTERS);
+            isCorrect = false;
+        }
+        if (target.length() == 0) {
+            addBucketView.get().showTargetError(R.string.error_empty, null);
+            isCorrect = false;
+        } else if (Double.parseDouble(target) >= MAX_AMOUNT) {
+            addBucketView.get().showTargetError(R.string.max_amount, MAX_AMOUNT);
+            isCorrect = false;
+        }
+        if (!isRecurrent && dueDate == null) {
+            addBucketView.get().showDateError(R.string.error_empty);
+            isCorrect = false;
+        } else if (!isRecurrent && dueDate.getTime() < new Date().getTime()) {
+            addBucketView.get().showDateError(R.string.error_past_date);
+            isCorrect = false;
+        }
+        if (bucketType == null) {
+            addBucketView.get().showBucketTypeError(R.string.error_empty);
+            isCorrect = false;
+        }
+        return isCorrect;
     }
 
     public void onClickLoadImage() {
         if (addBucketView.get() != null) {
-            addBucketView.get().goToLoadImage();
+            addBucketView.get().requestStoragePermission();
         }
     }
 
