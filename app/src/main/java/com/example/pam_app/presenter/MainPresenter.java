@@ -14,7 +14,6 @@ import com.example.pam_app.view.MainView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +58,7 @@ public class MainPresenter {
         disposable = bucketRepository.getEntryList()
             .map(unsortedList -> {
                 List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
-                Collections.sort(sortedList, new BucketEntryComparator());
+                sortedList.sort(new BucketEntryComparator());
                 return sortedList;
             })
             .subscribeOn(schedulerProvider.computation())
@@ -70,11 +69,6 @@ public class MainPresenter {
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
             .subscribe(this::onIncomesReceived);
-
-        disposable = bucketRepository.getSpendingTotal()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(this::onSpendingTotalReceived);
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
@@ -82,11 +76,10 @@ public class MainPresenter {
     }
 
     private void onEntriesReceived(final List<BucketEntry> entries) {
-        mainView.get().onEntriesReceived(entries);
-    }
-
-    private void onSpendingTotalReceived(final List<Double> amounts) {
-        this.totalSpending = amounts.stream().mapToDouble(Double::doubleValue).sum();
+        this.totalSpending = entries.stream().mapToDouble(BucketEntry::getAmount).sum();
+        if (mainView != null) {
+            mainView.get().onEntriesReceived(entries);
+        }
     }
 
     private void onBucketsError(Throwable throwable) {

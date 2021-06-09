@@ -42,7 +42,7 @@ public class IncomeAdapter extends RecyclerView.Adapter<IncomeAdapter.IncomeView
 
     public void showNewIncome(final Income income) {
         incomeList.add(income);
-        notifyDataSetChanged();
+        notifyItemInserted(incomeList.indexOf(income));
     }
 
     public void update(final List<Income> newIncomeList) {

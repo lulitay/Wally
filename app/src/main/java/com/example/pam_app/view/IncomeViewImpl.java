@@ -21,7 +21,7 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
     private final Context context;
     private IncomeAdapter adapter;
     private final IncomePresenter incomePresenter;
-    private double incomeLeft;
+    private Double incomeLeft = null;
 
     public IncomeViewImpl(Context context) {
         this(context, null);
@@ -50,7 +50,17 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
 
     @Override
     public void onIncomeAdded(final Income income) {
-        adapter.showNewIncome(income);
+        if (income != null) {
+            this.incomeLeft = incomeLeft + income.getAmount();
+            incomePresenter.onIncomeLeftAmountReceived(incomeLeft);
+            adapter.showNewIncome(income);
+        }
+    }
+
+    @Override
+    public void onBucketEntryAdded(final Double amount) {
+        this.incomeLeft = incomeLeft - amount;
+        incomePresenter.onIncomeLeftAmountReceived(incomeLeft);
     }
 
     @Override

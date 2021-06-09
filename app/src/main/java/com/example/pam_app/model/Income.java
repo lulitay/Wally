@@ -41,7 +41,7 @@ public class Income implements Serializable {
     }
 
     public String getAmountString() {
-        return String.valueOf(amount);
+        return "$" + amount;
     }
 
     public String getDateString() {

@@ -8,5 +8,6 @@ public interface IncomeView {
 
     void bind(final List<Income> incomeList, final Double incomeLeft);
     void onIncomeAdded(final Income income);
+    void onBucketEntryAdded(final Double amount);
     void setUpIncomeLeftText(final boolean isPositive);
 }
