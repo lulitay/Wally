@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.pam_app.db.WallyDatabase;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.repository.BucketMapper;
 import com.example.pam_app.repository.BucketRepository;
@@ -40,6 +41,7 @@ import com.example.pam_app.view.ProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         setUpViews();
         setUpBottomNavigation();
         setUpAddBucketResultLauncher();
-        setUpAddBucketEntryResultLauncher();
+        setUpAddEntryResultLauncher();
         setUpFAB();
     }
 
@@ -127,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     @Override
     public void onEntriesReceived(final List<BucketEntry> entryList) {
         homeView.bind(entryList);
+    }
+
+    @Override
+    public void onIncomeDataReceived(final List<Income> incomeList, final Double incomeLeft) {
+        incomeView.bind(incomeList, incomeLeft);
     }
 
     @Override
@@ -194,8 +201,17 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         final Resources res = getResources();
         final DisplayMetrics dm = res.getDisplayMetrics();
         final Configuration conf = res.getConfiguration();
-        conf.locale = locale;
+        conf.setLocale(locale);
         res.updateConfiguration(conf, dm);
+    }
+
+    private void onEntryAdded(final Serializable entry) {
+        if (entry instanceof BucketEntry) {
+            homeView.onBucketEntryAdded((BucketEntry) entry);
+            incomeView.onBucketEntryAdded(((BucketEntry) entry).getAmount());
+        } else {
+            incomeView.onIncomeAdded((Income) entry);
+        }
     }
 
     private void setUpChosenLanguage() {
@@ -209,10 +225,10 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         );
     }
 
-    private void setUpAddBucketEntryResultLauncher() {
+    private void setUpAddEntryResultLauncher() {
         addBucketEntryResultLauncher = registerForActivityResult(
                 new EntryContract(),
-                result -> homeView.onBucketEntryAdded(result)
+                this::onEntryAdded
         );
     }
 

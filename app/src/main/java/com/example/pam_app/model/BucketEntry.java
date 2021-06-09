@@ -41,4 +41,8 @@ public class BucketEntry implements Serializable {
     public Date getDate() {
         return this.date;
     }
+
+    public Double getAmount() {
+        return amount;
+    }
 }
