@@ -14,17 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
-import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.di.Container;
+import com.example.pam_app.di.ContainerLocator;
 import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.AddIncomePresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.IncomeMapper;
-import com.example.pam_app.repository.IncomeRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
-import com.example.pam_app.repository.RoomIncomeRepository;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddIncomeView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
@@ -53,21 +46,13 @@ public class AddIncomeFragment extends Fragment implements AddIncomeView {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        final IncomeRepository incomeRepository = new RoomIncomeRepository(
-                WallyDatabase.getInstance(requireActivity().getApplicationContext()).incomeDao(),
-                new IncomeMapper()
-        );
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(requireActivity().getApplicationContext()).bucketDao(),
-                new BucketMapper()
-        );
-        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        presenter = new AddIncomePresenter(this, incomeRepository, schedulerProvider);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, Bundle savedInstanceState) {
+        super.onCreateView(inflater, viewGroup, savedInstanceState);
+        final Container container = ContainerLocator.locateComponent(getContext());
+        presenter = new AddIncomePresenter(this, container.getIncomeRepository(),
+                container.getSchedulerProvider());
         this.date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        return inflater.inflate(R.layout.fragment_add_income, container, false);
+        return inflater.inflate(R.layout.fragment_add_income, viewGroup, false);
     }
 
     @Override

@@ -10,16 +10,12 @@ import androidx.room.RoomDatabase;
 public abstract class WallyDatabase extends RoomDatabase {
 
     private static final String NAME = "wally_db";
-    private static WallyDatabase database;
 
     public abstract BucketDao bucketDao();
     public abstract IncomeDao incomeDao();
 
     public static synchronized WallyDatabase getInstance(final Context context) {
-        if (database == null) {
-            database = Room.databaseBuilder(context.getApplicationContext(), WallyDatabase.class, NAME)
+        return Room.databaseBuilder(context.getApplicationContext(), WallyDatabase.class, NAME)
                             .fallbackToDestructiveMigration().build();
-        }
-        return database;
     }
 }

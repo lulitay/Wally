@@ -16,14 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.pam_app.R;
-import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.di.Container;
+import com.example.pam_app.di.ContainerLocator;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.presenter.AddBucketEntryPresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketEntryView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
@@ -51,14 +47,11 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(requireActivity().getApplicationContext()).bucketDao(),
-                new BucketMapper()
-        );
-        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        presenter = new AddBucketEntryPresenter(this, bucketRepository, schedulerProvider);
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
+        final Container container = ContainerLocator.locateComponent(getContext());
+        presenter = new AddBucketEntryPresenter(this, container.getBucketRepository(),
+                container.getSchedulerProvider());
+        return super.onCreateView(inflater, viewGroup, savedInstanceState);
     }
 
     @Override
