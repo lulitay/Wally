@@ -30,8 +30,12 @@ public class MainPresenter {
     private final LanguagesRepository languagesRepository;
     private Disposable disposable;
 
-    private Double totalIncome = null;
-    private Double totalSpending = null;
+    private Double totalIncome;
+    private Double totalSpending;
+
+    private List<Bucket> bucketList;
+    private List<BucketEntry> bucketEntryList;
+    private List<Income> incomeList;
 
     public MainPresenter(
             final BucketRepository bucketRepository,
@@ -45,39 +49,52 @@ public class MainPresenter {
         this.incomeRepository = incomeRepository;
         this.schedulerProvider = schedulerProvider;
         this.languagesRepository = languagesRepository;
+        this.totalIncome = null;
+        this.totalSpending = null;
+        this.bucketList = null;
+        this.bucketEntryList = null;
+        this.incomeList = null;
     }
 
     public void onViewAttached() {
         languagesRepository.setOnSharedPreferencesListener(sharedPreferencesListener());
 
-        disposable = bucketRepository.getList()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(this::onBucketsReceived, this::onBucketsError);
+        if (bucketList == null) {
+            disposable = bucketRepository.getList()
+                    .subscribeOn(schedulerProvider.computation())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe(this::onBucketsReceived, this::onBucketsError);
+        }
 
-        disposable = bucketRepository.getEntryList()
-            .map(unsortedList -> {
-                List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
-                sortedList.sort(new BucketEntryComparator());
-                return sortedList;
-            })
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(this::onEntriesReceived);
+        if (bucketEntryList == null) {
+            disposable = bucketRepository.getEntryList()
+                    .map(unsortedList -> {
+                        List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
+                        sortedList.sort(new BucketEntryComparator());
+                        return sortedList;
+                    })
+                    .subscribeOn(schedulerProvider.computation())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe(this::onEntriesReceived);
+        }
 
-        disposable = incomeRepository.getList()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(this::onIncomesReceived);
+        if (incomeList == null) {
+            disposable = incomeRepository.getList()
+                    .subscribeOn(schedulerProvider.computation())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe(this::onIncomesReceived);
+        }
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
+        this.bucketList = bucketList;
         mainView.get().onBucketListViewReceived(bucketList);
     }
 
     private void onEntriesReceived(final List<BucketEntry> entries) {
+        this.bucketEntryList = entries;
         this.totalSpending = entries.stream().mapToDouble(BucketEntry::getAmount).sum();
-        if (mainView != null) {
+        if (mainView.get() != null) {
             mainView.get().onEntriesReceived(entries);
         }
     }
@@ -87,6 +104,7 @@ public class MainPresenter {
     }
 
     private void onIncomesReceived(final List<Income> incomeList) {
+        this.incomeList = incomeList;
         this.totalIncome = incomeList.stream().mapToDouble(Income::getAmount).sum();
         if (this.totalSpending != null) {
             mainView.get().onIncomeDataReceived(incomeList, (totalIncome - totalSpending));

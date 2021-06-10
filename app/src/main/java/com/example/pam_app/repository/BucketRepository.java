@@ -3,6 +3,7 @@ package com.example.pam_app.repository;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -10,6 +11,10 @@ import io.reactivex.Single;
 
 public interface BucketRepository {
     Flowable<List<Bucket>> getList();
+
+    Flowable<List<Bucket>> getList(final boolean type, final Date date);
+
+    void update(final Bucket bucket);
 
     void create(final Bucket bucket);
 

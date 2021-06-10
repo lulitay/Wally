@@ -26,9 +26,9 @@ public class EntryContract extends ActivityResultContract<String, Serializable> 
     public Serializable parseResult(int resultCode, @Nullable Intent intent) {
         if (resultCode == Activity.RESULT_OK && intent != null) {
             if (intent.getSerializableExtra("entry") == null) {
-                return (Income) intent.getSerializableExtra("income");
+                return intent.getSerializableExtra("income");
             }
-            return (BucketEntry) intent.getSerializableExtra("entry");
+            return intent.getSerializableExtra("entry");
         }
         return null;
     }

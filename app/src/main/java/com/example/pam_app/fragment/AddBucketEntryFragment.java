@@ -100,7 +100,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         final Intent result = new Intent();
         result.putExtra("entry", entry);
         requireActivity().setResult(RESULT_OK, result);
-        requireActivity().finish();
+        getActivity().finish();
     }
 
     @Override

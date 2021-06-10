@@ -2,6 +2,7 @@ package com.example.pam_app.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -17,49 +18,61 @@ public class Bucket implements Serializable {
     public final BucketType bucketType;
     public final double target;
     public final List<BucketEntry> entries;
+    public final List<BucketEntry> oldEntries;
     public final Integer id;
     public final String imagePath;
+    public final boolean isRecurrent;
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries) {
+                  List<BucketEntry> entries, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
-        this.entries = entries;
+        this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = null;
+        this.isRecurrent = isRecurrent;
+        initEntries(entries);
     }
 
     public Bucket(String title, Date dueDate, BucketType bucketType, double target,
-                  List<BucketEntry> entries, int id, String imagePath) {
+                  List<BucketEntry> entries, Integer id, String imagePath, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
-        this.entries = entries;
+        this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = id;
         this.imagePath = imagePath;
+        this.isRecurrent = isRecurrent;
+        initEntries(entries);
     }
 
-    public Bucket(String title, Date dueDate, BucketType bucketType, double target) {
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
         this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = null;
+        this.isRecurrent = isRecurrent;
     }
 
-    public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath) {
+    public Bucket(String title, Date dueDate, BucketType bucketType, double target, String imagePath, boolean isRecurrent) {
         this.title = title;
         this.dueDate = dueDate;
         this.bucketType = bucketType;
         this.target = target;
         this.entries = new LinkedList<>();
+        this.oldEntries = new LinkedList<>();
         this.id = null;
         this.imagePath = imagePath;
+        this.isRecurrent = isRecurrent;
     }
 
     public int getProgress() {
@@ -92,6 +105,11 @@ public class Bucket implements Serializable {
         return "0D 0Hs";
     }
 
+    public Bucket setDueDate(final Date newDueDate) {
+        return new Bucket(title, newDueDate, bucketType, target,
+                entries, id, imagePath, isRecurrent);
+    }
+
     private Map<TimeUnit,Long> computeDiff(Date date1, Date date2) {
         long diffInMillis = date2.getTime() - date1.getTime();
         List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
@@ -107,5 +125,23 @@ public class Bucket implements Serializable {
         }
 
         return result;
+    }
+
+    private void initEntries(final List<BucketEntry> entries) {
+        if (entries != null) {
+            final Calendar currentDate = Calendar.getInstance();
+            currentDate.set(Calendar.HOUR_OF_DAY, 0);
+            currentDate.set(Calendar.MINUTE, 0);
+            currentDate.set(Calendar.SECOND, 0);
+            currentDate.set(Calendar.DAY_OF_MONTH, 1);
+            final Date firstDayOfMonth = currentDate.getTime();
+            for (BucketEntry e : entries) {
+                if (this.isRecurrent && e.date.before(firstDayOfMonth)) {
+                    this.oldEntries.add(e);
+                } else {
+                    this.entries.add(e);
+                }
+            }
+        }
     }
 }
