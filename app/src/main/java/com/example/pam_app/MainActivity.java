@@ -12,12 +12,9 @@ import android.widget.ViewFlipper;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.example.pam_app.di.Container;
 import com.example.pam_app.di.ContainerLocator;
@@ -140,13 +137,10 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void setUpRecurrentBucketWorker() {
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
-                new BucketMapper()
-        );
+        final Container container = ContainerLocator.locateComponent(this);
         final androidx.work.Configuration myConfig = new androidx.work.Configuration.Builder()
                 .setMinimumLoggingLevel(android.util.Log.INFO)
-                .setWorkerFactory(new RecurrentBucketWorkerFactory(bucketRepository))
+                .setWorkerFactory(new RecurrentBucketWorkerFactory(container.getBucketRepository()))
                 .build();
         WorkManager.initialize(this, myConfig);
 
