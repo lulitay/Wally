@@ -37,11 +37,11 @@ public class Module {
         return WallyDatabase.getInstance(applicationContext);
     }
 
-    /* default */ BucketDao provideBucketDao(WallyDatabase wallyDatabase) {
+    /* default */ BucketDao provideBucketDao(final WallyDatabase wallyDatabase) {
         return wallyDatabase.bucketDao();
     }
 
-    /* default */ IncomeDao provideIncomeDao(WallyDatabase wallyDatabase) {
+    /* default */ IncomeDao provideIncomeDao(final WallyDatabase wallyDatabase) {
         return wallyDatabase.incomeDao();
     }
 
