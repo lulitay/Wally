@@ -28,15 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryAdapter;
 import com.example.pam_app.databinding.ActivityBucketBinding;
-import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.di.Container;
+import com.example.pam_app.di.ContainerLocator;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.BucketPresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.listener.Clickable;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.BucketView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -56,12 +52,9 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         super.onCreate(bundle);
 
         int id = Integer.parseInt(getIntent().getData().getQueryParameter("id"));
-        BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
-                new BucketMapper()
-            );
-        SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        bucketPresenter = new BucketPresenter(id, this, bucketRepository, schedulerProvider);
+        final Container container = ContainerLocator.locateComponent(this);
+        bucketPresenter = new BucketPresenter(id, this, container.getBucketRepository(),
+                container.getSchedulerProvider());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_bucket);
         binding.setLifecycleOwner(this);
 

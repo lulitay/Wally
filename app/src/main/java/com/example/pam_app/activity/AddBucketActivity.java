@@ -20,16 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.pam_app.R;
-import com.example.pam_app.db.WallyDatabase;
+import com.example.pam_app.di.Container;
+import com.example.pam_app.di.ContainerLocator;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
 import com.example.pam_app.presenter.AddBucketPresenter;
-import com.example.pam_app.repository.BucketMapper;
-import com.example.pam_app.repository.BucketRepository;
-import com.example.pam_app.repository.RoomBucketRepository;
 import com.example.pam_app.utils.contracts.GalleryContract;
-import com.example.pam_app.utils.schedulers.AndroidSchedulerProvider;
-import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
@@ -64,12 +60,9 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bucket);
 
-        final BucketRepository bucketRepository = new RoomBucketRepository(
-                WallyDatabase.getInstance(getApplicationContext()).bucketDao(),
-                new BucketMapper()
-        );
-        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        presenter = new AddBucketPresenter(this, bucketRepository, schedulerProvider);
+        final Container container = ContainerLocator.locateComponent(this);
+        presenter = new AddBucketPresenter(this, container.getBucketRepository(),
+                container.getSchedulerProvider());
         final Button loadImage = findViewById(R.id.button_load_image);
         loadImage.setOnClickListener(view -> presenter.onClickLoadImage());
         this.imageView = findViewById(R.id.image_view);
