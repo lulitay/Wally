@@ -63,7 +63,7 @@ public class MainPresenter {
             disposable = bucketRepository.getList()
                     .subscribeOn(schedulerProvider.computation())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe(this::onBucketsReceived, this::onBucketsError);
+                    .subscribe(this::onBucketsReceived);
         }
 
         if (bucketEntryList == null) {
@@ -97,10 +97,6 @@ public class MainPresenter {
         if (mainView.get() != null) {
             mainView.get().onEntriesReceived(entries);
         }
-    }
-
-    private void onBucketsError(Throwable throwable) {
-        //TODO: throw error
     }
 
     private void onIncomesReceived(final List<Income> incomeList) {
