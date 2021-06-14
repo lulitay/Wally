@@ -48,7 +48,7 @@ public class AddBucketPresenter {
         final Date date = isRecurrent ? getFirstDayOfNextMonth() : dueDate;
         final boolean fields = checkFields(title, date, bucketType, target, isRecurrent);
         if (fields) {
-            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
+            final Bucket bucket = new Bucket(title, date, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
             disposable = bucketRepository.create(bucket)
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())

@@ -55,12 +55,12 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public Single<Long> create(Bucket bucket) {
-        return just(bucketDao.create(bucketMapper.toEntity(bucket)));
+        return Single.fromCallable(() -> bucketDao.create(bucketMapper.toEntity(bucket)));
     }
 
     @Override
     public Single<Integer> delete(int id) {
-        return just(bucketDao.delete(id));
+        return Single.fromCallable(() -> bucketDao.delete(id));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public Single<Long> addEntry(BucketEntry entry, final int bucketId) {
-        return just(bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
+        return Single.fromCallable(() -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
     }
 
     @Override

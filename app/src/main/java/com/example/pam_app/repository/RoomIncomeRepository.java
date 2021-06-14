@@ -10,8 +10,6 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-import static io.reactivex.Single.just;
-
 public class RoomIncomeRepository implements IncomeRepository {
 
     private final IncomeDao incomeDao;
@@ -35,7 +33,7 @@ public class RoomIncomeRepository implements IncomeRepository {
 
     @Override
     public Single<Long> create(final Income income) {
-        return just(incomeDao.create(incomeMapper.toEntity(income)));
+        return Single.fromCallable(() -> incomeDao.create(incomeMapper.toEntity(income)));
     }
 
     @Override

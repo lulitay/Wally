@@ -87,8 +87,12 @@ public class MainPresenter {
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
-        this.bucketList = bucketList;
-        mainView.get().onBucketListViewReceived(bucketList);
+        if (this.bucketList == null) {
+            this.bucketList = bucketList;
+            if (mainView.get() != null) {
+                mainView.get().onBucketListViewReceived(bucketList);
+            }
+        }
     }
 
     private void onEntriesReceived(final List<BucketEntry> entries) {
@@ -102,7 +106,7 @@ public class MainPresenter {
     private void onIncomesReceived(final List<Income> incomeList) {
         this.incomeList = incomeList;
         this.totalIncome = incomeList.stream().mapToDouble(Income::getAmount).sum();
-        if (this.totalSpending != null) {
+        if (this.totalSpending != null && mainView.get() != null) {
             mainView.get().onIncomeDataReceived(incomeList, (totalIncome - totalSpending));
         }
     }
