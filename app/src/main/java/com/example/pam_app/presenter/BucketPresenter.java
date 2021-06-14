@@ -8,7 +8,6 @@ import com.example.pam_app.view.BucketView;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class BucketPresenter {
@@ -75,18 +74,18 @@ public class BucketPresenter {
     public void onDelete() {
         if (bucketView.get() != null) {
             disposable.add(
-                    Completable.fromAction(() -> bucketRepository.delete(id))
-                            .subscribeOn(schedulerProvider.io())
-                            .observeOn(schedulerProvider.ui())
-                            .subscribe(() -> {
-                                if (bucketView.get() != null) {
-                                    bucketView.get().showDeleteBucketSuccess();
-                                }
-                            }, (throwable) -> {
-                                if (bucketView.get() != null) {
-                                    bucketView.get().showDeleteBucketError();
-                                }
-                            })
+                     bucketRepository.delete(id)
+                        .subscribeOn(schedulerProvider.io())
+                        .observeOn(schedulerProvider.ui())
+                        .subscribe((Integer deleted) -> {
+                            if (bucketView.get() != null) {
+                                bucketView.get().showDeleteBucketSuccess();
+                            }
+                        }, (throwable) -> {
+                            if (bucketView.get() != null) {
+                                bucketView.get().showDeleteBucketError();
+                            }
+                        })
             );
             bucketView.get().back();
         }

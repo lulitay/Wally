@@ -9,7 +9,6 @@ import com.example.pam_app.view.AddIncomeView;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
 
 public class AddIncomePresenter {
@@ -35,10 +34,10 @@ public class AddIncomePresenter {
             final Date date
     ) {
         final Income income = new Income(description, Double.parseDouble(amount), IncomeType.MONTHLY, date);
-        disposable = Completable.fromAction(() -> incomeRepository.create(income))
+        disposable = incomeRepository.create(income)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe(() -> {
+            .subscribe((Long id) -> {
                 if (addIncomeView.get() != null) {
                     addIncomeView.get().onSuccessSavingIncome(income);
                 }

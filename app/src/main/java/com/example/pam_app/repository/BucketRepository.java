@@ -16,9 +16,9 @@ public interface BucketRepository {
 
     void update(final Bucket bucket);
 
-    void create(final Bucket bucket);
+    Single<Long> create(final Bucket bucket);
 
-    void delete(final int id);
+    Single<Integer> delete(final int id);
 
     Flowable<Bucket> get(final int id);
 

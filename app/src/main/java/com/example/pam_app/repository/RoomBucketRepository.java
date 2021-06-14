@@ -14,6 +14,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static com.example.pam_app.model.BucketType.SPENDING;
+import static io.reactivex.Single.just;
 
 public class RoomBucketRepository implements BucketRepository {
 
@@ -53,13 +54,13 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void create(Bucket bucket) {
-        bucketDao.create(bucketMapper.toEntity(bucket));
+    public Single<Long> create(Bucket bucket) {
+        return just(bucketDao.create(bucketMapper.toEntity(bucket)));
     }
 
     @Override
-    public void delete(int id) {
-        this.bucketDao.delete(id);
+    public Single<Integer> delete(int id) {
+        return just(bucketDao.delete(id));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public Single<Long> addEntry(BucketEntry entry, final int bucketId) {
-        return Single.just(bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
+        return just(bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
     }
 
     @Override
