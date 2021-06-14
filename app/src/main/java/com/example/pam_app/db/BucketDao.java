@@ -51,7 +51,7 @@ public interface BucketDao {
     Single<BucketEntity> getBucket(final String title);
 
     @Insert
-    void addEntry(final BucketEntryEntity entry);
+    long addEntry(final BucketEntryEntity entry);
 
     @Delete
     void removeEntry(final BucketEntryEntity entry);

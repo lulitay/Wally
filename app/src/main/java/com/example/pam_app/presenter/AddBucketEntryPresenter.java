@@ -11,7 +11,6 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
@@ -54,29 +53,34 @@ public class AddBucketEntryPresenter {
         if (fields) {
             final BucketEntry entry = new BucketEntry(Double.parseDouble(amount), date, description);
             disposable.add(
-                    bucketRepository.get(bucketTitle)
-                            .subscribeOn(schedulerProvider.io())
-                            .observeOn(schedulerProvider.ui())
-                            .subscribe((Bucket bucket) -> disposable.add(
-                                    Completable.fromAction(() -> bucketRepository.addEntry(entry, bucket.id))
-                                            .subscribeOn(schedulerProvider.io())
-                                            .observeOn(schedulerProvider.ui())
-                                            .subscribe(() -> {
-                                                if (addBucketEntryView.get() != null) {
-                                                    addBucketEntryView.get().onSuccessSavingBucketEntry(entry);
-                                                }
-                                            }, (throwable) -> {
-                                                if (addBucketEntryView.get() != null) {
-                                                    addBucketEntryView.get().onErrorSavingBucketEntry();
-                                                }
-                                            })
-                            ), (throwable) -> {
-                                if (addBucketEntryView.get() != null) {
-                                    addBucketEntryView.get().onErrorSavingBucketEntry();
-                                }
-                            })
+                bucketRepository.get(bucketTitle)
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe((Bucket bucket) -> addEntryToBucket(entry, bucket), (throwable) ->
+                    {
+                        if (addBucketEntryView.get() != null) {
+                            addBucketEntryView.get().onErrorSavingBucketEntry();
+                        }
+                    })
             );
         }
+    }
+
+    private void addEntryToBucket(final BucketEntry entry, final Bucket bucket) {
+        disposable.add(
+            bucketRepository.addEntry(entry, bucket.id)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe((Long id) -> {
+                    if (addBucketEntryView.get() != null) {
+                        addBucketEntryView.get().onSuccessSavingBucketEntry(entry);
+                    }
+                }, (throwable) -> {
+                    if (addBucketEntryView.get() != null) {
+                        addBucketEntryView.get().onErrorSavingBucketEntry();
+                    }
+                })
+        );
     }
 
     private boolean checkFields(

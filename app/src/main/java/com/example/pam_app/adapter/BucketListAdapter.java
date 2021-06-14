@@ -31,13 +31,15 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
         bucketList.clear();
         if (newBucketList != null) {
             bucketList.addAll(newBucketList);
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     public void showNewBucket(final Bucket bucket) {
-        bucketList.add(bucket);
-        notifyDataSetChanged();
+        if (bucket != null) {
+            bucketList.add(bucket);
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull

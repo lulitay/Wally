@@ -89,8 +89,8 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void addEntry(BucketEntry entry, final int bucketId) {
-        bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId));
+    public Single<Long> addEntry(BucketEntry entry, final int bucketId) {
+        return Single.just(bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
     }
 
     @Override
