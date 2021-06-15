@@ -120,8 +120,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     @Override
-    public void goToAddEntry(String bucketName) {
-        final String uri = "wally://add_entry/detail?bucket_name=" + bucketName;
+    public void goToAddEntry(String bucketName, int bucketType) {
+        final String uri = "wally://add_entry/detail?bucket_name=" + bucketName + "&bucket_type=" + bucketType;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
     }
