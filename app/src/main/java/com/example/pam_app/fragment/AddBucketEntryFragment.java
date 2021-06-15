@@ -144,7 +144,7 @@ public abstract class AddBucketEntryFragment extends Fragment implements AddBuck
         final Button saveEntry = createdView.findViewById(R.id.save);
         saveEntry.setOnClickListener(v -> presenter.saveBucketEntry(
                 amount.getText().toString(),
-                date.getTime(),
+                selectedDate.getText().toString().equals("") ? null : date.getTime(),
                 description.getText().toString(),
                 bucket.getText().toString()
         ));

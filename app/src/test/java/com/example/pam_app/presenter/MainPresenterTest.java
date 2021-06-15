@@ -123,4 +123,25 @@ public class MainPresenterTest {
         presenter.onViewDetached();
     }
 
+    @Test
+    public void whenGetCurrentLocaleCallLanguagesRepository() {
+        final Locale locale = presenter.getCurrentLocale();
+        final Locale localeExpected = languagesRepository.getCurrentLocale();
+
+        assertEquals(localeExpected, locale);
+    }
+
+    @Test
+    public void whenUnregisterListenerThenUnregisterFromLanguagesRepository() {
+        presenter.unregisterOnSharedPreferencesListener();
+    }
+
+    @Test
+    public void whenChangeLanguageThenChangeLanguageFromLanguagesRepository() {
+        presenter.changeLanguage("en");
+
+        assertEquals(new Locale("en"), languagesRepository.getCurrentLocale());
+    }
+
+
 }
