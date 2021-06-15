@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         languagesRepository = container.getLanguageRepository(); //TODO change
         presenter = new MainPresenter(container.getBucketRepository(), container.getIncomeRepository(),
                 this, container.getSchedulerProvider(), languagesRepository);
-        setContentView(R.layout.activity_main);
-
         setUpChosenLanguage();
+        setContentView(R.layout.activity_main);
+        
         setUpViews();
         setUpBottomNavigation();
         setUpAddBucketResultLauncher();
