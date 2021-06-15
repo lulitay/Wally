@@ -71,6 +71,9 @@ public class AddIncomePresenter {
         if (amount.length() == 0) {
             addIncomeView.get().showAmountError(R.string.error_empty, null);
             isCorrect = false;
+        } else if (amount.equals(".")) {
+            addIncomeView.get().showAmountError(R.string.error_format, null);
+            isCorrect = false;
         } else if (Double.parseDouble(amount) >= MAX_AMOUNT) {
             addIncomeView.get().showAmountError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;
