@@ -44,9 +44,7 @@ public class AddBucketEntryPresenter {
     }
 
     public void onViewDetached() {
-        if (disposable != null) {
-            disposable.dispose();
-        }
+        disposable.dispose();
     }
 
     public void saveBucketEntry(final String amount, final Date date, final String description,
