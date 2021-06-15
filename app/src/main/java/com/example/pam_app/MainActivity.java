@@ -1,10 +1,8 @@
 package com.example.pam_app;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -24,6 +22,7 @@ import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.MainPresenter;
 import com.example.pam_app.utils.contracts.BucketContract;
 import com.example.pam_app.utils.contracts.EntryContract;
+import com.example.pam_app.utils.contracts.EntryListContract;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.workers.RecurrentBucketWorker;
 import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory;
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
 
     private ActivityResultLauncher<String> addBucketResultLauncher;
     private ActivityResultLauncher<String> addBucketEntryResultLauncher;
+    private ActivityResultLauncher<Serializable> bucketDetailResultLauncher;
 
     private MainPresenter presenter;
 
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         setUpViews();
         setUpBottomNavigation();
         setUpAddBucketResultLauncher();
+        setUpBucketDetailResultLauncher();
         setUpAddEntryResultLauncher();
         setUpFAB();
         setUpRecurrentBucketWorker();
@@ -198,13 +199,11 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void launchAddBucketEntryActivity(final View view) {
-        addBucketEntryResultLauncher.launch("addEntry");
+        addBucketEntryResultLauncher.launch("");
     }
 
-    private void launchBucketDetailActivity(Integer bucketId) {
-        final String uri = "wally://bucket/detail?id=" + bucketId;
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        startActivity(intent);
+    private void launchBucketDetailActivity(final Integer bucketId) {
+        addBucketResultLauncher.launch(String.valueOf(bucketId));
     }
 
     private void launchAddBucketActivity() {
@@ -249,6 +248,18 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         addBucketEntryResultLauncher = registerForActivityResult(
                 new EntryContract(),
                 this::onEntryAdded
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setUpBucketDetailResultLauncher() {
+        addBucketResultLauncher = registerForActivityResult(
+                new EntryListContract(),
+                result ->  {
+                    if (result instanceof List) {
+                        ((List<Serializable>) result).forEach(this::onEntryAdded);
+                    }
+                }
         );
     }
 

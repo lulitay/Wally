@@ -9,31 +9,26 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.pam_app.activity.AddBucketEntryActivity;
-import com.example.pam_app.model.BucketEntry;
-import com.example.pam_app.model.Income;
+import com.example.pam_app.activity.BucketActivity;
 
 import java.io.Serializable;
 
-public class EntryContract extends ActivityResultContract<String, Serializable> {
+public class EntryListContract extends ActivityResultContract<String, Serializable> {
 
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, String input) {
         if (!input.equals("")) {
-            final String uri = "wally://add_entry/detail?" + input;
+            final String uri = "wally://bucket/detail?id=" + input;
             return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         }
-        return new Intent(context, AddBucketEntryActivity.class);
+        return new Intent(context, BucketActivity.class);
     }
 
     @Override
     public Serializable parseResult(int resultCode, @Nullable Intent intent) {
         if (resultCode == Activity.RESULT_OK && intent != null) {
-            if (intent.getSerializableExtra("entry") == null) {
-                return intent.getSerializableExtra("income");
-            }
-            return intent.getSerializableExtra("entry");
+            return intent.getSerializableExtra("entries");
         }
         return null;
     }
