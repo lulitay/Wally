@@ -97,7 +97,7 @@ public class BucketPresenter {
 
     public void onAddEntryClick() {
         if (bucketView.get() != null){
-            bucketView.get().goToAddEntry(currentBucket.title);
+            bucketView.get().goToAddEntry(currentBucket.title, currentBucket.bucketType.ordinal());
         }
     }
 }

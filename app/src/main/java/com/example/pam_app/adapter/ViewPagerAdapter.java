@@ -11,23 +11,26 @@ import com.example.pam_app.fragment.AddSpendingBucketEntryFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
-    String defaultBucket;
+    String defaultBucketName;
+    int defaultBucketType;
 
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, String defaultBucket) {
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, String defaultBucketName, int defaultBucketType) {
         super(fragmentActivity);
-        this.defaultBucket = defaultBucket;
+        this.defaultBucketName = defaultBucketName;
+        this.defaultBucketType = defaultBucketType;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+        String bucketNamePlaceholder = position == defaultBucketType ? defaultBucketName : null;
         switch(position) {
             case 0:
-                return AddSpendingBucketEntryFragment.newInstance(position ,defaultBucket);
+                return AddSpendingBucketEntryFragment.newInstance(position , bucketNamePlaceholder);
             case 1:
-                return AddSavingBucketEntryFragment.newInstance(position, defaultBucket);
+                return AddSavingBucketEntryFragment.newInstance(position, bucketNamePlaceholder);
             case 2:
-                return AddIncomeFragment.newInstance(position, defaultBucket);
+                return AddIncomeFragment.newInstance(position, bucketNamePlaceholder);
             default:
                 return null;
         }

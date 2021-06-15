@@ -100,6 +100,9 @@ public class AddBucketEntryPresenter {
         if (amount.length() == 0) {
             addBucketEntryView.get().showAmountError(R.string.error_empty, null);
             isCorrect = false;
+        } else if (amount.equals(".")){
+            addBucketEntryView.get().showAmountError(R.string.error_format, null);
+            isCorrect = false;
         } else if (Double.parseDouble(amount) >= MAX_AMOUNT) {
             addBucketEntryView.get().showAmountError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;

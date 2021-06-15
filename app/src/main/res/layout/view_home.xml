@@ -21,7 +21,7 @@
             android:gravity="center"
             android:text="@string/welcome_to_wally"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="@dimen/subtitle_text_size" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/no_entries"
@@ -31,7 +31,7 @@
             android:gravity="center"
             android:text="@string/no_entries_available"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="@dimen/subtitle_text_size" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart"

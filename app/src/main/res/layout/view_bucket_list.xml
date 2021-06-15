@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="20dp"
+        android:padding="@dimen/title_padding"
         android:text="@string/all_buckets" />
 
     <androidx.core.widget.NestedScrollView
@@ -27,22 +27,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="4dp">
+                android:layout_margin="@dimen/card_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="20dp">
+                    android:padding="@dimen/content_padding">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/spending_buckets_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="21dp"
-                        android:layout_marginLeft="21dp"
+                        android:layout_marginStart="@dimen/content_padding"
+                        android:layout_marginLeft="@dimen/content_padding"
                         android:gravity="center"
                         android:text="@string/spending"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/subtitle_text_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +67,7 @@
                 android:id="@+id/spending_buckets_unavailable"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/content_padding"
                 android:gravity="center"
                 android:text="@string/no_spending_buckets_available"
                 android:visibility="gone" />
@@ -75,7 +75,7 @@
             <LinearLayout
                 android:id="@+id/spending_header"
                 android:layout_width="match_parent"
-                android:layout_height="66dp"
+                android:layout_height="@dimen/header_height"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -85,7 +85,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="@dimen/content_padding"
                     android:text="@string/name" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -94,8 +94,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical|end"
-                    android:paddingEnd="20dp"
-                    android:paddingStart="20dp"
+                    android:paddingEnd="@dimen/content_padding"
+                    android:paddingStart="@dimen/content_padding"
                     android:text="@string/target" />
             </LinearLayout>
 
@@ -110,22 +110,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="4dp">
+                android:layout_margin="@dimen/card_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="20dp">
+                    android:padding="@dimen/content_padding">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/savings_buckets_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="21dp"
-                        android:layout_marginLeft="21dp"
+                        android:layout_marginStart="@dimen/content_padding"
+                        android:layout_marginLeft="@dimen/content_padding"
                         android:gravity="center"
                         android:text="@string/saving"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/subtitle_text_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -150,7 +150,7 @@
                 android:id="@+id/savings_buckets_unavailable"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/content_padding"
                 android:gravity="center"
                 android:text="@string/no_savings_buckets_available"
                 android:visibility="gone" />
@@ -158,7 +158,7 @@
             <LinearLayout
                 android:id="@+id/savings_header"
                 android:layout_width="match_parent"
-                android:layout_height="66dp"
+                android:layout_height="@dimen/header_height"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -168,7 +168,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="@dimen/content_padding"
                     android:text="@string/name" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -177,8 +177,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical|end"
-                    android:paddingEnd="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingEnd="@dimen/content_padding"
+                    android:paddingRight="@dimen/content_padding"
                     android:text="@string/target" />
             </LinearLayout>
 

@@ -82,6 +82,9 @@ public class AddBucketPresenter {
         if (target.length() == 0) {
             addBucketView.get().showTargetError(R.string.error_empty, null);
             isCorrect = false;
+        } else if (target.equals(".")){
+            addBucketView.get().showTargetError(R.string.error_format, null);
+            isCorrect = false;
         } else if (Double.parseDouble(target) >= MAX_AMOUNT) {
             addBucketView.get().showTargetError(R.string.max_amount, MAX_AMOUNT);
             isCorrect = false;
