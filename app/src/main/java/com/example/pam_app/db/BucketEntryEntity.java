@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-@Entity(tableName = "entries", indices = {@Index(value = {"title"})},
+@Entity(tableName = "entries", indices = {@Index(value = {"comment"})},
         foreignKeys = {
                 @ForeignKey(
                         entity = BucketEntity.class,
@@ -25,13 +25,13 @@ public class BucketEntryEntity {
     public final int idBucket;
     public final double amount;
     public final Date date;
-    @ColumnInfo(name = "title")
-    public final String title;
+    @ColumnInfo(name = "comment")
+    public final String comment;
 
-    public BucketEntryEntity(int idBucket, double amount, Date date, String title) {
+    public BucketEntryEntity(int idBucket, double amount, Date date, String comment) {
         this.idBucket = idBucket;
         this.amount = amount;
         this.date = date;
-        this.title = title;
+        this.comment = comment;
     }
 }
