@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -34,8 +35,8 @@ import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.BucketPresenter;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.view.BucketView;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -212,6 +213,16 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        final AppBarLayout appBar =  findViewById(R.id.app_bar);
+        TextView time = findViewById(R.id.time);
+        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                time.setAlpha(1.0f - Math.abs(verticalOffset / (float)
+                        appBarLayout.getTotalScrollRange()));
+            }
+        });
     }
 
     private void setUpAddEntryButton() {
