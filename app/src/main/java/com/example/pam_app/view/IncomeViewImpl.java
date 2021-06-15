@@ -19,6 +19,7 @@ import java.util.List;
 public class IncomeViewImpl extends LinearLayout implements IncomeView {
 
     private final Context context;
+    private final MaterialTextView emptyNotice;
     private IncomeAdapter adapter;
     private final IncomePresenter incomePresenter;
     private Double incomeLeft = null;
@@ -37,20 +38,28 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
         setOrientation(VERTICAL);
         this.incomePresenter = new IncomePresenter(this);
         this.context = context;
+        this.emptyNotice = findViewById(R.id.income_unavailable);
 
         setUpList();
     }
 
     @Override
     public void bind(final List<Income> incomeList, final Double incomeLeft) {
+        if (incomeList.isEmpty()) {
+            emptyNotice.setVisibility(VISIBLE);
+            this.incomeLeft = 0.0;
+        } else {
+            emptyNotice.setVisibility(GONE);
+            this.incomeLeft = incomeLeft;
+        }
         adapter.update(incomeList);
-        this.incomeLeft = incomeLeft;
-        incomePresenter.onIncomeLeftAmountReceived(incomeLeft);
+        incomePresenter.onIncomeLeftAmountReceived(this.incomeLeft);
     }
 
     @Override
     public void onIncomeAdded(final Income income) {
         if (income != null) {
+            emptyNotice.setVisibility(GONE);
             this.incomeLeft = incomeLeft + income.getAmount();
             incomePresenter.onIncomeLeftAmountReceived(incomeLeft);
             adapter.showNewIncome(income);

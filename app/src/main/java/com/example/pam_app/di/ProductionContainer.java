@@ -54,7 +54,7 @@ public class ProductionContainer implements Container {
     @Override
     public IncomeRepository getIncomeRepository() {
         if (incomeRepository == null) {
-            incomeRepository = module.provideBucketRepository(getIncomeDao(), getIncomeMapper());
+            incomeRepository = module.provideIncomeRepository(getIncomeDao(), getIncomeMapper());
         }
         return incomeRepository;
     }
@@ -96,7 +96,7 @@ public class ProductionContainer implements Container {
     }
 
     private IncomeMapper getIncomeMapper() {
-        if (bucketMapper == null) {
+        if (incomeMapper == null) {
             incomeMapper = module.provideIncomeMapper();
         }
         return incomeMapper;

@@ -142,9 +142,13 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
                 .setMinimumLoggingLevel(android.util.Log.INFO)
                 .setWorkerFactory(new RecurrentBucketWorkerFactory(container.getBucketRepository()))
                 .build();
-        WorkManager.initialize(this, myConfig);
-
-        final WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+        WorkManager workManager;
+        try {
+            workManager = WorkManager.getInstance(getApplicationContext());
+        } catch (final Exception e) {
+            WorkManager.initialize(this, myConfig);
+            workManager = WorkManager.getInstance(getApplicationContext());
+        }
 
         final Calendar currentDate = Calendar.getInstance();
         final Calendar dueDate = Calendar.getInstance();

@@ -58,7 +58,7 @@ public class Module {
         return new RoomBucketRepository(bucketDao, bucketMapper);
     }
 
-    /* default */ IncomeRepository provideBucketRepository(final IncomeDao incomeDao,
+    /* default */ IncomeRepository provideIncomeRepository(final IncomeDao incomeDao,
                                                            final IncomeMapper incomeMapper) {
         return new RoomIncomeRepository(incomeDao, incomeMapper);
     }
