@@ -120,6 +120,10 @@ public class MainPresenterTest {
 
     @Test
     public void onViewDetachedTest() {
+        when(bucketRepository.getList()).thenReturn(BUCKETS);
+        when(bucketRepository.getEntryList()).thenReturn(ENTRIES);
+        when(incomeRepository.getList()).thenReturn(INCOMES);
+        presenter.onViewAttached();
         presenter.onViewDetached();
     }
 

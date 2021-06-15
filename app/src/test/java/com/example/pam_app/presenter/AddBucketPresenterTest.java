@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 import io.reactivex.Single;
 
@@ -31,6 +32,8 @@ import static java.util.Calendar.YEAR;
 import static java.util.Calendar.getInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +56,7 @@ public class AddBucketPresenterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @ValueSource(ints = {1, 2, 3, 4, 5, 6})
     public void givenErrorInFieldWhenSaveBucketThenShowErrorWithoutParameter(final int variable) {
         final long now = new Date().getTime();
         switch (variable) {
@@ -76,6 +79,10 @@ public class AddBucketPresenterTest {
             case 5:
                 presenter.saveBucket("test", new Date(now + 1000), SPENDING, "", null, false);
                 verify(addBucketView, only()).showTargetError(R.string.error_empty, null);
+                break;
+            case 6:
+                presenter.saveBucket("test", new Date(now + 1000), SPENDING, ".", null, false);
+                verify(addBucketView, only()).showTargetError(R.string.error_format, null);
                 break;
         }
     }
@@ -105,19 +112,24 @@ public class AddBucketPresenterTest {
         next.set(YEAR, today.get(YEAR));
         next.set(MONTH, today.get(MONTH) + 1);
         next.set(DAY_OF_MONTH, 1);
+        final Single<Bucket> bucket = Single.just(new Bucket("test", new Date(now + 1000), SPENDING, 200.0, new LinkedList<>(), true));
+
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
+        when(bucketRepository.get(anyString())).thenReturn(bucket);
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, true);
 
         final ArgumentCaptor<Bucket> bucketAC = ArgumentCaptor.forClass(Bucket.class);
-        verify(bucketRepository, only()).create(bucketAC.capture());
+        verify(bucketRepository, atLeastOnce()).create(bucketAC.capture());
         assertEquals(next.getTime(), bucketAC.getValue().dueDate);
     }
 
     @Test
     public void givenNoErrorsWhenSaveBucketThenShowSuccessInView() {
         final long now = new Date().getTime();
+        final Single<Bucket> bucket = Single.just(new Bucket("test", new Date(now + 1000), SPENDING, 200.0, new LinkedList<>(), false));
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
+        when(bucketRepository.get(anyString())).thenReturn(bucket);
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
 
@@ -125,9 +137,20 @@ public class AddBucketPresenterTest {
     }
 
     @Test
-    public void givenErrorsInGetBucketWhenSaveEntryThenShowErrorInView() {
+    public void givenErrorsInSaveBucketWhenSaveBucketThenShowErrorInView() {
         final long now = new Date().getTime();
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.error(new IOException()));
+
+        presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
+
+        verify(addBucketView, only()).onErrorSavingBucket();
+    }
+
+    @Test
+    public void givenErrorsInGetBucketWhenSaveBucketThenShowErrorInView() {
+        final long now = new Date().getTime();
+        when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
+        when(bucketRepository.get(anyString())).thenReturn(Single.error(new IOException()));
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
 
