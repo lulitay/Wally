@@ -11,8 +11,8 @@ public class ProfilePresenter {
         this.view = new WeakReference<>(view);
     }
 
-    public void onApplyChangesClicked(){
-        if(view.get() != null) {
+    public void onApplyChangesClicked() {
+        if (view.get() != null) {
             view.get().applyChanges();
         }
     }

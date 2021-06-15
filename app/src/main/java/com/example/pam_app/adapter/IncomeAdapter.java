@@ -46,6 +46,7 @@ public class IncomeAdapter extends RecyclerView.Adapter<IncomeAdapter.IncomeView
     }
 
     public void update(final List<Income> newIncomeList) {
+        incomeList.clear();
         if (newIncomeList != null) {
             incomeList.addAll(newIncomeList);
             notifyDataSetChanged();

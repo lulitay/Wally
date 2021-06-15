@@ -46,6 +46,7 @@ public class BucketEntryHomeAdapter extends RecyclerView.Adapter<BucketEntryHome
     }
 
     public void update(final List<BucketEntry> newBucketEntryList) {
+        bucketEntryList.clear();
         if (newBucketEntryList != null) {
             bucketEntryList.addAll(newBucketEntryList);
             notifyDataSetChanged();

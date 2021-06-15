@@ -5,12 +5,13 @@ import com.example.pam_app.model.Income;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public interface IncomeRepository {
 
     Flowable<List<Income>> getList();
 
-    void create(final Income income);
+    Single<Long> create(final Income income);
 
     void delete(final int id);
 
