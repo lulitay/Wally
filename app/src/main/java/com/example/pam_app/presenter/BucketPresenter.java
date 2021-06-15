@@ -18,7 +18,8 @@ public class BucketPresenter {
     private final SchedulerProvider schedulerProvider;
     private Bucket currentBucket;
 
-    public BucketPresenter(final int id, final BucketView bucketView,
+    public BucketPresenter(final int id,
+                           final BucketView bucketView,
                            final BucketRepository bucketRepository,
                            final SchedulerProvider schedulerProvider) {
         this.id = id;
