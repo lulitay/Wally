@@ -1,12 +1,13 @@
 package com.example.pam_app.db;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-@Entity(tableName = "buckets")
+@Entity(tableName = "buckets", indices = @Index(value = {"title"}, unique = true))
 @TypeConverters(DateConverter.class)
 public class BucketEntity {
     @PrimaryKey(autoGenerate = true)
