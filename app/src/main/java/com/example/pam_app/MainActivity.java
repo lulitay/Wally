@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     protected void onStart() {
         super.onStart();
         presenter.onViewAttached();
-        profileView.bind(presenter.getCurrentLanguage(), this::applyChanges);
+        profileView.bind(presenter.getCurrentLocale().getLanguage(), this::applyChanges);
     }
 
     @Override
