@@ -59,7 +59,7 @@ public class AddIncomePresenterTest {
                 break;
             case 3:
                 presenter.saveIncome("test", "200", new Date(now + 1000));
-                verify(addIncomeView, only()).showDateError(R.string.error_past_date);
+                verify(addIncomeView, only()).showDateError(R.string.error_future_date);
                 break;
             case 4:
                 presenter.saveIncome("test", "", new Date(now - 1000));

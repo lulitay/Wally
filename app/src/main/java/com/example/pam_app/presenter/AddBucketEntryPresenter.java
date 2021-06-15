@@ -107,8 +107,8 @@ public class AddBucketEntryPresenter {
         if (date == null) {
             addBucketEntryView.get().showDateError(R.string.error_empty);
             isCorrect = false;
-        } else if (date.getTime() < new Date().getTime()) {
-            addBucketEntryView.get().showDateError(R.string.error_past_date);
+        } else if (date.getTime() > new Date().getTime()) {
+            addBucketEntryView.get().showDateError(R.string.error_future_date);
             isCorrect = false;
         }
         if (bucket == null || bucket.isEmpty()) {

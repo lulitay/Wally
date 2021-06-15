@@ -79,7 +79,7 @@ public class AddIncomePresenter {
             addIncomeView.get().showDateError(R.string.error_empty);
             isCorrect = false;
         } else if (date.getTime() > new Date().getTime()) {
-            addIncomeView.get().showDateError(R.string.error_past_date);
+            addIncomeView.get().showDateError(R.string.error_future_date);
             isCorrect = false;
         }
         return isCorrect;
