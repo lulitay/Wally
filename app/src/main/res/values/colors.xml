@@ -9,4 +9,10 @@
     <color name="red">#D82F2F</color>
     <color name="detailText">#7C7C7C</color>
     <color name="highlightText">#353535</color>
+    <color name="graph1">#00083f</color>
+    <color name="graph2">#510d56</color>
+    <color name="graph3">#960e5a</color>
+    <color name="graph4">#ce324e</color>
+    <color name="graph5">#f36835</color>
+    <color name="graph6">#ffa600</color>
 </resources>

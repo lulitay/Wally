@@ -66,4 +66,6 @@
     <string name="income_saving_success">Ingreso %1$s guardada</string>
     <string name="money_display">$%1$.2f</string>
     <string name="no_income_entries_added_yet">No hay entradas de ingresos</string>
+    <string name="metrics">Métricas</string>
+    <string name="others">Otros</string>
 </resources>
