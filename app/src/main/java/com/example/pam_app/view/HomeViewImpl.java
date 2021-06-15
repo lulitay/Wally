@@ -26,11 +26,17 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static android.view.Gravity.CENTER;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
@@ -181,12 +187,14 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     }
 
     private ArrayList<PieEntry> getBucketData(final List<BucketEntry> entryList) {
-        List<BucketEntry> reduceEntryList = entryList.stream().collect(Collectors.collectingAndThen(
-                Collectors.toMap(BucketEntry::getBucketTitle,
-                        Function.identity(),
-                        (left, right) -> new BucketEntry(left.amount + right.amount, left.date, left.comment, left.bucketTitle)),
-                m -> new ArrayList<>(m.values())
-        ));
+        List<BucketEntry> reduceEntryList = entryList.stream()
+                .filter((e) -> e.date.after(getFirstDayOfMonth()))
+                .collect(Collectors.collectingAndThen(
+                    Collectors.toMap(BucketEntry::getBucketTitle,
+                            Function.identity(),
+                            (left, right) -> new BucketEntry(left.amount + right.amount, left.date, left.comment, left.bucketTitle)),
+                    m -> new ArrayList<>(m.values())
+                ));
         reduceEntryList.sort((e1, e2) -> (int) (e2.amount - e1.amount));
         ArrayList<PieEntry> entries = new ArrayList<>();
         double otherAmount = 0;
@@ -203,5 +211,15 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
             entries.add(new PieEntry((float) otherAmount, others));
         }
         return entries;
+    }
+
+    private Date getFirstDayOfMonth() {
+        final Calendar today = getInstance();
+        final Calendar next = getInstance();
+        next.clear();
+        next.set(YEAR, today.get(YEAR));
+        next.set(MONTH, today.get(MONTH));
+        next.set(DAY_OF_MONTH, 1);
+        return next.getTime();
     }
 }
