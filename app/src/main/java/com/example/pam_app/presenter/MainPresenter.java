@@ -117,6 +117,22 @@ public class MainPresenter {
         }
     }
 
+    public String getCurrentLanguage() {
+        return languagesRepository.getCurrentLocale().getLanguage();
+    }
+
+    public void unregisterOnSharedPreferencesListener() {
+        languagesRepository.unregisterOnSharedPreferencesListener();
+    }
+
+    public Locale getCurrentLocale() {
+        return languagesRepository.getCurrentLocale();
+    }
+
+    public void changeLanguage(final String language) {
+        languagesRepository.changeLanguage(language);
+    }
+
     private OnSharedPreferenceChangeListener sharedPreferencesListener() {
         return (sp, key) -> {
             if (key.equals(KEY_PREF_LANGUAGE)) {
