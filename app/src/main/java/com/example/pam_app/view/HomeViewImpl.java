@@ -14,16 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryHomeAdapter;
 import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.utils.DecimalPercentageFormatter;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,7 +101,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        data.setValueFormatter(new DecimalPercentageFormatter(new DecimalFormat("###,###,###")));
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
         chart.setData(data);
@@ -175,6 +176,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
         chart.setEntryLabelColor(Color.WHITE);
         chart.setEntryLabelTextSize(12f);
+        chart.setDrawEntryLabels(false);
 
         TextView welcome = findViewById(R.id.welcome);
         TextView no_entries = findViewById(R.id.no_entries);
