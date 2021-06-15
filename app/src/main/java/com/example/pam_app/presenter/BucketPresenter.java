@@ -11,7 +11,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -105,17 +104,17 @@ public class BucketPresenter {
         }
     }
 
-    public void onAddEntry(Serializable entry) {
+    public void onAddEntry(final Serializable entry) {
         if (entry != null) {
             createdEntries.add(entry);
-            if (entry instanceof BucketEntry && ((BucketEntry)entry).bucketTitle.equals(currentBucket.title)) {
-                if (currentBucket.isRecurrent && ((BucketEntry)entry).date.before(getFirstDayOfMonth())) {
-                    currentBucket.oldEntries.add(((BucketEntry)entry));
+            if (entry instanceof BucketEntry && ((BucketEntry) entry).bucketTitle.equals(currentBucket.title)) {
+                if (currentBucket.isRecurrent && ((BucketEntry) entry).date.before(getFirstDayOfMonth())) {
+                    currentBucket.oldEntries.add(((BucketEntry) entry));
                 }
                 else {
-                    currentBucket.entries.add(((BucketEntry)entry));
+                    currentBucket.entries.add(((BucketEntry) entry));
                 }
-                if (bucketView.get() != null){
+                if (bucketView.get() != null) {
                     bucketView.get().bind(currentBucket);
                 }
             }
