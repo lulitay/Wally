@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="form_padding">2dp</dimen>
+    <dimen name="form_padding">20dp</dimen>
     <dimen name="form_margin">20dp</dimen>
     <dimen name="subtitle_text_size">20sp</dimen>
     <dimen name="subtitle2_text_size">16sp</dimen>
     <dimen name="big_number_text_size">30sp</dimen>
+    <dimen name="toolbar_padding">80dp</dimen>
+    <dimen name="time_padding">24dp</dimen>
+    <dimen name="time_text_size">24sp</dimen>
+    <dimen name="bucket_layout_padding">20dp</dimen>
+    <dimen name="layout_padding_bottom">72dp</dimen>
+    <dimen name="progress_bar_height">40dp</dimen>
+    <dimen name="progress_bar_padding">10dp</dimen>
+    <dimen name="content_padding">20dp</dimen>
+    <dimen name="entry_margin">10dp</dimen>
+    <dimen name="entry_big_text_size">16sp</dimen>
+    <dimen name="entry_small_text_size">12sp</dimen>
+    <dimen name="entry_padding">12dp</dimen>
+    <dimen name="bucket_height">68dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="list_item_padding">16dp</dimen>
+    <dimen name="title_padding">20dp</dimen>
+    <dimen name="card_margin">4dp</dimen>
+    <dimen name="header_height">60dp</dimen>
+    <dimen name="profile_pic_size">150dp</dimen>
+    <dimen name="profile_pic_radius">75dp</dimen>
+    <dimen name="profile_pic_stroke">2dp</dimen>
+    <dimen name="eye_size">32dp</dimen>
 </resources>
