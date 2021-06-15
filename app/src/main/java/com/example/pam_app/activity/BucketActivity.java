@@ -43,7 +43,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 
 public class BucketActivity extends AppCompatActivity implements BucketView {
 
@@ -160,8 +159,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
                     break;
             }
         };
-        Context context = getApplicationContext();
-        AlertDialog.Builder builder = new AlertDialog.Builder(BucketActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(BucketActivity.this);
         builder.setMessage(getString(R.string.are_you_sure))
                 .setPositiveButton(getString(R.string.yes), dialogClickListener)
                 .setNegativeButton(getString(R.string.no), dialogClickListener)
@@ -216,7 +214,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         }
 
         final AppBarLayout appBar =  findViewById(R.id.app_bar);
-        TextView time = findViewById(R.id.time);
+        final TextView time = findViewById(R.id.time);
         appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> time.setAlpha(1.0f - Math.abs(verticalOffset / (float)
                 appBarLayout.getTotalScrollRange())));
     }
