@@ -24,13 +24,15 @@ public class AddBucketEntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_entry);
 
         Uri uri = getIntent().getData();
-        String defaultBucket = null;
+        String defaultBucketName = null;
+        int defaultBucketType = 0;
         if(uri != null) {
-            defaultBucket = uri.getQueryParameter("bucket_name");
+            defaultBucketName = uri.getQueryParameter("bucket_name");
+            defaultBucketType = Integer.parseInt(uri.getQueryParameter("bucket_type"));
         }
 
         setUpToolbar();
-        setUpTabs(defaultBucket);
+        setUpTabs(defaultBucketName, defaultBucketType);
     }
 
     private void setUpToolbar() {
@@ -46,8 +48,8 @@ public class AddBucketEntryActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpTabs(String defaultBucket) {
-        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, defaultBucket);
+    private void setUpTabs(String defaultBucketName, int defaultBucketType) {
+        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, defaultBucketName, defaultBucketType);
         final TabLayout tabLayout = findViewById(R.id.add_entry_tabs);
         final ViewPager2 viewPager = findViewById(R.id.add_entry_view_pager);
         final Map<Integer, String> titles = new HashMap<Integer, String>() {
@@ -62,6 +64,8 @@ public class AddBucketEntryActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(titles.get(position))
         ).attach();
+        TabLayout.Tab tab = tabLayout.getTabAt(defaultBucketType);
+        tab.select();
     }
 
     @Override

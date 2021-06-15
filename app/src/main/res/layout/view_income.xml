@@ -10,19 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="20dp"
+        android:padding="@dimen/title_padding"
         android:text="@string/income" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="@dimen/content_padding">
 
             <ImageView
                 android:id="@+id/eye"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="20dp"
+                android:layout_width="@dimen/eye_size"
+                android:layout_height="@dimen/eye_size"
+                android:layout_marginStart="@dimen/content_padding"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
         android:id="@+id/income_unavailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/content_padding"
         android:gravity="center"
         android:text="@string/no_income_entries_added_yet"
         android:visibility="visible" />

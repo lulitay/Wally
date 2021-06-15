@@ -124,26 +124,26 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     @Override
-    public void goToAddEntry(String bucketName) {
-        addBucketEntryResultLauncher.launch("bucket_name=" + bucketName);
+    public void goToAddEntry(String bucketName, int bucketType) {
+        addBucketEntryResultLauncher.launch("bucket_name=" + bucketName + "&bucket_type=" + bucketType);
     }
 
     @Override
     public void showGetBucketError() {
         Context context = getApplicationContext();
-        Toast.makeText(context, context.getString(R.string.error_get_bucket), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, getString(R.string.error_get_bucket), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showDeleteBucketError() {
         Context context = getApplicationContext();
-        Toast.makeText(context, context.getString(R.string.error_delete_bucket), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, getString(R.string.error_delete_bucket), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showDeleteBucketSuccess() {
         Context context = getApplicationContext();
-        Toast.makeText(context, context.getString(R.string.success_delete_bucket), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, getString(R.string.success_delete_bucket), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -162,9 +162,9 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         };
         Context context = getApplicationContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(BucketActivity.this);
-        builder.setMessage(context.getString(R.string.are_you_sure))
-                .setPositiveButton(context.getString(R.string.yes), dialogClickListener)
-                .setNegativeButton(context.getString(R.string.no), dialogClickListener)
+        builder.setMessage(getString(R.string.are_you_sure))
+                .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener)
                 .show();
     }
 
@@ -181,7 +181,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Context context = getApplicationContext();
-                Toast.makeText(context, context.getString(R.string.error), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, getString(R.string.error), Toast.LENGTH_LONG).show();
             }
         }
 
