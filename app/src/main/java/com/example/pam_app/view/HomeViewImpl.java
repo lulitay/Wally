@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryHomeAdapter;
 import com.example.pam_app.model.BucketEntry;
-import com.example.pam_app.presenter.HomePresenter;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ import static android.view.Gravity.CENTER;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
-    private final HomePresenter homePresenter;
     private BucketEntryHomeAdapter adapter;
 
     public HomeViewImpl(Context context) {
@@ -36,7 +34,6 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         inflate(context, R.layout.view_home, this);
         setGravity(CENTER);
         setOrientation(VERTICAL);
-        homePresenter = new HomePresenter(this);
         setUpList();
     }
 
