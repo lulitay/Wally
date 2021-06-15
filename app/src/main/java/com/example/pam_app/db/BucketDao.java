@@ -36,8 +36,8 @@ public interface BucketDao {
     @Query("DELETE FROM buckets WHERE id=:id")
     int delete(final int id);
 
-    @Query("SELECT * FROM entries")
-    Flowable<List<BucketEntryEntity>> getEntryList();
+    @Query("SELECT * FROM entries INNER JOIN buckets ON entries.idBucket = buckets.id")
+    Flowable<List<BucketEntryWithBucketEntity>> getEntryList();
 
     @Query("SELECT amount FROM entries JOIN buckets ON idBucket=id WHERE bucketType=:type")
     Flowable<List<Double>> getTotalAmountByType(final int type);

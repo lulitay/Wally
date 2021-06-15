@@ -10,12 +10,22 @@ public class BucketEntry implements Serializable, Entry {
     public final Date date;
     public final String comment;
     public final Integer id;
+    public final String bucketTitle;
 
     public BucketEntry(double amount, Date date, String comment) {
         this.amount = amount;
         this.date = date;
         this.comment = comment;
         this.id = null;
+        this.bucketTitle = null;
+    }
+
+    public BucketEntry(double amount, Date date, String comment, String bucketTitle) {
+        this.amount = amount;
+        this.date = date;
+        this.comment = comment;
+        this.id = null;
+        this.bucketTitle = bucketTitle;
     }
 
     public BucketEntry(double amount, Date date, String comment, int id) {
@@ -23,6 +33,7 @@ public class BucketEntry implements Serializable, Entry {
         this.date = date;
         this.comment = comment;
         this.id = id;
+        this.bucketTitle = null;
     }
 
     @Override
@@ -47,5 +58,9 @@ public class BucketEntry implements Serializable, Entry {
 
     public Double getAmount() {
         return amount;
+    }
+
+    public String getBucketTitle() {
+        return bucketTitle;
     }
 }
