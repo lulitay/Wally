@@ -221,7 +221,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     @Override
     protected void onStop() {
         super.onStop();
-        presenter.onDetachView();
+        presenter.onViewDetached();
     }
 
     @Override

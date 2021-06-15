@@ -56,4 +56,31 @@ public class BucketListPresenterTest {
         verify(bucketListView).drawSavingsBucketList();
     }
 
+    @Test
+    public void whenBucketClickedThenLaunchBucketDetailActivity() {
+        presenter.onBucketClicked(1);
+
+        verify(bucketListView).launchBucketDetailActivity(1);
+    }
+
+    @Test
+    public void whenAddBucketClickedThenLaunchAddBucketActivity() {
+        presenter.onAddBucketClicked();
+
+        verify(bucketListView).launchAddBucketActivity();
+    }
+
+    @Test
+    public void whenSpendingCardClickedThenCollapseSpendingBuckets() {
+        presenter.onSpendingCardClicked();
+
+        verify(bucketListView).collapseSpendingBuckets();
+    }
+
+    @Test
+    public void whenSavingCardClickedThenCollapseSavingBuckets() {
+        presenter.onSavingsCardClicked();
+
+        verify(bucketListView).collapseSavingsBuckets();
+    }
 }

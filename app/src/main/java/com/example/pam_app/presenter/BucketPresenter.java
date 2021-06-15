@@ -18,7 +18,8 @@ public class BucketPresenter {
     private final SchedulerProvider schedulerProvider;
     private Bucket currentBucket;
 
-    public BucketPresenter(final int id, final BucketView bucketView,
+    public BucketPresenter(final int id,
+                           final BucketView bucketView,
                            final BucketRepository bucketRepository,
                            final SchedulerProvider schedulerProvider) {
         this.id = id;
@@ -51,11 +52,15 @@ public class BucketPresenter {
     }
 
     public void onViewPause() {
-        disposable.clear();
+        if (disposable != null) {
+            disposable.clear();
+        }
     }
 
     public void onViewDetached() {
-        disposable.dispose();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     public void onBackSelected() {
