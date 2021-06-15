@@ -36,6 +36,8 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     private final HomePresenter homePresenter;
     private BucketEntryHomeAdapter adapter;
+    private final String legendTitle;
+    private final String others;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -53,36 +55,19 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         setOrientation(VERTICAL);
         homePresenter = new HomePresenter(this);
         setUpList();
-        setUpGraph();
+        setUpGraph(context);
+        legendTitle = context.getString(R.string.bucket);
+        others = context.getString(R.string.others);
     }
 
     @Override
     public void bind(final List<BucketEntry> entryList) {
         adapter.update(entryList);
         PieChart chart = findViewById(R.id.chart);
-        List<BucketEntry> reduceEntryList = entryList.stream().collect(Collectors.collectingAndThen(
-                Collectors.toMap(BucketEntry::getBucketTitle,
-                    Function.identity(),
-                    (left, right) -> new BucketEntry(left.amount + right.amount, left.date, left.comment, left.bucketTitle)),
-                m -> new ArrayList<>(m.values())
-        ));
-        reduceEntryList.sort((e1, e2) -> (int) (e2.amount - e1.amount));
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        double otherAmount = 0;
-        for (int i = 0; i < reduceEntryList.size(); i++) {
-            BucketEntry e = reduceEntryList.get(i);
-            if (i < 5) {
-                entries.add(new PieEntry((float) e.amount, e.bucketTitle));
-            }
-            else {
-                otherAmount += e.amount;
-            }
-        }
-        if (reduceEntryList.size() > 5) {
-            entries.add(new PieEntry((float) otherAmount, "Others"));//TODO translate
-        }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Buckets");//TODO translate
+        ArrayList<PieEntry> entries = getBucketData(entryList);
+
+        PieDataSet dataSet = new PieDataSet(entries, legendTitle);
 
         dataSet.setDrawIcons(false);
 
@@ -147,7 +132,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }
 
-    private void setUpGraph() {
+    private void setUpGraph(final Context context) {
         PieChart chart = findViewById(R.id.chart);
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
@@ -155,9 +140,9 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
         chart.setDragDecelerationFrictionCoef(0.95f);
 
-        chart.setCenterText("Metrics");//TODO translate
+        chart.setCenterText(context.getString(R.string.metrics));
         chart.setCenterTextSize(20);
-        chart.setCenterTextColor(Color.parseColor("#2A9D8F"));//TODO malardo
+        chart.setCenterTextColor(context.getColor(R.color.colorPrimary));
 
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
@@ -193,5 +178,30 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         chart.setVisibility(View.GONE);
         no_entries.setVisibility(View.VISIBLE);
         welcome.setVisibility(View.VISIBLE);
+    }
+
+    private ArrayList<PieEntry> getBucketData(final List<BucketEntry> entryList) {
+        List<BucketEntry> reduceEntryList = entryList.stream().collect(Collectors.collectingAndThen(
+                Collectors.toMap(BucketEntry::getBucketTitle,
+                        Function.identity(),
+                        (left, right) -> new BucketEntry(left.amount + right.amount, left.date, left.comment, left.bucketTitle)),
+                m -> new ArrayList<>(m.values())
+        ));
+        reduceEntryList.sort((e1, e2) -> (int) (e2.amount - e1.amount));
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        double otherAmount = 0;
+        for (int i = 0; i < reduceEntryList.size(); i++) {
+            BucketEntry e = reduceEntryList.get(i);
+            if (i < 5) {
+                entries.add(new PieEntry((float) e.amount, e.bucketTitle));
+            }
+            else {
+                otherAmount += e.amount;
+            }
+        }
+        if (reduceEntryList.size() > 5) {
+            entries.add(new PieEntry((float) otherAmount, others));
+        }
+        return entries;
     }
 }
