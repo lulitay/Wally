@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
@@ -25,7 +26,7 @@ public class AddBucketPresenter {
     private final WeakReference<AddBucketView> addBucketView;
     private final BucketRepository bucketRepository;
     private final SchedulerProvider schedulerProvider;
-    private Disposable disposable;
+    private CompositeDisposable disposable;
 
     public AddBucketPresenter(
             final AddBucketView addBucketView,
@@ -35,6 +36,7 @@ public class AddBucketPresenter {
         this.addBucketView = new WeakReference<>(addBucketView);
         this.bucketRepository = bucketRepository;
         this.schedulerProvider = schedulerProvider;
+        this.disposable = new CompositeDisposable();
     }
 
     public void saveBucket(
@@ -49,18 +51,14 @@ public class AddBucketPresenter {
         final boolean fields = checkFields(title, date, bucketType, target, isRecurrent);
         if (fields) {
             final Bucket bucket = new Bucket(title, date, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
-            disposable = bucketRepository.create(bucket)
+            disposable.add(bucketRepository.create(bucket)
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
                     .subscribe((Long id) -> {
-                        if (addBucketView.get() != null) {
-                            addBucketView.get().onSuccessSavingBucket(bucket);
-                        }
+                        fetchBucket(bucket);
                     }, (throwable) -> {
-                        if (addBucketView.get() != null) {
-                            addBucketView.get().onErrorSavingBucket();
-                        }
-                    });
+                        throwErrorSavingBucket();
+                    }));
         }
     }
 
@@ -82,7 +80,7 @@ public class AddBucketPresenter {
         if (target.length() == 0) {
             addBucketView.get().showTargetError(R.string.error_empty, null);
             isCorrect = false;
-        } else if (target.equals(".")){
+        } else if (target.equals(".")) {
             addBucketView.get().showTargetError(R.string.error_format, null);
             isCorrect = false;
         } else if (Double.parseDouble(target) >= MAX_AMOUNT) {
@@ -129,5 +127,24 @@ public class AddBucketPresenter {
         next.set(MONTH, today.get(MONTH) + 1);
         next.set(DAY_OF_MONTH, 1);
         return next.getTime();
+    }
+
+    private void throwErrorSavingBucket() {
+        if (addBucketView.get() != null) {
+            addBucketView.get().onErrorSavingBucket();
+        }
+    }
+
+    private void fetchBucket(Bucket bucket) {
+        disposable.add(bucketRepository.get(bucket.title)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe((Bucket b) -> {
+                    if (addBucketView.get() != null) {
+                        addBucketView.get().onSuccessSavingBucket(b);
+                    }
+                }, (throwable) -> {
+                    throwErrorSavingBucket();
+                }));
     }
 }
