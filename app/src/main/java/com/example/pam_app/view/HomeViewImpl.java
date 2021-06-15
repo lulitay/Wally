@@ -43,6 +43,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     private BucketEntryHomeAdapter adapter;
     private final String legendTitle;
     private final String others;
+    private final ArrayList<Integer> graphColors;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -54,6 +55,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     public HomeViewImpl(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
+        graphColors = new ArrayList<>();
 
         inflate(context, R.layout.view_home, this);
         setGravity(CENTER);
@@ -67,11 +69,11 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     @Override
     public void bind(final List<BucketEntry> entryList) {
         adapter.update(entryList);
-        PieChart chart = findViewById(R.id.chart);
+        final PieChart chart = findViewById(R.id.chart);
 
-        ArrayList<PieEntry> entries = getBucketData(entryList);
+        final ArrayList<PieEntry> entries = getBucketData(entryList);
 
-        PieDataSet dataSet = new PieDataSet(entries, legendTitle);
+        final PieDataSet dataSet = new PieDataSet(entries, legendTitle);
 
         dataSet.setDrawIcons(false);
 
@@ -79,28 +81,9 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(5f);
 
-        ArrayList<Integer> colors = new ArrayList<>();//TODO check
+        dataSet.setColors(graphColors);
 
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(dataSet);
+        final PieData data = new PieData(dataSet);
         data.setValueFormatter(new DecimalPercentageFormatter(new DecimalFormat("###,###,###")));
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
@@ -108,8 +91,8 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         chart.highlightValues(null);
         chart.invalidate();
 
-        TextView welcome = findViewById(R.id.welcome);
-        TextView no_entries = findViewById(R.id.no_entries);
+        final TextView welcome = findViewById(R.id.welcome);
+        final TextView no_entries = findViewById(R.id.no_entries);
         if (entryList.size() == 0) {
             chart.setVisibility(View.GONE);
             no_entries.setVisibility(View.VISIBLE);
@@ -137,7 +120,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     }
 
     private void setUpGraph(final Context context) {
-        PieChart chart = findViewById(R.id.chart);
+        final PieChart chart = findViewById(R.id.chart);
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
         chart.setExtraOffsets(5, 10, 5, 5);
@@ -165,7 +148,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
         chart.animateY(1400, Easing.EaseInOutQuad);
 
-        Legend l = chart.getLegend();
+        final Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
@@ -178,15 +161,22 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         chart.setEntryLabelTextSize(12f);
         chart.setDrawEntryLabels(false);
 
-        TextView welcome = findViewById(R.id.welcome);
-        TextView no_entries = findViewById(R.id.no_entries);
+        final TextView welcome = findViewById(R.id.welcome);
+        final TextView no_entries = findViewById(R.id.no_entries);
         chart.setVisibility(View.GONE);
         no_entries.setVisibility(View.VISIBLE);
         welcome.setVisibility(View.VISIBLE);
+
+        graphColors.add(context.getColor(R.color.graph1));
+        graphColors.add(context.getColor(R.color.graph2));
+        graphColors.add(context.getColor(R.color.graph3));
+        graphColors.add(context.getColor(R.color.graph4));
+        graphColors.add(context.getColor(R.color.graph5));
+        graphColors.add(context.getColor(R.color.graph6));
     }
 
     private ArrayList<PieEntry> getBucketData(final List<BucketEntry> entryList) {
-        List<BucketEntry> reduceEntryList = entryList.stream()
+        final List<BucketEntry> reduceEntryList = entryList.stream()
                 .filter((e) -> e.date.after(getFirstDayOfMonth()))
                 .collect(Collectors.collectingAndThen(
                     Collectors.toMap(BucketEntry::getBucketTitle,
@@ -195,7 +185,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
                     m -> new ArrayList<>(m.values())
                 ));
         reduceEntryList.sort((e1, e2) -> (int) (e2.amount - e1.amount));
-        ArrayList<PieEntry> entries = new ArrayList<>();
+        final ArrayList<PieEntry> entries = new ArrayList<>();
         double otherAmount = 0;
         for (int i = 0; i < reduceEntryList.size(); i++) {
             BucketEntry e = reduceEntryList.get(i);
