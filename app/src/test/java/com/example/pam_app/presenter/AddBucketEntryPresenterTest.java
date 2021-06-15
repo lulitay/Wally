@@ -142,4 +142,9 @@ public class AddBucketEntryPresenterTest {
         verify(addBucketEntryView, only()).onErrorSavingBucketEntry();
     }
 
+    @Test
+    public void onViewDetachedTest() {
+        presenter.onViewDetached();
+    }
+
 }

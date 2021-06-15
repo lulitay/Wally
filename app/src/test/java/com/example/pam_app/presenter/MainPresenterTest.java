@@ -65,14 +65,14 @@ public class MainPresenterTest {
     private SharedPreferences sharedPreferences;
     private LanguagesRepository languagesRepository;
     private SchedulerProvider schedulerProvider;
-    private MainPresenter mainPresenter;
+    private MainPresenter presenter;
 
     @BeforeEach
     public void setUp() {
         sharedPreferences = new SPMockBuilder().createSharedPreferences();
         languagesRepository = new LanguagesRepositoryImpl(sharedPreferences);
         schedulerProvider = new SchedulerProviderTest();
-        mainPresenter = new MainPresenter(bucketRepository, incomeRepository, mainActivity,
+        presenter = new MainPresenter(bucketRepository, incomeRepository, mainActivity,
                 schedulerProvider, languagesRepository
         );
     }
@@ -83,7 +83,7 @@ public class MainPresenterTest {
         when(bucketRepository.getEntryList()).thenReturn(ENTRIES);
         when(incomeRepository.getList()).thenReturn(INCOMES);
 
-        mainPresenter.onViewAttached();
+        presenter.onViewAttached();
 
         verify(mainActivity).onBucketListViewReceived(BUCKETS.blockingFirst());
         verify(mainActivity).onEntriesReceived(ENTRIES.blockingFirst());
@@ -96,7 +96,7 @@ public class MainPresenterTest {
         when(bucketRepository.getEntryList()).thenReturn(ENTRIES);
         when(incomeRepository.getList()).thenReturn(INCOMES);
 
-        mainPresenter.onViewAttached();
+        presenter.onViewAttached();
         languagesRepository.changeLanguage("en");
 
         final ArgumentCaptor<Locale> localeAC = ArgumentCaptor.forClass(Locale.class);
@@ -110,12 +110,17 @@ public class MainPresenterTest {
         when(bucketRepository.getEntryList()).thenReturn(ENTRIES);
         when(incomeRepository.getList()).thenReturn(INCOMES);
 
-        mainPresenter.onViewAttached();
+        presenter.onViewAttached();
         languagesRepository.changeLanguage("es");
 
         final ArgumentCaptor<Locale> localeAC = ArgumentCaptor.forClass(Locale.class);
         verify(mainActivity).updateLocale(localeAC.capture());
         assertEquals("es", localeAC.getValue().getLanguage());
+    }
+
+    @Test
+    public void onViewDetachedTest() {
+        presenter.onViewDetached();
     }
 
 }

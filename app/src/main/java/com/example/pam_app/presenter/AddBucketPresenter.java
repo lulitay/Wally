@@ -106,7 +106,7 @@ public class AddBucketPresenter {
         }
     }
 
-    public void onDetachView() {
+    public void onViewDetached() {
         if (disposable != null) {
             disposable.dispose();
         }

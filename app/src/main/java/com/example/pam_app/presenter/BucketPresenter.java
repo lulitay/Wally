@@ -52,11 +52,15 @@ public class BucketPresenter {
     }
 
     public void onViewPause() {
-        disposable.clear();
+        if (disposable != null) {
+            disposable.clear();
+        }
     }
 
     public void onViewDetached() {
-        disposable.dispose();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     public void onBackSelected() {

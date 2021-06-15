@@ -104,4 +104,9 @@ public class AddIncomePresenterTest {
         verify(addIncomeView, only()).onErrorSavingIncome();
     }
 
+    @Test
+    public void onViewDetachedTest() {
+        presenter.onViewDetached();
+    }
+
 }

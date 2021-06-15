@@ -133,4 +133,23 @@ public class AddBucketPresenterTest {
 
         verify(addBucketView, only()).onErrorSavingBucket();
     }
+
+    @Test
+    public void whenClickLoadImageThenRequestStoragePermission() {
+        presenter.onClickLoadImage();
+
+        verify(addBucketView, only()).requestStoragePermission();
+    }
+
+    @Test
+    public void whenIsRecurrentSwitchChangeThenChangeDatePickerState() {
+        presenter.onIsRecurrentSwitchChange(true);
+
+        verify(addBucketView, only()).changeDatePickerState(false);
+    }
+
+    @Test
+    public void onViewDetachedTest() {
+        presenter.onViewDetached();
+    }
 }

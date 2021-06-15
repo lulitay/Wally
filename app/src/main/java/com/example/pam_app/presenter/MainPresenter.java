@@ -111,8 +111,10 @@ public class MainPresenter {
         }
     }
 
-    public void onViewStop() {
-        disposable.dispose();
+    public void onViewDetached() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     private OnSharedPreferenceChangeListener sharedPreferencesListener() {
