@@ -64,4 +64,6 @@
     <string name="error_saving_income">Income could not be saved</string>
     <string name="income_saving_success">Income %1$s saved</string>
     <string name="money_display">$%1$.2f</string>
+    <string name="metrics">Metrics</string>
+    <string name="others">Others</string>
 </resources>
