@@ -20,11 +20,11 @@ import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketType;
 import com.example.pam_app.presenter.BucketListPresenter;
 import com.example.pam_app.utils.listener.Clickable;
-import com.example.pam_app.utils.listener.ClickableWithParameter;
+import com.example.pam_app.utils.listener.ClickableTarget;
 
 import java.util.List;
 
-public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableWithParameter<Integer> {
+public class BucketListViewImpl extends LinearLayout implements BucketListView, ClickableTarget<Integer> {
 
     private RecyclerView spendingBuckets;
     private RecyclerView savingsBuckets;
@@ -34,7 +34,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     private BucketListAdapter savingsAdapter;
 
     private Clickable onAddBucketClickedListener;
-    private ClickableWithParameter<Integer> onBucketClickedListener;
+    private ClickableTarget<Integer> onBucketClickedListener;
 
     private boolean isSpendingListExpanded = true;
     private boolean isSavingsListExpanded = true;
@@ -60,7 +60,7 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     public void bind(
             final Context context,
             final Clickable onAddBucketClickedListener,
-            final ClickableWithParameter<Integer> onBucketClickedListener,
+            final ClickableTarget<Integer> onBucketClickedListener,
             final List<Bucket> bucketList
     ) {
         setUpAddBucketButton();

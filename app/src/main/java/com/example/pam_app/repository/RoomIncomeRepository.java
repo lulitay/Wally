@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class RoomIncomeRepository implements IncomeRepository {
 
@@ -31,9 +32,8 @@ public class RoomIncomeRepository implements IncomeRepository {
     }
 
     @Override
-    public void create(final Income income) {
-        this.incomeDao.create(incomeMapper.toEntity(income));
-
+    public Single<Long> create(final Income income) {
+        return Single.fromCallable(() -> incomeDao.create(incomeMapper.toEntity(income)));
     }
 
     @Override

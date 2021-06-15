@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     @Override
     protected void onStop() {
         super.onStop();
-        presenter.onViewStop();
+        presenter.onViewDetached();
         languagesRepository.unregisterOnSharedPreferencesListener();
     }
 

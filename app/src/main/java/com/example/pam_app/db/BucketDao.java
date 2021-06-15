@@ -31,10 +31,10 @@ public interface BucketDao {
     Flowable<List<String>> getTitleListByType(final int type);
 
     @Insert
-    void create(final BucketEntity bucket);
+    long create(final BucketEntity bucket);
 
     @Query("DELETE FROM buckets WHERE id=:id")
-    void delete(final int id);
+    int delete(final int id);
 
     @Query("SELECT * FROM entries INNER JOIN buckets ON entries.idBucket = buckets.id")
     Flowable<List<BucketEntryWithBucketEntity>> getEntryList();
@@ -51,7 +51,7 @@ public interface BucketDao {
     Single<BucketEntity> getBucket(final String title);
 
     @Insert
-    void addEntry(final BucketEntryEntity entry);
+    long addEntry(final BucketEntryEntity entry);
 
     @Delete
     void removeEntry(final BucketEntryEntity entry);

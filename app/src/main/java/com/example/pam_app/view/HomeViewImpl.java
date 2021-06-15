@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pam_app.R;
 import com.example.pam_app.adapter.BucketEntryHomeAdapter;
 import com.example.pam_app.model.BucketEntry;
-import com.example.pam_app.presenter.HomePresenter;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -40,7 +39,6 @@ import static java.util.Calendar.getInstance;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
-    private final HomePresenter homePresenter;
     private BucketEntryHomeAdapter adapter;
     private final String legendTitle;
     private final String others;
@@ -59,7 +57,6 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         inflate(context, R.layout.view_home, this);
         setGravity(CENTER);
         setOrientation(VERTICAL);
-        homePresenter = new HomePresenter(this);
         setUpList();
         setUpGraph(context);
         legendTitle = context.getString(R.string.bucket);
