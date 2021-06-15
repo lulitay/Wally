@@ -18,7 +18,7 @@ import static android.view.Gravity.CENTER;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
-    private BucketEntryAdapter adapter;
+    private BucketEntryAdapter<BucketEntry> adapter;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -51,7 +51,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     private void setUpList() {
         final RecyclerView listView = findViewById(R.id.activity);
-        adapter = new BucketEntryAdapter();
+        adapter = new BucketEntryAdapter<>();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }

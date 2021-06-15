@@ -196,11 +196,11 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
 
     private void setUpList() {
         RecyclerView listView = findViewById(R.id.bucket_entries);
-        BucketEntryAdapter adapter = new BucketEntryAdapter();
+        BucketEntryAdapter adapter = new BucketEntryAdapter<>();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
         listView = findViewById(R.id.bucket_entries_old);
-        adapter = new BucketEntryAdapter();
+        adapter = new BucketEntryAdapter<>();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }
@@ -216,13 +216,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
 
         final AppBarLayout appBar =  findViewById(R.id.app_bar);
         TextView time = findViewById(R.id.time);
-        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                time.setAlpha(1.0f - Math.abs(verticalOffset / (float)
-                        appBarLayout.getTotalScrollRange()));
-            }
-        });
+        appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> time.setAlpha(1.0f - Math.abs(verticalOffset / (float)
+                appBarLayout.getTotalScrollRange())));
     }
 
     private void setUpAddEntryButton() {
