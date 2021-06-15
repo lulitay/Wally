@@ -21,7 +21,6 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
@@ -40,7 +39,6 @@ import static java.util.Calendar.getInstance;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
-    private BucketEntryHomeAdapter adapter;
     private final String legendTitle;
     private final String others;
     private final ArrayList<Integer> graphColors;
@@ -69,7 +67,6 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     @Override
     public void bind(final List<BucketEntry> entryList) {
-        adapter.update(entryList);
         final PieChart chart = findViewById(R.id.chart);
 
         final ArrayList<PieEntry> entries = getBucketData(entryList);
