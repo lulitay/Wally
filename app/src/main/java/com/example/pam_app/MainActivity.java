@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void launchAddBucketEntryActivity(final View view) {
-        addBucketEntryResultLauncher.launch("addEntry");
+        addBucketEntryResultLauncher.launch("");
     }
 
     private void launchBucketDetailActivity(final Integer bucketId) {
