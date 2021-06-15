@@ -18,8 +18,12 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
 
     @Override
     public void setData(final List<BucketEntry> items) {
-        this.items.clear();
         this.items = items;
+        notifyDataSetChanged();
+    }
+
+    public void showNewBucket(final BucketEntry entry) {
+        items.add(entry);
         notifyDataSetChanged();
     }
 
