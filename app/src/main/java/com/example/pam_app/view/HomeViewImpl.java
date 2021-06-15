@@ -43,6 +43,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
     private final String others;
     private final ArrayList<Integer> graphColors;
     private BucketEntryAdapter<BucketEntry> adapter;
+    private List<BucketEntry> entryList;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -67,6 +68,12 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     @Override
     public void bind(final List<BucketEntry> entryList) {
+        this.entryList = entryList;
+        renderGraph(entryList);
+        adapter.setData(entryList);
+    }
+
+    private void renderGraph(final List<BucketEntry> entryList) {
         final PieChart chart = findViewById(R.id.chart);
 
         final ArrayList<PieEntry> entries = getBucketData(entryList);
@@ -101,13 +108,14 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
             welcome.setVisibility(View.GONE);
             no_entries.setVisibility(View.GONE);
         }
-        adapter.setData(entryList);
     }
 
     @Override
     public void onBucketEntryAdded(final BucketEntry bucketEntry) {
         if (bucketEntry != null) {
             adapter.showNewBucket(bucketEntry);
+            entryList.add(bucketEntry);
+            renderGraph(entryList);
         }
     }
 
