@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 import static com.example.pam_app.repository.LanguagesRepositoryImpl.KEY_PREF_LANGUAGE;
@@ -28,7 +29,7 @@ public class MainPresenter {
     private final IncomeRepository incomeRepository;
     private final SchedulerProvider schedulerProvider;
     private final LanguagesRepository languagesRepository;
-    private Disposable disposable;
+    private CompositeDisposable disposable;
 
     private Double totalIncome;
     private Double totalSpending;
@@ -57,17 +58,18 @@ public class MainPresenter {
     }
 
     public void onViewAttached() {
+        this.disposable = new CompositeDisposable();
         languagesRepository.setOnSharedPreferencesListener(sharedPreferencesListener());
 
         if (bucketList == null) {
-            disposable = bucketRepository.getList()
+            disposable.add(bucketRepository.getList()
                     .subscribeOn(schedulerProvider.computation())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe(this::onBucketsReceived, this::onBucketsError);
+                    .subscribe(this::onBucketsReceived));
         }
 
         if (bucketEntryList == null) {
-            disposable = bucketRepository.getEntryList()
+            disposable.add(bucketRepository.getEntryList()
                     .map(unsortedList -> {
                         List<BucketEntry> sortedList = new ArrayList<>(unsortedList);
                         sortedList.sort(new BucketEntryComparator());
@@ -75,20 +77,22 @@ public class MainPresenter {
                     })
                     .subscribeOn(schedulerProvider.computation())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe(this::onEntriesReceived);
+                    .subscribe(this::onEntriesReceived));
         }
 
         if (incomeList == null) {
-            disposable = incomeRepository.getList()
+            disposable.add(incomeRepository.getList()
                     .subscribeOn(schedulerProvider.computation())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe(this::onIncomesReceived);
+                    .subscribe(this::onIncomesReceived));
         }
     }
 
     private void onBucketsReceived(final List<Bucket> bucketList) {
         this.bucketList = bucketList;
-        mainView.get().onBucketListViewReceived(bucketList);
+        if (mainView.get() != null) {
+            mainView.get().onBucketListViewReceived(bucketList);
+        }
     }
 
     private void onEntriesReceived(final List<BucketEntry> entries) {
@@ -99,20 +103,28 @@ public class MainPresenter {
         }
     }
 
-    private void onBucketsError(Throwable throwable) {
-        //TODO: throw error
-    }
-
     private void onIncomesReceived(final List<Income> incomeList) {
         this.incomeList = incomeList;
         this.totalIncome = incomeList.stream().mapToDouble(Income::getAmount).sum();
-        if (this.totalSpending != null) {
+        if (this.totalSpending != null && mainView.get() != null) {
             mainView.get().onIncomeDataReceived(incomeList, (totalIncome - totalSpending));
         }
     }
 
-    public void onViewStop() {
+    public void onViewDetached() {
         disposable.dispose();
+    }
+
+    public void unregisterOnSharedPreferencesListener() {
+        languagesRepository.unregisterOnSharedPreferencesListener();
+    }
+
+    public Locale getCurrentLocale() {
+        return languagesRepository.getCurrentLocale();
+    }
+
+    public void changeLanguage(final String language) {
+        languagesRepository.changeLanguage(language);
     }
 
     private OnSharedPreferenceChangeListener sharedPreferencesListener() {

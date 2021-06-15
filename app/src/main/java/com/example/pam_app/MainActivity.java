@@ -22,7 +22,6 @@ import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.MainPresenter;
-import com.example.pam_app.repository.LanguagesRepository;
 import com.example.pam_app.utils.contracts.BucketContract;
 import com.example.pam_app.utils.contracts.EntryContract;
 import com.example.pam_app.utils.listener.Clickable;
@@ -37,8 +36,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -63,18 +62,16 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     private ActivityResultLauncher<String> addBucketEntryResultLauncher;
 
     private MainPresenter presenter;
-    private LanguagesRepository languagesRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Container container = ContainerLocator.locateComponent(this);
-        languagesRepository = container.getLanguageRepository(); //TODO change
         presenter = new MainPresenter(container.getBucketRepository(), container.getIncomeRepository(),
-                this, container.getSchedulerProvider(), languagesRepository);
+                this, container.getSchedulerProvider(), container.getLanguageRepository());
         setUpChosenLanguage();
         setContentView(R.layout.activity_main);
-        
+
         setUpViews();
         setUpBottomNavigation();
         setUpAddBucketResultLauncher();
@@ -91,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     @Override
     protected void onStop() {
         super.onStop();
-        presenter.onViewStop();
-        languagesRepository.unregisterOnSharedPreferencesListener();
+        presenter.onViewDetached();
+        presenter.unregisterOnSharedPreferencesListener();
     }
 
     @Override
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     protected void onStart() {
         super.onStart();
         presenter.onViewAttached();
-        profileView.bind(languagesRepository, this::applyChanges);
+        profileView.bind(presenter.getCurrentLocale().getLanguage(), this::applyChanges);
     }
 
     @Override
@@ -142,9 +139,13 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
                 .setMinimumLoggingLevel(android.util.Log.INFO)
                 .setWorkerFactory(new RecurrentBucketWorkerFactory(container.getBucketRepository()))
                 .build();
-        WorkManager.initialize(this, myConfig);
-
-        final WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+        WorkManager workManager;
+        try {
+            workManager = WorkManager.getInstance(getApplicationContext());
+        } catch (final Exception e) {
+            WorkManager.initialize(this, myConfig);
+            workManager = WorkManager.getInstance(getApplicationContext());
+        }
 
         final Calendar currentDate = Calendar.getInstance();
         final Calendar dueDate = Calendar.getInstance();
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void setUpChosenLanguage() {
-        setLocale(languagesRepository.getCurrentLocale());
+        setLocale(presenter.getCurrentLocale());
     }
 
     private void setUpAddBucketResultLauncher() {
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         );
     }
 
-    private void applyChanges(String language) {
-        languagesRepository.changeLanguage(language);
+    private void applyChanges(final String language) {
+        presenter.changeLanguage(language);
     }
 }

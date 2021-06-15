@@ -8,18 +8,17 @@ import com.example.pam_app.utils.schedulers.SchedulerProvider;
 import com.example.pam_app.view.AddBucketView;
 
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 import java.util.Date;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
-
-import java.util.Calendar;
-
-import static java.util.Calendar.*;
 import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
 
 public class AddBucketPresenter {
 
@@ -49,11 +48,11 @@ public class AddBucketPresenter {
         final Date date = isRecurrent ? getFirstDayOfNextMonth() : dueDate;
         final boolean fields = checkFields(title, date, bucketType, target, isRecurrent);
         if (fields) {
-            final Bucket bucket = new Bucket(title, dueDate, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
-            disposable = Completable.fromAction(() -> bucketRepository.create(bucket))
+            final Bucket bucket = new Bucket(title, date, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
+            disposable = bucketRepository.create(bucket)
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe(() -> {
+                    .subscribe((Long id) -> {
                         if (addBucketView.get() != null) {
                             addBucketView.get().onSuccessSavingBucket(bucket);
                         }
@@ -110,7 +109,7 @@ public class AddBucketPresenter {
         }
     }
 
-    public void onDetachView() {
+    public void onViewDetached() {
         if (disposable != null) {
             disposable.dispose();
         }

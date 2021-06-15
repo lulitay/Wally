@@ -5,7 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Income implements Serializable {
+public class Income implements Serializable, Entry {
     public final Integer id;
     private final String title;
     private final double amount;
@@ -40,10 +40,17 @@ public class Income implements Serializable {
         return amount;
     }
 
+    @Override
     public String getAmountString() {
         return "$" + amount;
     }
 
+    @Override
+    public String getComment() {
+        return title;
+    }
+
+    @Override
     public String getDateString() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(date);

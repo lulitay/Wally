@@ -11,16 +11,14 @@ import androidx.annotation.Nullable;
 
 import com.example.pam_app.R;
 import com.example.pam_app.presenter.ProfilePresenter;
-import com.example.pam_app.repository.LanguagesRepository;
-import com.example.pam_app.utils.listener.ClickableWithParameter;
+import com.example.pam_app.utils.listener.ClickableTarget;
 
 import static android.view.Gravity.CENTER_HORIZONTAL;
 
 public class ProfileViewImpl extends LinearLayout implements ProfileView {
 
     private final RadioGroup languageRadioGroup;
-    private LanguagesRepository languagesRepository;
-    private ClickableWithParameter<String> onApplyChangesClickedListener;
+    private ClickableTarget<String> onApplyChangesClickedListener;
     private final ProfilePresenter presenter;
     private String currentLanguage;
 
@@ -58,12 +56,11 @@ public class ProfileViewImpl extends LinearLayout implements ProfileView {
     }
 
     @Override
-    public void bind(final LanguagesRepository languagesRepository, ClickableWithParameter<String> applyChanges) {
-        this.languagesRepository = languagesRepository;
+    public void bind(final String currentLanguage, ClickableTarget<String> applyChanges) {
         setUpLanguageRadioButtonGroup();
         setUpApplyChangesButton();
         this.onApplyChangesClickedListener = applyChanges;
-        currentLanguage = languagesRepository.getCurrentLocale().toString();
+        this.currentLanguage = currentLanguage;
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface IncomeDao {
     Flowable<List<IncomeEntity>> getList();
 
     @Insert
-    void create(final IncomeEntity income);
+    long create(final IncomeEntity income);
 
     @Query("DELETE FROM income WHERE id=:id")
     void delete(final int id);

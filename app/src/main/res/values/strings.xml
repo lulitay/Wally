@@ -65,4 +65,7 @@
     <string name="income_saving_success">Income %1$s saved</string>
     <string name="money_display">$%1$.2f</string>
     <string name="error_format">Needs to include at least one digit</string>
+    <string name="no_income_entries_added_yet">No income entries available</string>
+    <string name="metrics">Metrics</string>
+    <string name="others">Others</string>
 </resources>

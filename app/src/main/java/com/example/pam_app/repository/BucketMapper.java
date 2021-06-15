@@ -2,6 +2,7 @@ package com.example.pam_app.repository;
 
 import com.example.pam_app.db.BucketEntity;
 import com.example.pam_app.db.BucketEntryEntity;
+import com.example.pam_app.db.BucketEntryWithBucketEntity;
 import com.example.pam_app.db.BucketWithEntriesEntity;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
@@ -41,7 +42,12 @@ public class BucketMapper {
 
     public BucketEntry toModel(final BucketEntryEntity bucketEntryEntity) {
         return new BucketEntry(bucketEntryEntity.amount, bucketEntryEntity.date,
-                bucketEntryEntity.title);
+                bucketEntryEntity.comment);
+    }
+
+    public BucketEntry toModel(final BucketEntryWithBucketEntity bucketEntryEntity) {
+        return new BucketEntry(bucketEntryEntity.bucketEntryEntity.amount, bucketEntryEntity.bucketEntryEntity.date,
+                bucketEntryEntity.bucketEntryEntity.comment, bucketEntryEntity.bucketEntity.title);
     }
 
     public BucketEntryEntity toEntity(final BucketEntry bucketEntry, final int idBucket) {

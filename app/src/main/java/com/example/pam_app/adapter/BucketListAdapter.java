@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
-import com.example.pam_app.utils.listener.ClickableWithParameter;
+import com.example.pam_app.utils.listener.ClickableTarget;
 import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ import java.util.List;
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.BucketViewHolder> {
     private final List<Bucket> bucketList;
-    private ClickableWithParameter listener;
+    private ClickableTarget listener;
 
     public BucketListAdapter() {
         this.bucketList = new ArrayList<>();
     }
 
-    public void setOnClickListener(final ClickableWithParameter listener) {
+    public void setOnClickListener(final ClickableTarget listener) {
         this.listener = listener;
     }
 
@@ -31,13 +31,15 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
         bucketList.clear();
         if (newBucketList != null) {
             bucketList.addAll(newBucketList);
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     public void showNewBucket(final Bucket bucket) {
-        bucketList.add(bucket);
-        notifyDataSetChanged();
+        if (bucket != null) {
+            bucketList.add(bucket);
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -59,7 +61,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
     }
 
     public static class BucketViewHolder extends RecyclerView.ViewHolder {
-        private ClickableWithParameter listener;
+        private ClickableTarget listener;
 
         public BucketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,7 +81,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
             });
         }
 
-        public void setOnClickListener(ClickableWithParameter listener) {
+        public void setOnClickListener(ClickableTarget listener) {
             this.listener = listener;
         }
     }

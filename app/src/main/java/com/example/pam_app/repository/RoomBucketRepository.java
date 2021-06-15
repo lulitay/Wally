@@ -3,6 +3,7 @@ package com.example.pam_app.repository;
 import com.example.pam_app.db.BucketDao;
 import com.example.pam_app.db.BucketEntity;
 import com.example.pam_app.db.BucketEntryEntity;
+import com.example.pam_app.db.BucketEntryWithBucketEntity;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
 
@@ -14,6 +15,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static com.example.pam_app.model.BucketType.SPENDING;
+import static io.reactivex.Single.just;
 
 public class RoomBucketRepository implements BucketRepository {
 
@@ -53,13 +55,13 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void create(Bucket bucket) {
-        bucketDao.create(bucketMapper.toEntity(bucket));
+    public Single<Long> create(Bucket bucket) {
+        return Single.fromCallable(() -> bucketDao.create(bucketMapper.toEntity(bucket)));
     }
 
     @Override
-    public void delete(int id) {
-        this.bucketDao.delete(id);
+    public Single<Integer> delete(int id) {
+        return Single.fromCallable(() -> bucketDao.delete(id));
     }
 
     @Override
@@ -76,7 +78,7 @@ public class RoomBucketRepository implements BucketRepository {
     public Flowable<List<BucketEntry>> getEntryList() {
         return this.bucketDao.getEntryList().map(bucketEntryEntityList -> {
             final List<BucketEntry> entries = new ArrayList<>();
-            for (final BucketEntryEntity be: bucketEntryEntityList) {
+            for (final BucketEntryWithBucketEntity be: bucketEntryEntityList) {
                 entries.add(bucketMapper.toModel(be));
             }
             return entries;
@@ -89,8 +91,8 @@ public class RoomBucketRepository implements BucketRepository {
     }
 
     @Override
-    public void addEntry(BucketEntry entry, final int bucketId) {
-        bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId));
+    public Single<Long> addEntry(BucketEntry entry, final int bucketId) {
+        return Single.fromCallable(() -> bucketDao.addEntry(bucketMapper.toEntity(entry, bucketId)));
     }
 
     @Override

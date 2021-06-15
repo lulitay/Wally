@@ -133,6 +133,31 @@ public class AddIncomeFragment extends Fragment implements AddIncomeView {
     }
 
     @Override
+    public void showDescriptionError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            description.setError(getString(error));
+        } else {
+            description.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showAmountError(final int error, final Integer parameter) {
+        if (parameter == null) {
+            amount.setError(getString(error));
+        } else {
+            amount.setError(getString(error, parameter));
+        }
+    }
+
+    @Override
+    public void showDateError(int error) {
+        selectedDate.requestFocus();
+        getParentFragmentManager().beginTransaction().remove(datePicker).commit();
+        selectedDate.setError(getString(error));
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         presenter.onViewDetached();

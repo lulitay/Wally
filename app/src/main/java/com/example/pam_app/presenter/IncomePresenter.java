@@ -13,6 +13,8 @@ public class IncomePresenter {
     }
 
     public void onIncomeLeftAmountReceived(final Double incomeLeft) {
-        incomeView.get().setUpIncomeLeftText(incomeLeft > 0);
+        if (incomeView.get() != null) {
+            incomeView.get().setUpIncomeLeftText(incomeLeft > 0);
+        }
     }
 }
