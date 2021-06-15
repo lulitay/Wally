@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
-import com.example.pam_app.adapter.BucketEntryHomeAdapter;
+import com.example.pam_app.adapter.BucketEntryAdapter;
 import com.example.pam_app.model.BucketEntry;
 import com.example.pam_app.utils.DecimalPercentageFormatter;
 import com.github.mikephil.charting.animation.Easing;
@@ -21,7 +21,6 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
@@ -40,10 +39,10 @@ import static java.util.Calendar.getInstance;
 
 public class HomeViewImpl extends LinearLayout implements HomeView {
 
-    private BucketEntryHomeAdapter adapter;
     private final String legendTitle;
     private final String others;
     private final ArrayList<Integer> graphColors;
+    private BucketEntryAdapter<BucketEntry> adapter;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -68,7 +67,6 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     @Override
     public void bind(final List<BucketEntry> entryList) {
-        adapter.update(entryList);
         final PieChart chart = findViewById(R.id.chart);
 
         final ArrayList<PieEntry> entries = getBucketData(entryList);
@@ -103,6 +101,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
             welcome.setVisibility(View.GONE);
             no_entries.setVisibility(View.GONE);
         }
+        adapter.setData(entryList);
     }
 
     @Override
@@ -114,7 +113,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     private void setUpList() {
         final RecyclerView listView = findViewById(R.id.activity);
-        adapter = new BucketEntryHomeAdapter();
+        adapter = new BucketEntryAdapter<>();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }

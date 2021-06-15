@@ -7,18 +7,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.databinding.ActivityBucketEntryBinding;
-import com.example.pam_app.model.BucketEntry;
+import com.example.pam_app.model.Entry;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.BucketEntryHolder>
-        implements BindableAdapter<List<BucketEntry>> {
+public class BucketEntryAdapter<T extends Entry> extends RecyclerView.Adapter<BucketEntryAdapter.BucketEntryHolder>
+        implements BindableAdapter<List<T>> {
 
-    private List<BucketEntry> items;
+    private List<T> items;
 
     @Override
-    public void setData(final List<BucketEntry> items) {
+    public void setData(final List<T> items) {
         this.items = items;
+        notifyDataSetChanged();
+    }
+
+    public void showNewBucket(final T entry) {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+        items.add(entry);
         notifyDataSetChanged();
     }
 
@@ -48,7 +57,7 @@ public class BucketEntryAdapter extends RecyclerView.Adapter<BucketEntryAdapter.
             this.binding = binding;
         }
 
-        public void bind(final BucketEntry entry) {
+        public void bind(final Entry entry) {
             this.binding.setEntry(entry);
         }
     }

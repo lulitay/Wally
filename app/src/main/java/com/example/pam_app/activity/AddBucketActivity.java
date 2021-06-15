@@ -94,10 +94,11 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
 
     private void setSaveBucketListener() {
         final Button saveEntry = findViewById(R.id.save);
+
         saveEntry.setOnClickListener(v ->
                 presenter.saveBucket(
                 title.getText().toString(),
-                date.getTime(),
+                dueDate.getText().toString().equals("") ? null : date.getTime(),
                 BucketType.getBucketType(bucketType.getText().toString()),
                 target.getText().toString(),
                 imagePath,

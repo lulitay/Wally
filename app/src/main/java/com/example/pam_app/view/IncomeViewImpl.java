@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pam_app.R;
-import com.example.pam_app.adapter.IncomeAdapter;
+import com.example.pam_app.adapter.BucketEntryAdapter;
 import com.example.pam_app.model.Income;
 import com.example.pam_app.presenter.IncomePresenter;
 import com.google.android.material.textview.MaterialTextView;
@@ -21,7 +21,7 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
 
     private final Context context;
     private final MaterialTextView emptyNotice;
-    private IncomeAdapter adapter;
+    private BucketEntryAdapter<Income> adapter;
     private final IncomePresenter incomePresenter;
     private Double incomeLeft;
     private final ImageView eye;
@@ -70,7 +70,7 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
             emptyNotice.setVisibility(GONE);
             this.incomeLeft = incomeLeft;
         }
-        adapter.update(incomeList);
+        adapter.setData(incomeList);
         incomePresenter.onIncomeLeftAmountReceived(this.incomeLeft);
     }
 
@@ -80,7 +80,7 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
             emptyNotice.setVisibility(GONE);
             this.incomeLeft = incomeLeft + income.getAmount();
             incomePresenter.onIncomeLeftAmountReceived(incomeLeft);
-            adapter.showNewIncome(income);
+            adapter.showNewBucket(income);
         }
     }
 
@@ -103,7 +103,7 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
 
     private void setUpList() {
         final RecyclerView listView = findViewById(R.id.monthly_income);
-        adapter = new IncomeAdapter();
+        adapter = new BucketEntryAdapter<>();
         listView.setAdapter(adapter);
         ViewCompat.setNestedScrollingEnabled(listView, false);
     }
