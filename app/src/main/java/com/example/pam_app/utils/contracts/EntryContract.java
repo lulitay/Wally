@@ -3,6 +3,7 @@ package com.example.pam_app.utils.contracts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
@@ -19,6 +20,10 @@ public class EntryContract extends ActivityResultContract<String, Serializable> 
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, String input) {
+        if (!input.equals("")) {
+            final String uri = "wally://add_entry/detail?" + input;
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        }
         return new Intent(context, AddBucketEntryActivity.class);
     }
 

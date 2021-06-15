@@ -51,7 +51,7 @@ public class AddBucketEntryPresenter {
                                 final String bucketTitle) {
         final boolean fields = checkFields(amount, date, description, bucketTitle);
         if (fields) {
-            final BucketEntry entry = new BucketEntry(Double.parseDouble(amount), date, description);
+            final BucketEntry entry = new BucketEntry(Double.parseDouble(amount), date, description, bucketTitle);
             disposable.add(
                 bucketRepository.get(bucketTitle)
                     .subscribeOn(schedulerProvider.io())

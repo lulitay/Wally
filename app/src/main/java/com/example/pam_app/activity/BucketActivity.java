@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import com.example.pam_app.di.Container;
 import com.example.pam_app.di.ContainerLocator;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.presenter.BucketPresenter;
+import com.example.pam_app.utils.contracts.EntryContract;
 import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.view.BucketView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -40,6 +42,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.List;
 
 public class BucketActivity extends AppCompatActivity implements BucketView {
 
@@ -47,6 +51,8 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     private ActivityBucketBinding binding;
 
     private boolean readExternalStorage;
+
+    private ActivityResultLauncher<String> addBucketEntryResultLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle bundle) {
@@ -62,6 +68,7 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         this.setUpToolBar();
         this.setUpList();
         this.setUpAddEntryButton();
+        setUpAddEntryResultLauncher();
         readExternalStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -69,18 +76,6 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     protected void onStart() {
         super.onStart();
         bucketPresenter.onViewAttach();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bucketPresenter.onViewResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        bucketPresenter.onViewPause();
     }
 
     @Override
@@ -116,15 +111,21 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     @Override
-    public void back() {
-        onBackPressed();
+    public void back(final Serializable entries) {
+        final Intent result = new Intent();
+        result.putExtra("entries", entries);
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        bucketPresenter.onBackSelected();
     }
 
     @Override
     public void goToAddEntry(String bucketName) {
-        final String uri = "wally://add_entry/detail?bucket_name=" + bucketName;
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        startActivity(intent);
+        addBucketEntryResultLauncher.launch("bucket_name=" + bucketName);
     }
 
     @Override
@@ -225,4 +226,10 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
         fab.setOnClickListener((View view) -> bucketPresenter.onAddEntryClick());
     }
 
+    private void setUpAddEntryResultLauncher() {
+        addBucketEntryResultLauncher = registerForActivityResult(
+                new EntryContract(),
+                bucketPresenter::onAddEntry
+        );
+    }
 }
