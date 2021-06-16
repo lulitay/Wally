@@ -21,8 +21,10 @@ public class BucketEntryAdapter<T extends Entry> extends RecyclerView.Adapter<Bu
     @Override
     public void setData(final List<T> items) {
         this.items = new LinkedList<>();
-        this.items.addAll(items);
-        notifyDataSetChanged();
+        if (items != null) {
+            this.items.addAll(items);
+            notifyDataSetChanged();
+        }
     }
 
     public void showNewBucket(final T entry) {
