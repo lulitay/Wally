@@ -1,5 +1,7 @@
 package com.example.pam_app.repository;
 
+import android.database.sqlite.SQLiteConstraintException;
+
 import com.example.pam_app.db.BucketDao;
 import com.example.pam_app.db.BucketEntity;
 import com.example.pam_app.db.BucketEntryWithBucketEntity;
@@ -54,7 +56,13 @@ public class RoomBucketRepository implements BucketRepository {
 
     @Override
     public Single<Long> create(Bucket bucket) {
-        return Single.fromCallable(() -> bucketDao.create(bucketMapper.toEntity(bucket)));
+        return Single.fromCallable(() -> {
+            try {
+                return bucketDao.create(bucketMapper.toEntity(bucket));
+            } catch (final SQLiteConstraintException e) {
+                return -1L;
+            }
+        });
     }
 
     @Override
