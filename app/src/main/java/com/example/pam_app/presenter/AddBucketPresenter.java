@@ -35,6 +35,9 @@ public class AddBucketPresenter {
         this.addBucketView = new WeakReference<>(addBucketView);
         this.bucketRepository = bucketRepository;
         this.schedulerProvider = schedulerProvider;
+    }
+
+    public void onAttachView() {
         this.disposable = new CompositeDisposable();
     }
 
