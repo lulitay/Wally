@@ -5,6 +5,7 @@ import com.example.pam_app.model.Bucket;
 public interface AddBucketView {
 
     void onErrorSavingBucket();
+    void onErrorExistingBucketName();
     void onSuccessSavingBucket(final Bucket bucket);
     void showTitleError(final int error, final Integer parameter);
     void showTargetError(final int error, final Integer parameter);

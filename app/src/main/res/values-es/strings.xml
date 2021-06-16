@@ -69,4 +69,5 @@
     <string name="no_income_entries_added_yet">No hay entradas de ingresos</string>
     <string name="metrics">Métricas</string>
     <string name="others">Otros</string>
+    <string name="error_existing_bucket_name">Ya existe una cuenta con ese nombre</string>
 </resources>

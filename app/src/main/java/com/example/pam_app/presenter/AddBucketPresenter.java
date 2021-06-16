@@ -56,7 +56,13 @@ public class AddBucketPresenter {
             disposable.add(bucketRepository.create(bucket)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe((Long id) -> fetchBucket(bucket), (throwable) -> throwErrorSavingBucket())
+                .subscribe((Long id) -> {
+                    if (id == -1) {
+                        throwErrorSavingBucketWithExistingName();
+                    } else {
+                        fetchBucket(bucket);
+                    }
+                }, (throwable) -> throwErrorSavingBucket())
             );
         }
     }
@@ -131,6 +137,12 @@ public class AddBucketPresenter {
     private void throwErrorSavingBucket() {
         if (addBucketView.get() != null) {
             addBucketView.get().onErrorSavingBucket();
+        }
+    }
+
+    private void throwErrorSavingBucketWithExistingName() {
+        if (addBucketView.get() != null) {
+            addBucketView.get().onErrorExistingBucketName();
         }
     }
 

@@ -197,6 +197,15 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
     }
 
     @Override
+    public void onErrorExistingBucketName() {
+        Toast.makeText(
+                getApplicationContext(),
+                getString(R.string.error_existing_bucket_name),
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
+    @Override
     public void onSuccessSavingBucket(final Bucket bucket) {
         Toast.makeText(
                 getApplicationContext(),
