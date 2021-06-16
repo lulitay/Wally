@@ -75,40 +75,27 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     private void renderGraph(final List<BucketEntry> entryList) {
         final PieChart chart = findViewById(R.id.chart);
-
         final ArrayList<PieEntry> entries = getBucketData(entryList);
-
         final PieDataSet dataSet = new PieDataSet(entries, legendTitle);
-
-        dataSet.setDrawIcons(false);
-
-        dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
-
-        dataSet.setColors(graphColors);
-
         final PieData data = new PieData(dataSet);
-        data.setValueFormatter(new DecimalPercentageFormatter(new DecimalFormat("###,###,###")));
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        chart.setData(data);
-        chart.highlightValues(null);
-        chart.invalidate();
-
         final TextView welcome = findViewById(R.id.welcome);
-        final TextView no_entries = findViewById(R.id.no_entries);
+        final TextView noEntries = findViewById(R.id.no_entries);
+
+        configureDataSet(dataSet);
+        configureChart(chart, data);
+
         if (entryList.size() == 0) {
             chart.setVisibility(View.GONE);
-            no_entries.setVisibility(View.VISIBLE);
+            noEntries.setVisibility(View.VISIBLE);
             welcome.setVisibility(View.VISIBLE);
         }
         else {
             chart.setVisibility(View.VISIBLE);
             welcome.setVisibility(View.GONE);
-            no_entries.setVisibility(View.GONE);
+            noEntries.setVisibility(View.GONE);
         }
     }
+
 
     @Override
     public void onBucketEntryAdded(final BucketEntry bucketEntry) {
@@ -128,58 +115,76 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
 
     private void setUpGraph(final Context context) {
         final PieChart chart = findViewById(R.id.chart);
+        final Legend legend = chart.getLegend();
+        final TextView welcome = findViewById(R.id.welcome);
+        final TextView noEntries = findViewById(R.id.no_entries);
+        noEntries.setVisibility(View.VISIBLE);
+        welcome.setVisibility(View.VISIBLE);
+
+        setUpChart(context, chart);
+        setUpLegend(legend);
+        setUpChartColors(context);
+    }
+
+    private void setUpLegend(final Legend legend) {
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setDrawInside(false);
+        legend.setXEntrySpace(7f);
+        legend.setYEntrySpace(0f);
+        legend.setYOffset(0f);
+    }
+
+    private void setUpChart(final Context context, final PieChart chart) {
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
         chart.setExtraOffsets(5, 10, 5, 5);
-
         chart.setDragDecelerationFrictionCoef(0.95f);
-
         chart.setCenterText(context.getString(R.string.metrics));
         chart.setCenterTextSize(20);
         chart.setCenterTextColor(context.getColor(R.color.colorPrimary));
-
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
-
         chart.setTransparentCircleColor(Color.WHITE);
         chart.setTransparentCircleAlpha(110);
-
         chart.setHoleRadius(58f);
         chart.setTransparentCircleRadius(61f);
-
         chart.setDrawCenterText(true);
-
         chart.setRotationAngle(0);
         chart.setRotationEnabled(true);
         chart.setHighlightPerTapEnabled(true);
-
         chart.animateY(1400, Easing.EaseInOutQuad);
-
-        final Legend l = chart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
-
         chart.setEntryLabelColor(Color.WHITE);
         chart.setEntryLabelTextSize(12f);
         chart.setDrawEntryLabels(false);
-
-        final TextView welcome = findViewById(R.id.welcome);
-        final TextView no_entries = findViewById(R.id.no_entries);
         chart.setVisibility(View.GONE);
-        no_entries.setVisibility(View.VISIBLE);
-        welcome.setVisibility(View.VISIBLE);
+    }
 
+    private void setUpChartColors(final Context context) {
         graphColors.add(context.getColor(R.color.graph1));
         graphColors.add(context.getColor(R.color.graph2));
         graphColors.add(context.getColor(R.color.graph3));
         graphColors.add(context.getColor(R.color.graph4));
         graphColors.add(context.getColor(R.color.graph5));
         graphColors.add(context.getColor(R.color.graph6));
+    }
+
+    private void configureChart(final PieChart chart, final PieData data) {
+        data.setValueFormatter(new DecimalPercentageFormatter(new DecimalFormat("###,###,###")));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        chart.setData(data);
+        chart.highlightValues(null);
+        chart.invalidate();
+    }
+
+    private void configureDataSet(final PieDataSet dataSet) {
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(graphColors);
     }
 
     private ArrayList<PieEntry> getBucketData(final List<BucketEntry> entryList) {
@@ -195,7 +200,7 @@ public class HomeViewImpl extends LinearLayout implements HomeView {
         final ArrayList<PieEntry> entries = new ArrayList<>();
         double otherAmount = 0;
         for (int i = 0; i < reduceEntryList.size(); i++) {
-            BucketEntry e = reduceEntryList.get(i);
+            final BucketEntry e = reduceEntryList.get(i);
             if (i < 5) {
                 entries.add(new PieEntry((float) e.amount, e.bucketTitle));
             }

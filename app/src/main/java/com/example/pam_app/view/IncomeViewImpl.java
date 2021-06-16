@@ -65,11 +65,10 @@ public class IncomeViewImpl extends LinearLayout implements IncomeView {
         setUpEye();
         if (incomeList.isEmpty()) {
             emptyNotice.setVisibility(VISIBLE);
-            this.incomeLeft = 0.0;
         } else {
             emptyNotice.setVisibility(GONE);
-            this.incomeLeft = incomeLeft;
         }
+        this.incomeLeft = incomeLeft;
         adapter.setData(incomeList);
         incomePresenter.onIncomeLeftAmountReceived(this.incomeLeft);
     }

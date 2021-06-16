@@ -10,6 +10,7 @@ import com.example.pam_app.databinding.ActivityBucketEntryBinding;
 import com.example.pam_app.model.Entry;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BucketEntryAdapter<T extends Entry> extends RecyclerView.Adapter<BucketEntryAdapter.BucketEntryHolder>
@@ -19,7 +20,8 @@ public class BucketEntryAdapter<T extends Entry> extends RecyclerView.Adapter<Bu
 
     @Override
     public void setData(final List<T> items) {
-        this.items = items;
+        this.items = new LinkedList<>();
+        this.items.addAll(items);
         notifyDataSetChanged();
     }
 
