@@ -116,6 +116,7 @@ public class AddBucketPresenterTest {
 
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
         when(bucketRepository.get(anyString())).thenReturn(bucket);
+        presenter.onAttachView();
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, true);
 
@@ -130,6 +131,7 @@ public class AddBucketPresenterTest {
         final Single<Bucket> bucket = Single.just(new Bucket("test", new Date(now + 1000), SPENDING, 200.0, new LinkedList<>(), false));
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
         when(bucketRepository.get(anyString())).thenReturn(bucket);
+        presenter.onAttachView();
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
 
@@ -140,6 +142,7 @@ public class AddBucketPresenterTest {
     public void givenErrorsInSaveBucketWhenSaveBucketThenShowErrorInView() {
         final long now = new Date().getTime();
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.error(new IOException()));
+        presenter.onAttachView();
 
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
 
@@ -151,7 +154,7 @@ public class AddBucketPresenterTest {
         final long now = new Date().getTime();
         when(bucketRepository.create(any(Bucket.class))).thenReturn(Single.just(20L));
         when(bucketRepository.get(anyString())).thenReturn(Single.error(new IOException()));
-
+        presenter.onAttachView();
         presenter.saveBucket("test", new Date(now + 1000), SPENDING, "200", null, false);
 
         verify(addBucketView, only()).onErrorSavingBucket();

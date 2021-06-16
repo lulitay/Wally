@@ -2,7 +2,6 @@ package com.example.pam_app.repository;
 
 import com.example.pam_app.db.BucketDao;
 import com.example.pam_app.db.BucketEntity;
-import com.example.pam_app.db.BucketEntryEntity;
 import com.example.pam_app.db.BucketEntryWithBucketEntity;
 import com.example.pam_app.model.Bucket;
 import com.example.pam_app.model.BucketEntry;
@@ -15,7 +14,6 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static com.example.pam_app.model.BucketType.SPENDING;
-import static io.reactivex.Single.just;
 
 public class RoomBucketRepository implements BucketRepository {
 
