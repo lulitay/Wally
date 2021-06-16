@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_AMOUNT;
 import static com.example.pam_app.fragment.AddBucketEntryFragment.MAX_CHARACTERS;
@@ -52,13 +51,10 @@ public class AddBucketPresenter {
         if (fields) {
             final Bucket bucket = new Bucket(title, date, bucketType, Double.parseDouble(target), imagePath, isRecurrent);
             disposable.add(bucketRepository.create(bucket)
-                    .subscribeOn(schedulerProvider.io())
-                    .observeOn(schedulerProvider.ui())
-                    .subscribe((Long id) -> {
-                        fetchBucket(bucket);
-                    }, (throwable) -> {
-                        throwErrorSavingBucket();
-                    }));
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe((Long id) -> fetchBucket(bucket), (throwable) -> throwErrorSavingBucket())
+            );
         }
     }
 
@@ -137,14 +133,13 @@ public class AddBucketPresenter {
 
     private void fetchBucket(Bucket bucket) {
         disposable.add(bucketRepository.get(bucket.title)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe((Bucket b) -> {
-                    if (addBucketView.get() != null) {
-                        addBucketView.get().onSuccessSavingBucket(b);
-                    }
-                }, (throwable) -> {
-                    throwErrorSavingBucket();
-                }));
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe((Bucket b) -> {
+                if (addBucketView.get() != null) {
+                    addBucketView.get().onSuccessSavingBucket(b);
+                }
+            }, (throwable) -> throwErrorSavingBucket())
+        );
     }
 }

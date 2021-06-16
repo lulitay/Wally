@@ -67,7 +67,7 @@ public class AddBucketEntryPresenterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4})
+    @ValueSource(ints = {1, 2, 3, 4, 5})
     public void givenErrorInFieldWhenSaveEntryThenShowErrorWithoutParameter(final int variable) {
         final long now = new Date().getTime();
         switch (variable) {
@@ -86,6 +86,10 @@ public class AddBucketEntryPresenterTest {
             case 4:
                 presenter.saveBucketEntry("200", new Date(now - 1000), "test", "");
                 verify(addBucketEntryView, only()).showBucketTitleError(R.string.error_empty);
+                break;
+            case 5:
+                presenter.saveBucketEntry(".", new Date(now - 1000), "test", "bucket");
+                verify(addBucketEntryView, only()).showAmountError(R.string.error_format, null);
                 break;
         }
     }

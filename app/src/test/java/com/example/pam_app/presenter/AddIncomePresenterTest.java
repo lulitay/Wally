@@ -45,7 +45,7 @@ public class AddIncomePresenterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4})
+    @ValueSource(ints = {1, 2, 3, 4, 5})
     public void givenErrorInFieldWhenSaveIncomeThenShowErrorWithoutParameter(final int variable) {
         final long now = new Date().getTime();
         switch (variable) {
@@ -64,6 +64,10 @@ public class AddIncomePresenterTest {
             case 4:
                 presenter.saveIncome("test", "", new Date(now - 1000));
                 verify(addIncomeView, only()).showAmountError(R.string.error_empty, null);
+                break;
+            case 5:
+                presenter.saveIncome("test", ".", new Date(now - 1000));
+                verify(addIncomeView, only()).showAmountError(R.string.error_format, null);
                 break;
         }
     }
