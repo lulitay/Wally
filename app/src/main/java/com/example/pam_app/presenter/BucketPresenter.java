@@ -68,7 +68,7 @@ public class BucketPresenter {
 
     public void onBackSelected() {
         if (bucketView.get() != null){
-            bucketView.get().back(createdEntries);
+            bucketView.get().back(createdEntries, null);
         }
     }
 
@@ -94,7 +94,7 @@ public class BucketPresenter {
                         }
                     })
             );
-            bucketView.get().back(createdEntries);
+            bucketView.get().back(createdEntries, currentBucket.id);
         }
     }
 

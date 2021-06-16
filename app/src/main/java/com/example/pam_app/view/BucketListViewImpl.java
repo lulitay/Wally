@@ -157,6 +157,13 @@ public class BucketListViewImpl extends LinearLayout implements BucketListView, 
     }
 
     @Override
+    public void onDeleteBucket(Integer id) {
+        savingsAdapter.delete(id);
+        spendingAdapter.delete(id);
+        //TODO Remove message
+    }
+
+    @Override
     public void setIsSpendingListEmpty(boolean isEmpty) {
         isSpendingListEmpty = isEmpty;
     }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface BucketView {
     void bind(Bucket bucket);
     void goToAddEntry(String bucketName, int bucketType);
-    void back(Serializable entries);
+    void back(Serializable entries, Integer id);
     void showGetBucketError();
     void showDeleteBucketError();
     void showDeleteBucketSuccess();

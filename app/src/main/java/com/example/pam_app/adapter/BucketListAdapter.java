@@ -14,9 +14,10 @@ import com.example.pam_app.model.Bucket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.BucketViewHolder> {
-    private final List<Bucket> bucketList;
+    private List<Bucket> bucketList;
     private ClickableTarget listener;
 
     public BucketListAdapter() {
@@ -58,6 +59,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Bu
     @Override
     public int getItemCount() {
         return bucketList.size();
+    }
+
+    public void delete(Integer id) {
+        bucketList = bucketList.stream().filter(b -> !b.id.equals(id)).collect(Collectors.toList());
+        notifyDataSetChanged();
     }
 
     public static class BucketViewHolder extends RecyclerView.ViewHolder {

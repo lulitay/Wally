@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Pair;
 
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
@@ -13,7 +14,7 @@ import com.example.pam_app.activity.BucketActivity;
 
 import java.io.Serializable;
 
-public class EntryListContract extends ActivityResultContract<String, Serializable> {
+public class EntryListContract extends ActivityResultContract<String, Pair<Serializable, Serializable>> {
 
     @NonNull
     @Override
@@ -26,9 +27,9 @@ public class EntryListContract extends ActivityResultContract<String, Serializab
     }
 
     @Override
-    public Serializable parseResult(int resultCode, @Nullable Intent intent) {
+    public Pair<Serializable, Serializable> parseResult(int resultCode, @Nullable Intent intent) {
         if (resultCode == Activity.RESULT_OK && intent != null) {
-            return intent.getSerializableExtra("entries");
+            return new Pair<>(intent.getSerializableExtra("entries"), intent.getSerializableExtra("id"));
         }
         return null;
     }
