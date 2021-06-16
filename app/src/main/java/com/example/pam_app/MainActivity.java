@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
 
     private ActivityResultLauncher<String> addBucketResultLauncher;
     private ActivityResultLauncher<String> addBucketEntryResultLauncher;
-    private ActivityResultLauncher<Serializable> bucketDetailResultLauncher;
+    private ActivityResultLauncher<String> bucketDetailResultLauncher;
 
     private MainPresenter presenter;
 
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
     }
 
     private void launchBucketDetailActivity(final Integer bucketId) {
-        addBucketResultLauncher.launch(String.valueOf(bucketId));
+        bucketDetailResultLauncher.launch(String.valueOf(bucketId));
     }
 
     private void launchAddBucketActivity() {
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
 
     @SuppressWarnings("unchecked")
     private void setUpBucketDetailResultLauncher() {
-        addBucketResultLauncher = registerForActivityResult(
+        bucketDetailResultLauncher = registerForActivityResult(
                 new EntryListContract(),
                 result ->  {
                     if (result instanceof List) {
