@@ -82,6 +82,7 @@ public class AddBucketActivity extends AppCompatActivity implements AddBucketVie
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build();
         isRecurrent = findViewById(R.id.switch_recurrent_bucket);
 
+        presenter.onAttachView();
         setDatePicker();
         setSaveBucketListener();
         setBucketTypeValues();
