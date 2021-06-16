@@ -6,6 +6,7 @@ import com.example.pam_app.utils.listener.Clickable;
 import com.example.pam_app.utils.listener.ClickableTarget;
 import com.example.pam_app.model.Bucket;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface BucketListView {
@@ -33,4 +34,6 @@ public interface BucketListView {
     void drawSpendingBucketList();
 
     void drawSavingsBucketList();
+
+    void onDeleteBucket(Integer id);
 }

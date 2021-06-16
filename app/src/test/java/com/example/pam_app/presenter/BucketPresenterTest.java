@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -96,7 +98,7 @@ public class BucketPresenterTest {
         presenter.onDelete();
 
         verify(bucketView).showDeleteBucketSuccess();
-        verify(bucketView).back(any());
+        verify(bucketView).back(any(Serializable.class), anyInt());
     }
 
     @Test
@@ -107,7 +109,7 @@ public class BucketPresenterTest {
         presenter.onDelete();
 
         verify(bucketView).showDeleteBucketError();
-        verify(bucketView).back(any());
+        verify(bucketView).back(any(Serializable.class), anyInt());
     }
 
     @Test
@@ -130,7 +132,7 @@ public class BucketPresenterTest {
     public void whenBackSelectedThenGoBackInView() {
         presenter.onBackSelected();
 
-        verify(bucketView, only()).back(any());
+        verify(bucketView, only()).back(any(Serializable.class), nullable(Integer.class));
     }
 
     @Test

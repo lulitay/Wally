@@ -110,9 +110,10 @@ public class BucketActivity extends AppCompatActivity implements BucketView {
     }
 
     @Override
-    public void back(final Serializable entries) {
+    public void back(final Serializable entries, final Integer id) {
         final Intent result = new Intent();
         result.putExtra("entries", entries);
+        result.putExtra("id", id);
         setResult(RESULT_OK, result);
         finish();
     }

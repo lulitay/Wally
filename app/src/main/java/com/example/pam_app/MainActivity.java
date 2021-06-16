@@ -256,8 +256,11 @@ public class MainActivity extends AppCompatActivity implements Clickable, MainVi
         bucketDetailResultLauncher = registerForActivityResult(
                 new EntryListContract(),
                 result ->  {
-                    if (result instanceof List) {
-                        ((List<Serializable>) result).forEach(this::onEntryAdded);
+                    if (result.first instanceof List) {
+                        ((List<Serializable>) result.first).forEach(this::onEntryAdded);
+                    }
+                    if (result.second instanceof Integer) {
+                        bucketListView.onDeleteBucket((Integer) result.second);
                     }
                 }
         );
