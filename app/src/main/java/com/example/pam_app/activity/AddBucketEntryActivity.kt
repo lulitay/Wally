@@ -15,10 +15,10 @@ class AddBucketEntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_entry)
         val uri = intent.data
-        var defaultBucketName: String? = null
+        var defaultBucketName = ""
         var defaultBucketType = 0
         if (uri != null) {
-            defaultBucketName = uri.getQueryParameter("bucket_name")
+            defaultBucketName = uri.getQueryParameter("bucket_name")!!
             defaultBucketType = uri.getQueryParameter("bucket_type")?.toInt()!!
         }
         setUpToolbar()
@@ -37,8 +37,8 @@ class AddBucketEntryActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpTabs(defaultBucketName: String?, defaultBucketType: Int) {
-        val viewPagerAdapter = ViewPagerAdapter(this, defaultBucketName!!, defaultBucketType)
+    private fun setUpTabs(defaultBucketName: String, defaultBucketType: Int) {
+        val viewPagerAdapter = ViewPagerAdapter(this, defaultBucketName, defaultBucketType)
         val tabLayout = findViewById<TabLayout>(R.id.add_entry_tabs)
         val viewPager = findViewById<ViewPager2>(R.id.add_entry_view_pager)
         val titles: Map<Int, String> = object : HashMap<Int, String>() {
