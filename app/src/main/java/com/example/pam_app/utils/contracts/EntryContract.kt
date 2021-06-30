@@ -7,7 +7,6 @@ import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import com.example.pam_app.activity.AddBucketEntryActivity
 import java.io.Serializable
-import kotlin.jvm.Synchronized
 
 class EntryContract : ActivityResultContract<String, Serializable?>() {
     override fun createIntent(context: Context, input: String): Intent {
@@ -23,6 +22,6 @@ class EntryContract : ActivityResultContract<String, Serializable?>() {
             if (intent.getSerializableExtra("entry") == null) {
                 intent.getSerializableExtra("income")
             } else intent.getSerializableExtra("entry")
-        } else null
+        } else ""
     }
 }

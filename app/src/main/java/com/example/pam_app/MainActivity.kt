@@ -184,8 +184,8 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         if (entry is BucketEntry) {
             homeView!!.onBucketEntryAdded(entry)
             incomeView!!.onBucketEntryAdded(entry.amount)
-        } else {
-            incomeView!!.onIncomeAdded(entry as Income)
+        } else if (entry is Income) {
+            incomeView!!.onIncomeAdded(entry)
         }
     }
 
