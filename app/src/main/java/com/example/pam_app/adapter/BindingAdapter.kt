@@ -8,7 +8,7 @@ object BindingAdapter {
     @kotlin.jvm.JvmStatic
     @BindingAdapter("data")
     fun <T> setRecyclerViewProperties(recyclerView: RecyclerView, items: List<T>?) {
-        if (recyclerView.adapter is BindableAdapter<*>) {
+        if (recyclerView.adapter is BindableAdapter<*> && items != null) {
             (recyclerView.adapter as BindableAdapter<Collection<T>>?)!!.setData(items)
         }
     }
