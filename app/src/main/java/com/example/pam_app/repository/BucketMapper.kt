@@ -8,7 +8,6 @@ import com.example.pam_app.model.Bucket
 import com.example.pam_app.model.BucketEntry
 import com.example.pam_app.model.BucketType
 import java.util.*
-import kotlin.jvm.Synchronized
 
 class BucketMapper {
     @kotlin.jvm.JvmOverloads
@@ -31,7 +30,7 @@ class BucketMapper {
 
     fun toEntity(bucket: Bucket?): BucketEntity {
         return BucketEntity(bucket!!.title, bucket.dueDate, bucket.bucketType.ordinal,
-                bucket.target, bucket.imagePath, bucket.isRecurrent, bucket.id!!)
+                bucket.target, bucket.imagePath, bucket.isRecurrent, bucket.id)
     }
 
     fun toModel(bucketEntryEntity: BucketEntryEntity?): BucketEntry {
