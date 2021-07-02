@@ -24,7 +24,8 @@ class AddIncomePresenter(
             date: Date?,
             isRecurrent: Boolean
     ) {
-        val fields = checkFields(description, amount, date, isRecurrent)
+        val dateAux = if (isRecurrent) firstDayOfNextMonth else date!!
+        val fields = checkFields(description, amount, dateAux, isRecurrent)
         if (fields) {
             val income = Income(description, amount.toDouble(), if(isRecurrent) IncomeType.MONTHLY else IncomeType.EXTRA, date)
             disposable = incomeRepository!!.create(income)
@@ -91,4 +92,15 @@ class AddIncomePresenter(
             addIncomeView.get()!!.changeDatePickerState(!isRecurrent)
         }
     }
+
+    private val firstDayOfNextMonth: Date
+        get() {
+            val today = Calendar.getInstance()
+            val next = Calendar.getInstance()
+            next.clear()
+            next[Calendar.YEAR] = today[Calendar.YEAR]
+            next[Calendar.MONTH] = today[Calendar.MONTH] + 1
+            next[Calendar.DAY_OF_MONTH] = 1
+            return next.time
+        }
 }

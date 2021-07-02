@@ -23,6 +23,7 @@ import com.example.pam_app.utils.contracts.EntryListContract
 import com.example.pam_app.utils.listener.Clickable
 import com.example.pam_app.utils.workers.RecurrentBucketWorker
 import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory
+import com.example.pam_app.utils.workers.RecurrentIncomeWorker
 import com.example.pam_app.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         val container = ContainerLocator.locateComponent(this)
         val myConfig = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.INFO)
-                .setWorkerFactory(RecurrentBucketWorkerFactory(container?.bucketRepository))
+                .setWorkerFactory(RecurrentBucketWorkerFactory(container?.bucketRepository, container?.incomeRepository))
                 .build()
         val workManager: WorkManager = try {
             WorkManager.getInstance(applicationContext)
@@ -116,8 +117,15 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
                 30, TimeUnit.MINUTES)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                 .build()
+        val incomeRecurrent = PeriodicWorkRequest.Builder(RecurrentIncomeWorker::class.java,
+                1, TimeUnit.DAYS,
+                30, TimeUnit.MINUTES)
+                .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+                .build()
         workManager.enqueueUniquePeriodicWork("recurrent_bucket",
                 ExistingPeriodicWorkPolicy.REPLACE, bucketRecurrent)
+        workManager.enqueueUniquePeriodicWork("recurrent_income",
+                ExistingPeriodicWorkPolicy.REPLACE, incomeRecurrent)
     }
 
     @SuppressLint("NonConstantResourceId")

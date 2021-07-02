@@ -6,7 +6,6 @@ import com.example.pam_app.model.Income
 import io.reactivex.Flowable
 import io.reactivex.Single
 import java.util.*
-import kotlin.jvm.Synchronized
 
 class RoomIncomeRepository(private val incomeDao: IncomeDao?, private val incomeMapper: IncomeMapper?) : IncomeRepository {
     override val list: Flowable<List<Income>>
@@ -30,4 +29,13 @@ class RoomIncomeRepository(private val incomeDao: IncomeDao?, private val income
         return incomeDao!![id].map { incomeEntity: IncomeEntity? -> incomeMapper!!.toModel(incomeEntity) }
     }
 
+    override fun getList(type: Int, date: Date?): Flowable<List<Income?>> {
+        return incomeDao!!.getList(type, date).map { incomeEntityList: List<IncomeEntity?>? ->
+            val incomes: MutableList<Income> = ArrayList()
+            for (income in incomeEntityList!!) {
+                incomes.add(incomeMapper!!.toModel(income))
+            }
+            incomes
+        }
+    }
 }
