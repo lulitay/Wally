@@ -42,6 +42,7 @@ abstract class AddBucketEntryFragment : Fragment(), AddBucketEntryView {
         description = view.findViewById(R.id.description)
         amount = view.findViewById(R.id.amount)
         selectedDate = view.findViewById(R.id.date)
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         date = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         bucket = view.findViewById(R.id.bucket)
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build()
