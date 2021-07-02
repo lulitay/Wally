@@ -9,4 +9,5 @@ interface AddIncomeView {
     fun showDescriptionError(error: Int, parameter: Int?)
     fun showAmountError(error: Int, parameter: Int?)
     fun showDateError(error: Int)
+    fun changeDatePickerState(state: Boolean)
 }
