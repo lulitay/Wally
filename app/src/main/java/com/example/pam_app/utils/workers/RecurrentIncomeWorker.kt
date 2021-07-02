@@ -21,10 +21,8 @@ class RecurrentIncomeWorker(context: Context, params: WorkerParameters,
         return incomeRepository.getList(IncomeType.MONTHLY.ordinal, now)
                 .firstOrError()
                 .doOnSuccess { incomes: List<Income?>? ->
-                    incomes?.forEach { income ->
-                        if (income != null) {
-                            incomeRepository.create(Income(income.comment, income.amount, IncomeType.EXTRA, firstDayOfNextMonth))
-                        }
+                    for(i in incomes!!) {
+                        incomeRepository.create(Income(i!!.comment, i.amount, IncomeType.EXTRA, firstDayOfNextMonth))
                     }
                 }
                 .map { Result.success() }
