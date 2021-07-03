@@ -25,15 +25,15 @@ class AddBucketPresenter(
     fun saveBucket(
             title: String,
             dueDate: Date?,
-            bucketType: BucketType,
+            bucketType: BucketType?,
             target: String,
             imagePath: String?,
             isRecurrent: Boolean
     ) {
-        val date = if (isRecurrent) firstDayOfNextMonth else dueDate!!
+        val date = if (isRecurrent) firstDayOfNextMonth else dueDate
         val fields = checkFields(title, date, bucketType, target, isRecurrent)
         if (fields) {
-            val bucket = Bucket(title, date, bucketType, target.toDouble(), imagePath, isRecurrent)
+            val bucket = Bucket(title, date, bucketType!!, target.toDouble(), imagePath, isRecurrent)
             disposable!!.add(bucketRepository.create(bucket)
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())

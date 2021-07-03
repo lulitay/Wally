@@ -24,7 +24,7 @@ class AddIncomePresenter(
             date: Date?,
             isRecurrent: Boolean
     ) {
-        val dateAux = if (isRecurrent) firstDayOfNextMonth else date!!
+        val dateAux = if (isRecurrent) firstDayOfNextMonth else date
         val fields = checkFields(description, amount, dateAux, isRecurrent)
         if (fields) {
             val income = Income(description, amount.toDouble(), if(isRecurrent) IncomeType.MONTHLY else IncomeType.EXTRA, date)

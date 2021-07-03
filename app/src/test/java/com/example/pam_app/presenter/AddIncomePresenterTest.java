@@ -50,23 +50,23 @@ public class AddIncomePresenterTest {
         final long now = new Date().getTime();
         switch (variable) {
             case 1:
-                presenter.saveIncome("", "200", new Date(now - 1000));
+                presenter.saveIncome("", "200", new Date(now - 1000), false);
                 verify(addIncomeView, only()).showDescriptionError(R.string.error_empty, null);
                 break;
             case 2:
-                presenter.saveIncome("test", "200", null);
+                presenter.saveIncome("test", "200", null, false);
                 verify(addIncomeView, only()).showDateError(R.string.error_empty);
                 break;
             case 3:
-                presenter.saveIncome("test", "200", new Date(now + 1000));
+                presenter.saveIncome("test", "200", new Date(now + 1000), false);
                 verify(addIncomeView, only()).showDateError(R.string.error_future_date);
                 break;
             case 4:
-                presenter.saveIncome("test", "", new Date(now - 1000));
+                presenter.saveIncome("test", "", new Date(now - 1000), false);
                 verify(addIncomeView, only()).showAmountError(R.string.error_empty, null);
                 break;
             case 5:
-                presenter.saveIncome("test", ".", new Date(now - 1000));
+                presenter.saveIncome("test", ".", new Date(now - 1000), false);
                 verify(addIncomeView, only()).showAmountError(R.string.error_format, null);
                 break;
         }
@@ -78,11 +78,11 @@ public class AddIncomePresenterTest {
         final long now = new Date().getTime();
         switch (variable) {
             case 1:
-                presenter.saveIncome("qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnm", "200", new Date(now - 1000));
+                presenter.saveIncome("qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnm", "200", new Date(now - 1000), false);
                 verify(addIncomeView, only()).showDescriptionError(R.string.max_characters, MAX_CHARACTERS);
                 break;
             case 4:
-                presenter.saveIncome("test", String.valueOf(MAX_AMOUNT), new Date(now - 1000));
+                presenter.saveIncome("test", String.valueOf(MAX_AMOUNT), new Date(now - 1000), false);
                 verify(addIncomeView, only()).showAmountError(R.string.max_amount, MAX_AMOUNT);
                 break;
         }
@@ -93,7 +93,7 @@ public class AddIncomePresenterTest {
         final long now = new Date().getTime();
         when(incomeRepository.create(any(Income.class))).thenReturn(Single.just(20L));
 
-        presenter.saveIncome("test", "200", new Date(now - 1000));
+        presenter.saveIncome("test", "200", new Date(now - 1000), false);
 
         verify(addIncomeView, only()).onSuccessSavingIncome(any(Income.class));
     }
@@ -103,7 +103,7 @@ public class AddIncomePresenterTest {
         final long now = new Date().getTime();
         when(incomeRepository.create(any(Income.class))).thenReturn(Single.error(new IOException()));
 
-        presenter.saveIncome("test", "200", new Date(now - 1000));
+        presenter.saveIncome("test", "200", new Date(now - 1000), false);
 
         verify(addIncomeView, only()).onErrorSavingIncome();
     }
