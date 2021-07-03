@@ -17,6 +17,7 @@ import com.example.pam_app.model.Income
 import com.example.pam_app.presenter.AddIncomePresenter
 import com.example.pam_app.view.AddIncomeView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.switchmaterial.SwitchMaterial
 import java.util.*
 
 class AddIncomeFragment : Fragment(), AddIncomeView {
@@ -27,6 +28,7 @@ class AddIncomeFragment : Fragment(), AddIncomeView {
     private var date: Calendar? = null
     private var datePicker: MaterialDatePicker<Long>? = null
     private var presenter: AddIncomePresenter? = null
+    private var isRecurrent: SwitchMaterial? = null
     override fun onCreateView(inflater: LayoutInflater, viewGroup: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, viewGroup, savedInstanceState)
         val container = ContainerLocator.locateComponent(context)
@@ -44,8 +46,18 @@ class AddIncomeFragment : Fragment(), AddIncomeView {
         selectedDate = view.findViewById(R.id.date)
         date = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build()
+        isRecurrent = view.findViewById(R.id.switch_recurrent_income)
         setDatePicker()
         setSaveIncomeListener()
+        setIsRecurrentSwitch()
+    }
+
+    private fun setIsRecurrentSwitch() {
+        isRecurrent!!.setOnClickListener { presenter!!.onIsRecurrentSwitchChange(isRecurrent!!.isChecked) }
+    }
+
+    override fun changeDatePickerState(state: Boolean) {
+        selectedDate!!.isEnabled = state
     }
 
     private fun setDatePicker() {
@@ -71,7 +83,8 @@ class AddIncomeFragment : Fragment(), AddIncomeView {
             presenter!!.saveIncome(
                     description!!.text.toString(),
                     amount!!.text.toString(),
-                    date!!.time
+                    date!!.time,
+                    isRecurrent!!.isChecked
             )
         }
     }

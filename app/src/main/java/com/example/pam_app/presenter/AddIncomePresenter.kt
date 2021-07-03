@@ -21,11 +21,13 @@ class AddIncomePresenter(
     fun saveIncome(
             description: String,
             amount: String,
-            date: Date?
+            date: Date?,
+            isRecurrent: Boolean
     ) {
-        val fields = checkFields(description, amount, date)
+        val dateAux = if (isRecurrent) firstDayOfNextMonth else date
+        val fields = checkFields(description, amount, dateAux, isRecurrent)
         if (fields) {
-            val income = Income(description, amount.toDouble(), IncomeType.MONTHLY, date)
+            val income = Income(description, amount.toDouble(), if(isRecurrent) IncomeType.MONTHLY else IncomeType.EXTRA, date)
             disposable = incomeRepository!!.create(income)
                     .subscribeOn(schedulerProvider!!.io())
                     .observeOn(schedulerProvider.ui())
@@ -44,7 +46,8 @@ class AddIncomePresenter(
     private fun checkFields(
             description: String,
             amount: String,
-            date: Date?
+            date: Date?,
+            isRecurrent: Boolean
     ): Boolean {
         var isCorrect = true
         if (description.isEmpty()) {
@@ -68,10 +71,10 @@ class AddIncomePresenter(
                 isCorrect = false
             }
         }
-        if (date == null) {
+        if (!isRecurrent && date == null) {
             addIncomeView.get()!!.showDateError(R.string.error_empty)
             isCorrect = false
-        } else if (date.time > Date().time) {
+        } else if (!isRecurrent && date!!.time > Date().time) {
             addIncomeView.get()!!.showDateError(R.string.error_future_date)
             isCorrect = false
         }
@@ -84,4 +87,20 @@ class AddIncomePresenter(
         }
     }
 
+    fun onIsRecurrentSwitchChange(isRecurrent: Boolean) {
+        if (addIncomeView.get() != null) {
+            addIncomeView.get()!!.changeDatePickerState(!isRecurrent)
+        }
+    }
+
+    private val firstDayOfNextMonth: Date
+        get() {
+            val today = Calendar.getInstance()
+            val next = Calendar.getInstance()
+            next.clear()
+            next[Calendar.YEAR] = today[Calendar.YEAR]
+            next[Calendar.MONTH] = today[Calendar.MONTH] + 1
+            next[Calendar.DAY_OF_MONTH] = 1
+            return next.time
+        }
 }

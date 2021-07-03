@@ -8,10 +8,7 @@ import android.view.MenuItem
 import android.widget.ViewFlipper
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.pam_app.di.ContainerLocator
 import com.example.pam_app.model.Bucket
 import com.example.pam_app.model.BucketEntry
@@ -23,6 +20,7 @@ import com.example.pam_app.utils.contracts.EntryListContract
 import com.example.pam_app.utils.listener.Clickable
 import com.example.pam_app.utils.workers.RecurrentBucketWorker
 import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory
+import com.example.pam_app.utils.workers.RecurrentIncomeWorker
 import com.example.pam_app.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -96,7 +94,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         val container = ContainerLocator.locateComponent(this)
         val myConfig = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.INFO)
-                .setWorkerFactory(RecurrentBucketWorkerFactory(container?.bucketRepository))
+                .setWorkerFactory(RecurrentBucketWorkerFactory(container?.bucketRepository, container?.incomeRepository))
                 .build()
         val workManager: WorkManager = try {
             WorkManager.getInstance(applicationContext)
@@ -111,13 +109,20 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         dueDate[Calendar.SECOND] = 0
         dueDate[Calendar.DAY_OF_MONTH] = currentDate[Calendar.DAY_OF_MONTH] + 1
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
-        val bucketRecurrent = PeriodicWorkRequest.Builder(RecurrentBucketWorker::class.java,
+        val bucketRecurrent = PeriodicWorkRequestBuilder<RecurrentBucketWorker>(
+                1, TimeUnit.DAYS,
+                30, TimeUnit.MINUTES)
+                .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+                .build()
+        val incomeRecurrent = PeriodicWorkRequestBuilder<RecurrentIncomeWorker>(
                 1, TimeUnit.DAYS,
                 30, TimeUnit.MINUTES)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                 .build()
         workManager.enqueueUniquePeriodicWork("recurrent_bucket",
                 ExistingPeriodicWorkPolicy.REPLACE, bucketRecurrent)
+        workManager.enqueueUniquePeriodicWork("recurrent_income",
+                ExistingPeriodicWorkPolicy.REPLACE, incomeRecurrent)
     }
 
     @SuppressLint("NonConstantResourceId")
