@@ -8,10 +8,7 @@ import android.view.MenuItem
 import android.widget.ViewFlipper
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.pam_app.di.ContainerLocator
 import com.example.pam_app.model.Bucket
 import com.example.pam_app.model.BucketEntry
@@ -112,12 +109,12 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         dueDate[Calendar.SECOND] = 0
         dueDate[Calendar.DAY_OF_MONTH] = currentDate[Calendar.DAY_OF_MONTH] + 1
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
-        val bucketRecurrent = PeriodicWorkRequest.Builder(RecurrentBucketWorker::class.java,
+        val bucketRecurrent = PeriodicWorkRequestBuilder<RecurrentBucketWorker>(
                 1, TimeUnit.DAYS,
                 30, TimeUnit.MINUTES)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                 .build()
-        val incomeRecurrent = PeriodicWorkRequest.Builder(RecurrentIncomeWorker::class.java,
+        val incomeRecurrent = PeriodicWorkRequestBuilder<RecurrentIncomeWorker>(
                 1, TimeUnit.DAYS,
                 30, TimeUnit.MINUTES)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)

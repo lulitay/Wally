@@ -22,7 +22,7 @@ class RecurrentIncomeWorker(context: Context, params: WorkerParameters,
                 .firstOrError()
                 .doOnSuccess { incomes: List<Income?>? ->
                     for(i in incomes!!) {
-                        incomeRepository.create(Income(i!!.comment, i.amount, IncomeType.EXTRA, firstDayOfNextMonth))
+                        incomeRepository.create(Income(i!!.comment, i.amount, IncomeType.EXTRA, firstDayOfNextMonth)).blockingGet()
                     }
                 }
                 .map { Result.success() }
