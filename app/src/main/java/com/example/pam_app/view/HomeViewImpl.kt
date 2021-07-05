@@ -44,7 +44,7 @@ class HomeViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context, attrib
         val noEntries = findViewById<TextView>(R.id.no_entries)
         configureDataSet(dataSet)
         configureChart(chart, data)
-        if (entryList!!.isEmpty()) {
+        if (entries!!.isEmpty()) {
             chart.visibility = View.GONE
             noEntries.visibility = View.VISIBLE
             welcome.visibility = View.VISIBLE
