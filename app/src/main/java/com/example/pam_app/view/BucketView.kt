@@ -12,4 +12,5 @@ interface BucketView {
     fun showDeleteBucketError()
     fun showDeleteBucketSuccess()
     fun showSureDialog(clickable: () -> Unit)
+    fun goToAddBucket()
 }

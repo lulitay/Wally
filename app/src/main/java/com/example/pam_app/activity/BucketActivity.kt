@@ -28,6 +28,7 @@ import com.example.pam_app.di.ContainerLocator
 import com.example.pam_app.model.Bucket
 import com.example.pam_app.model.Entry
 import com.example.pam_app.presenter.BucketPresenter
+import com.example.pam_app.utils.contracts.BucketContract
 import com.example.pam_app.utils.contracts.EntryContract
 import com.example.pam_app.view.BucketView
 import com.google.android.material.appbar.AppBarLayout
@@ -41,6 +42,7 @@ class BucketActivity : AppCompatActivity(), BucketView {
     private var binding: ActivityBucketBinding? = null
     private var readExternalStorage = false
     private var addBucketEntryResultLauncher: ActivityResultLauncher<String>? = null
+    private var addBucketResultLauncher: ActivityResultLauncher<String?>? = null
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
         val id: Int = intent.data!!.getQueryParameter("id")?.toInt()!!
@@ -52,6 +54,7 @@ class BucketActivity : AppCompatActivity(), BucketView {
         setUpList()
         setUpAddEntryButton()
         setUpAddEntryResultLauncher()
+        setUpAddBucketResultLauncher()
         readExternalStorage = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -73,8 +76,17 @@ class BucketActivity : AppCompatActivity(), BucketView {
         } else if (id == R.id.action_delete) {
             bucketPresenter!!.onDeleteSelected()
             return true
+        } else if (id == R.id.action_edit) {
+            println("HOLA")
+            bucketPresenter!!.onEditSelected()
+            //bucketPresenter!!.onDeleteSelected()
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun goToAddBucket() {
+        addBucketResultLauncher!!.launch("")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -193,4 +205,10 @@ class BucketActivity : AppCompatActivity(), BucketView {
         addBucketEntryResultLauncher = registerForActivityResult(
                 EntryContract()) { entry: Serializable? -> bucketPresenter!!.onAddEntry(entry) }
     }
+
+    private fun setUpAddBucketResultLauncher() {
+        addBucketResultLauncher = registerForActivityResult(
+                BucketContract()) {}
+    }
+
 }

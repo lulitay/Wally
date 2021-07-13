@@ -56,6 +56,12 @@ class BucketPresenter(private val id: Int,
         }
     }
 
+    fun onEditSelected() {
+        if (bucketView.get() != null) {
+            bucketView.get()!!.goToAddBucket()
+        }
+    }
+
     fun onDelete() {
         if (bucketView.get() != null) {
             disposable!!.add(
