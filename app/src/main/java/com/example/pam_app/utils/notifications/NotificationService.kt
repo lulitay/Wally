@@ -98,8 +98,8 @@ class NotificationService : JobIntentService() {
     }
 
     companion object {
-        const val CHANNEL_ID = "samples.notification.devdeeds.com.CHANNEL_ID"
-        const val CHANNEL_NAME = "Sample Notification"
+        const val CHANNEL_ID = "BUCKET_CHANNEL_ID"
+        const val CHANNEL_NAME = "Bucket Notification"
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, NotificationService::class.java, 1, intent)
         }
