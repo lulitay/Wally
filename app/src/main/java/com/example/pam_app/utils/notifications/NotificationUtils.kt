@@ -8,12 +8,13 @@ import java.util.*
 
 class NotificationUtils {
 
-    fun setNotification(timeInMilliSeconds: Long, activity: Activity) {
+    fun setNotification(timeInMilliSeconds: Long, activity: Activity, bucketTitle: String) {
 
         if (timeInMilliSeconds > 0) {
             val alarmManager = activity.getSystemService(Activity.ALARM_SERVICE) as AlarmManager
             val alarmIntent = Intent(activity.applicationContext, NotificationPublisher::class.java)
 
+            alarmIntent.putExtra("bucketTitle", bucketTitle)
             alarmIntent.putExtra("reason", "notification")
             alarmIntent.putExtra("timestamp", timeInMilliSeconds)
 

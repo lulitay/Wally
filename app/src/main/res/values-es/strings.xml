@@ -71,4 +71,6 @@
     <string name="metrics">Métricas</string>
     <string name="others">Otros</string>
     <string name="error_existing_bucket_name">Ya existe una cuenta con ese nombre</string>
+    <string name="bucket_notif_title">¡La fecha de vencimiento de tu cuenta se acerca!</string>
+    <string name="bucket_notif_message">Tu cuenta \'%1$s\' va a llegar a su vencimiento pronto. ¡Intenta completarla!</string>
 </resources>

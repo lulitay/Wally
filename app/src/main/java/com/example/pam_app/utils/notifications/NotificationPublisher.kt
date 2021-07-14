@@ -11,6 +11,7 @@ class NotificationPublisher : BroadcastReceiver() {
         val service = Intent(context, NotificationService::class.java)
         service.putExtra("reason", intent.getStringExtra("reason"))
         service.putExtra("timestamp", intent.getLongExtra("timestamp", 0))
+        service.putExtra("bucketTitle", intent.getStringExtra("bucketTitle"))
 
         NotificationService.enqueueWork(context, service)
     }

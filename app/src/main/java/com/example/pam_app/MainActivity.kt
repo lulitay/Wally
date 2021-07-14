@@ -1,7 +1,6 @@
 package com.example.pam_app
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Pair
@@ -19,7 +18,6 @@ import com.example.pam_app.utils.contracts.BucketContract
 import com.example.pam_app.utils.contracts.EntryContract
 import com.example.pam_app.utils.contracts.EntryListContract
 import com.example.pam_app.utils.listener.Clickable
-import com.example.pam_app.utils.notifications.NotificationService
 import com.example.pam_app.utils.notifications.NotificationUtils
 import com.example.pam_app.utils.workers.RecurrentBucketWorker
 import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory
@@ -208,7 +206,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
         ) {
             result: Bucket? -> bucketListView?.onBucketAdded(result)
             val time = getNotificationDelay(result!!) + 5 + Calendar.getInstance().timeInMillis
-            NotificationUtils().setNotification(time, this@MainActivity)
+            NotificationUtils().setNotification(time, this@MainActivity, result.title!!)
         }
     }
 

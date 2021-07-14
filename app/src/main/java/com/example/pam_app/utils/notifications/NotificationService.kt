@@ -43,16 +43,18 @@ class NotificationService : JobIntentService() {
     private fun onHandleIntent(intent: Intent?) {
         createChannel()
         var timestamp: Long = 0
+        var bucketTitle = "unknown"
         if (intent != null && intent.extras != null) {
             timestamp = intent.extras!!.getLong("timestamp")
+            bucketTitle = intent.extras!!.getString("bucketTitle", "unknown")
         }
 
         if (timestamp > 0) {
             val context = this.applicationContext
             val notifyIntent = Intent(this, MainActivity::class.java)
 
-            val title = "Sample Notification"
-            val message = "You have received a sample notification. This notification will take you to the details page."
+            val title = getString(R.string.bucket_notif_title)
+            val message = getString(R.string.bucket_notif_message, bucketTitle)
 
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("message", message)
