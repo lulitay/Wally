@@ -36,6 +36,7 @@ import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.FileNotFoundException
 import java.io.Serializable
+import java.util.*
 
 class BucketActivity : AppCompatActivity(), BucketView {
     private var bucketPresenter: BucketPresenter? = null
@@ -77,16 +78,14 @@ class BucketActivity : AppCompatActivity(), BucketView {
             bucketPresenter!!.onDeleteSelected()
             return true
         } else if (id == R.id.action_edit) {
-            println("HOLA")
             bucketPresenter!!.onEditSelected()
-            //bucketPresenter!!.onDeleteSelected()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun goToAddBucket() {
-        addBucketResultLauncher!!.launch("")
+    override fun goToAddBucket(bucketName: String?, bucketType: Int, bucketTarget: Double, bucketDueDate: Long?, bucketIsRecurrent: Boolean) {
+        addBucketResultLauncher!!.launch("bucket_name=$bucketName&bucket_type=$bucketType&bucket_target=$bucketTarget&bucket_due_date=$bucketDueDate&bucket_is_recurrent=$bucketIsRecurrent")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -208,7 +207,7 @@ class BucketActivity : AppCompatActivity(), BucketView {
 
     private fun setUpAddBucketResultLauncher() {
         addBucketResultLauncher = registerForActivityResult(
-                BucketContract()) {}
+                BucketContract()) {bucket: Bucket? -> bind(bucket)}
     }
 
 }

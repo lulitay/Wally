@@ -48,6 +48,33 @@ class AddBucketPresenter(
         }
     }
 
+    fun updateBucket(
+            title: String,
+            dueDate: Date?,
+            bucketType: BucketType?,
+            target: String,
+            imagePath: String?,
+            isRecurrent: Boolean
+    ) {
+        val date = if (isRecurrent) firstDayOfNextMonth else dueDate
+        val fields = checkFields(title, date, bucketType, target, isRecurrent)
+        if (fields) {
+            disposable!!.add(bucketRepository[title]
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe({ bucket: Bucket? ->
+                        val updatedBucket = Bucket(title, date, bucketType!!, target.toDouble(), bucket?.entries, bucket?.id, imagePath, isRecurrent)
+                        bucketRepository.update(updatedBucket).subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui()).subscribe({
+                            if (addBucketView.get() != null) {
+                                addBucketView.get()!!.onSuccessSavingBucket(updatedBucket)
+                            }
+                        }) {throwErrorSavingBucket()}
+                    }
+                    ) { throwErrorSavingBucket() }
+            )
+        }
+    }
+
     private fun checkFields(
             title: String,
             dueDate: Date?,

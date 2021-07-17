@@ -16,7 +16,7 @@ interface BucketDao {
     fun getList(type: Boolean, date: Date?): Flowable<List<BucketEntity?>?>
 
     @Update
-    fun update(bucket: BucketEntity?)
+    fun update(bucket: BucketEntity?): Int
 
     @Query("SELECT title FROM buckets WHERE bucketType=:type")
     fun getTitleListByType(type: Int): Flowable<List<String?>?>?

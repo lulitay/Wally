@@ -33,8 +33,8 @@ class RoomBucketRepository(private val bucketDao: BucketDao?, private val bucket
         }
     }
 
-    override fun update(bucket: Bucket?) {
-        bucketDao!!.update(bucketMapper!!.toEntity(bucket))
+    override fun update(bucket: Bucket?): Single<Int?> {
+        return Single.fromCallable { bucketDao!!.update(bucketMapper!!.toEntity(bucket))}
     }
 
     override fun create(bucket: Bucket?): Single<Long?> {

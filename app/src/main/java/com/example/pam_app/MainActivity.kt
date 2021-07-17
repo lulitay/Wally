@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     }
 
     private fun launchAddBucketActivity() {
-        addBucketResultLauncher!!.launch("addBucket")
+        addBucketResultLauncher!!.launch("")
     }
 
     private fun setUpFAB() {

@@ -10,7 +10,7 @@ import kotlin.jvm.Synchronized
 interface BucketRepository {
     val list: Flowable<List<Bucket>>
     fun getList(type: Boolean, date: Date?): Flowable<List<Bucket?>>
-    fun update(bucket: Bucket?)
+    fun update(bucket: Bucket?): Single<Int?>
     fun create(bucket: Bucket?): Single<Long?>
     fun delete(id: Int): Single<Int?>
     operator fun get(id: Int): Flowable<Bucket>

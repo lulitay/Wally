@@ -1,8 +1,8 @@
 package com.example.pam_app.view
 
 import com.example.pam_app.model.Bucket
-import com.example.pam_app.utils.listener.Clickable
 import java.io.Serializable
+import java.util.*
 
 interface BucketView {
     fun bind(bucket: Bucket?)
@@ -12,5 +12,5 @@ interface BucketView {
     fun showDeleteBucketError()
     fun showDeleteBucketSuccess()
     fun showSureDialog(clickable: () -> Unit)
-    fun goToAddBucket()
+    fun goToAddBucket(bucketName: String?, bucketType: Int, bucketTarget: Double, bucketDueDate: Long?, bucketIsRecurrent: Boolean)
 }
