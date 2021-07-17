@@ -252,6 +252,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
 
     override fun onDeleteBucket(id: Int) {
         bucketListView!!.onDeleteBucket(id)
+        homeView!!.onDeleteBucket(id)
     }
 
     companion object {

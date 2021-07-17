@@ -51,7 +51,7 @@ class RoomBucketRepository(private val bucketDao: BucketDao?, private val bucket
         return Single.fromCallable { bucketDao!!.delete(id) }
     }
 
-    override fun get(id: Int): Flowable<Bucket> {
+    override fun get(id: Int): Single<Bucket> {
         return bucketDao!![id].map { bucketEntity: BucketWithEntriesEntity? -> bucketMapper!!.toModel(bucketEntity) }
     }
 

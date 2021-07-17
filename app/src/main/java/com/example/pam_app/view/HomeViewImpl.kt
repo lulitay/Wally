@@ -63,6 +63,13 @@ class HomeViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context, attrib
         }
     }
 
+    override fun onDeleteBucket(id: Int) {
+        val newEntryList = entryList?.filter { e -> e!!.bucketId != id } as List<BucketEntry>
+        adapter!!.setData(newEntryList)
+        entryList = newEntryList.toMutableList()
+        renderGraph(entryList)
+    }
+
     private fun setUpList() {
         val listView: RecyclerView = findViewById(R.id.activity)
         adapter = BucketEntryAdapter()

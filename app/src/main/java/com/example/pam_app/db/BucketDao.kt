@@ -35,7 +35,7 @@ interface BucketDao {
 
     @Transaction
     @Query("SELECT * FROM buckets WHERE id=:id")
-    operator fun get(id: Int): Flowable<BucketWithEntriesEntity?>
+    operator fun get(id: Int): Single<BucketWithEntriesEntity?>
 
     @Transaction
     @Query("SELECT * FROM buckets WHERE title=:title")

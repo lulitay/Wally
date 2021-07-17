@@ -120,10 +120,16 @@ class MainPresenter(
                     if (mainView.get() != null) {
                         mainView.get()!!.onUpdateBucket(bucket!!)
                     }
-                }) { if (mainView.get() != null) {
-                    mainView.get()!!.onDeleteBucket(id)
-                } }
+                }) {
+                    if (mainView.get() != null) {
+                        mainView.get()!!.onDeleteBucket(id)
+                    }
+                }
         )
+    }
+
+    private fun onDeleteBucket(id: Int) {
+
     }
 
     init {
