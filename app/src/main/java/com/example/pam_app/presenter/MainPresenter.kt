@@ -88,8 +88,9 @@ class MainPresenter(
         languagesRepository!!.unregisterOnSharedPreferencesListener()
     }
 
-    val currentLocale: Locale?
-        get() = languagesRepository?.currentLocale
+    fun getCurrentLanguage(): Locale {
+        return languagesRepository?.currentLocale!!
+    }
 
     fun changeLanguage(language: String?) {
         languagesRepository!!.changeLanguage(language)
@@ -100,11 +101,15 @@ class MainPresenter(
             if (key == LanguagesRepositoryImpl.KEY_PREF_LANGUAGE) {
                 when (languagesRepository!!.getKeyPrefLanguage(key)) {
                     "en" -> {
-                        val localeEN = Locale("en")
+                        val localeEN = Locale("en", "US")
+                        languagesRepository.changeLanguage("en")
+                        languagesRepository.currentLocale = localeEN
                         mainView.get()!!.updateLocale(localeEN)
                     }
                     "es" -> {
-                        val localeES = Locale("es")
+                        val localeES = Locale("es", "ES")
+                        languagesRepository.changeLanguage("es")
+                        languagesRepository.currentLocale = localeES
                         mainView.get()!!.updateLocale(localeES)
                     }
                 }
