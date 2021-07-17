@@ -89,7 +89,7 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
             if(updateBucket) { presenter!!.updateBucket(
                     title!!.text.toString(),
                     if (dueDate!!.text.toString() == "") null else date!!.time,
-                    BucketType.getBucketType(bucketType!!.text.toString())!!,
+                    BucketType.getBucketType(bucketType!!.text.toString()),
                     target!!.text.toString(),
                     imagePath,
                     isRecurrent!!.isChecked)
@@ -97,7 +97,7 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
             presenter!!.saveBucket(
                     title!!.text.toString(),
                     if (dueDate!!.text.toString() == "") null else date!!.time,
-                    BucketType.getBucketType(bucketType!!.text.toString())!!,
+                    BucketType.getBucketType(bucketType!!.text.toString()),
                     target!!.text.toString(),
                     imagePath,
                     isRecurrent!!.isChecked)
