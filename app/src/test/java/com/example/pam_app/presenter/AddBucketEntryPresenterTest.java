@@ -72,23 +72,23 @@ public class AddBucketEntryPresenterTest {
         final long now = new Date().getTime();
         switch (variable) {
             case 1:
-                presenter.saveBucketEntry("", new Date(now - 1000), "test", "bucket");
+                presenter.saveBucketEntry("", new Date(now - 1000), "test", "bucket",1);
                 verify(addBucketEntryView, only()).showAmountError(R.string.error_empty, null);
                 break;
             case 2:
-                presenter.saveBucketEntry("200", null, "test", "bucket");
+                presenter.saveBucketEntry("200", null, "test", "bucket", 1);
                 verify(addBucketEntryView, only()).showDateError(R.string.error_empty);
                 break;
             case 3:
-                presenter.saveBucketEntry("200", new Date(now - 1000), "", "bucket");
+                presenter.saveBucketEntry("200", new Date(now - 1000), "", "bucket", 1);
                 verify(addBucketEntryView, only()).showDescriptionError(R.string.error_empty, null);
                 break;
             case 4:
-                presenter.saveBucketEntry("200", new Date(now - 1000), "test", "");
+                presenter.saveBucketEntry("200", new Date(now - 1000), "test", "", 1);
                 verify(addBucketEntryView, only()).showBucketTitleError(R.string.error_empty);
                 break;
             case 5:
-                presenter.saveBucketEntry(".", new Date(now - 1000), "test", "bucket");
+                presenter.saveBucketEntry(".", new Date(now - 1000), "test", "bucket", 1);
                 verify(addBucketEntryView, only()).showAmountError(R.string.error_format, null);
                 break;
         }
@@ -100,15 +100,15 @@ public class AddBucketEntryPresenterTest {
         final long now = new Date().getTime();
         switch (variable) {
             case 1:
-                presenter.saveBucketEntry(String.valueOf(MAX_AMOUNT), new Date(now - 1000), "test", "bucket");
+                presenter.saveBucketEntry(String.valueOf(MAX_AMOUNT), new Date(now - 1000), "test", "bucket", 1);
                 verify(addBucketEntryView, only()).showAmountError(R.string.max_amount, MAX_AMOUNT);
                 break;
             case 2:
-                presenter.saveBucketEntry("200", new Date(now + 1000), "test", "bucket");
+                presenter.saveBucketEntry("200", new Date(now + 1000), "test", "bucket", 1);
                 verify(addBucketEntryView, only()).showDateError(R.string.error_future_date);
                 break;
             case 3:
-                presenter.saveBucketEntry("200", new Date(now - 1000), "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnm", "bucket");
+                presenter.saveBucketEntry("200", new Date(now - 1000), "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnm", "bucket", 1);
                 verify(addBucketEntryView, only()).showDescriptionError(R.string.max_characters, MAX_CHARACTERS);
                 break;
         }
@@ -120,7 +120,7 @@ public class AddBucketEntryPresenterTest {
         when(bucketRepository.get("bucket")).thenReturn(BUCKET);
         when(bucketRepository.addEntry(any(BucketEntry.class), anyInt())).thenReturn(Single.just(2L));
 
-        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket");
+        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket", 1);
 
         verify(addBucketEntryView, only()).onSuccessSavingBucketEntry(any(BucketEntry.class));
     }
@@ -130,7 +130,7 @@ public class AddBucketEntryPresenterTest {
         final long now = new Date().getTime();
         when(bucketRepository.get("bucket")).thenReturn(Single.error(new IOException()));
 
-        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket");
+        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket", 1);
 
         verify(addBucketEntryView, only()).onErrorSavingBucketEntry();
     }
@@ -141,7 +141,7 @@ public class AddBucketEntryPresenterTest {
         when(bucketRepository.get("bucket")).thenReturn(BUCKET);
         when(bucketRepository.addEntry(any(BucketEntry.class), anyInt())).thenReturn(Single.error(new IOException()));
 
-        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket");
+        presenter.saveBucketEntry("200", new Date(now - 1000), "test", "bucket", 1);
 
         verify(addBucketEntryView, only()).onErrorSavingBucketEntry();
     }

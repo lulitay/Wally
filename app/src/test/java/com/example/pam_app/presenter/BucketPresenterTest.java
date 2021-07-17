@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static com.example.pam_app.model.BucketType.SAVING;
@@ -41,20 +40,21 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 @ExtendWith(MockitoExtension.class)
 public class BucketPresenterTest {
 
-    private static final BucketEntry ENTRY_1 = new BucketEntry(20, new Date(12), "test", "bucket1");
-    private static final BucketEntry ENTRY_2 = new BucketEntry(30, new Date(10), "test2", "non_recurrent_bucket");
+    private static final BucketEntry ENTRY_1 = new BucketEntry(20, new Date(12), "test", "bucket1", 1);
+    private static final BucketEntry ENTRY_2 = new BucketEntry(30, new Date(10), "test2", "non_recurrent_bucket", 2);
     private static final List<BucketEntry> ENTRIES = ImmutableList.of(ENTRY_1, ENTRY_2);
     private static final List<BucketEntry> ENTRIES_ORDERED = ImmutableList.of(ENTRY_2, ENTRY_1);
-    private static final Flowable<Bucket> BUCKET_1 = Flowable.just(
+    private static final Single<Bucket> BUCKET_1 = Single.just(
             new Bucket("bucket1", new Date(), SAVING, 300, ENTRIES, 1, null,  false)
     );
-    private static final Flowable<Bucket> RECURRENT_BUCKET = Flowable.just(
+    private static final Single<Bucket> RECURRENT_BUCKET = Single.just(
             new Bucket("recurrent_bucket", new Date(), SAVING, 300, new LinkedList<>(), 1, null,  true)
     );
-    private static final Flowable<Bucket> NON_RECURRENT_BUCKET = Flowable.just(
+    private static final Single<Bucket> NON_RECURRENT_BUCKET = Single.just(
             new Bucket("non_recurrent_bucket", new Date(), SAVING, 300, new LinkedList<>(), 1, null,  false)
     );
 
@@ -84,7 +84,7 @@ public class BucketPresenterTest {
 
     @Test
     public void givenBucketIdWhenOnViewAttachFailureThenShowError() {
-        when(bucketRepository.get(1)).thenReturn(Flowable.error(new IOException()));
+        when(bucketRepository.get(1)).thenReturn(Single.error(new IOException()));
         presenter.onViewAttach();
 
         verify(bucketView, only()).showGetBucketError();
@@ -151,7 +151,7 @@ public class BucketPresenterTest {
     @Test
     public void givenRecurrentAndOldEntryWhenAddEntryThenAddToOldEntries() {
         final Date oldDate = getOldDate();
-        final BucketEntry oldEntry = new BucketEntry(20, oldDate, "test", "recurrent_bucket");
+        final BucketEntry oldEntry = new BucketEntry(20, oldDate, "test", "recurrent_bucket", 1);
 
         when(bucketRepository.get(1)).thenReturn(RECURRENT_BUCKET);
         presenter.onViewAttach();
@@ -166,7 +166,7 @@ public class BucketPresenterTest {
     @Test
     public void givenRecurrentAndNewEntryWhenAddEntryThenAddToNewEntries() {
         final Date newDate = getNewDate();
-        final BucketEntry newEntry = new BucketEntry(20, newDate, "test", "recurrent_bucket");
+        final BucketEntry newEntry = new BucketEntry(20, newDate, "test", "recurrent_bucket", 1);
 
         when(bucketRepository.get(1)).thenReturn(RECURRENT_BUCKET);
         presenter.onViewAttach();
