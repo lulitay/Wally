@@ -128,10 +128,6 @@ class MainPresenter(
         )
     }
 
-    private fun onDeleteBucket(id: Int) {
-
-    }
-
     init {
         totalIncome = null
         totalSpending = null
