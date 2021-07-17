@@ -25,6 +25,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputLayout
 import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissionsResultCallback {
@@ -241,9 +242,13 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
         title?.isEnabled = !updateBucket
         target?.setText(bucket!!.target.toString())
         bucketType?.setText(getString(bucket!!.bucketType.stringResource), false)
-        isRecurrent?.setChecked(bucket!!.isRecurrent)
-        date?.timeInMillis = bucket!!.dueDate!!.time
-        dueDate?.setText(date?.time.toString())
+        if(bucket!!.isRecurrent) {
+            dueDate?.isEnabled = false
+            isRecurrent?.setChecked(true)
+        }
+        val sdf = SimpleDateFormat("MMM dd, yyyy",)
+        date?.timeInMillis = bucket.dueDate!!.time
+        dueDate?.setText(sdf.format(date!!.time))
     }
 
     companion object {
