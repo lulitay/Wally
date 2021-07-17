@@ -112,6 +112,20 @@ class MainPresenter(
         }
     }
 
+    fun onBucketChanged(id: Int) {
+        disposable!!.add(bucketRepository!![id]
+                .subscribeOn(schedulerProvider!!.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ bucket: Bucket? ->
+                    if (mainView.get() != null) {
+                        mainView.get()!!.onUpdateBucket(bucket!!)
+                    }
+                }) { if (mainView.get() != null) {
+                    mainView.get()!!.onDeleteBucket(id)
+                } }
+        )
+    }
+
     init {
         totalIncome = null
         totalSpending = null

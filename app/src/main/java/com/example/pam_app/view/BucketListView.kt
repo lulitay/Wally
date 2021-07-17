@@ -21,4 +21,5 @@ interface BucketListView {
     fun drawSpendingBucketList()
     fun drawSavingsBucketList()
     fun onDeleteBucket(id: Int)
+    fun onUpdateBucket(bucket: Bucket)
 }

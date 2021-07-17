@@ -207,7 +207,7 @@ class BucketActivity : AppCompatActivity(), BucketView {
 
     private fun setUpAddBucketResultLauncher() {
         addBucketResultLauncher = registerForActivityResult(
-                BucketContract()) {bucket: Bucket? -> bind(bucket)}
+                BucketContract()) {bucket: Bucket? -> bucketPresenter!!.onBucketChanged(bucket!!)}
     }
 
 }

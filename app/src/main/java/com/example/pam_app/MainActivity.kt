@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
                 (result.first as List<java.io.Serializable>).forEach { entry: java.io.Serializable -> onEntryAdded(entry) }
             }
             if (result?.second is Int) {
-                bucketListView!!.onDeleteBucket(result.second as Int)
+                presenter!!.onBucketChanged(result.second as Int)
             }
         }
     }
@@ -244,6 +244,14 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
             entryDate[Calendar.DAY_OF_MONTH] -= 3
             entryDate.timeInMillis
         }
+    }
+
+    override fun onUpdateBucket(bucket: Bucket) {
+        bucketListView!!.onUpdateBucket(bucket)
+    }
+
+    override fun onDeleteBucket(id: Int) {
+        bucketListView!!.onDeleteBucket(id)
     }
 
     companion object {

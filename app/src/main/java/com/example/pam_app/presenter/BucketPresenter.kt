@@ -18,6 +18,7 @@ class BucketPresenter(private val id: Int,
     private var disposable: CompositeDisposable? = null
     private var currentBucket: Bucket? = null
     private val createdEntries: ArrayList<Serializable> = ArrayList()
+    private var bucketChanged = false
     fun onViewAttach() {
         disposable = CompositeDisposable()
         if (currentBucket == null) {
@@ -45,8 +46,9 @@ class BucketPresenter(private val id: Int,
     }
 
     fun onBackSelected() {
+
         if (bucketView.get() != null) {
-            bucketView.get()!!.back(createdEntries, null)
+            bucketView.get()!!.back(createdEntries, if(bucketChanged) currentBucket?.id else null)
         }
     }
 
@@ -101,6 +103,13 @@ class BucketPresenter(private val id: Int,
                     bucketView.get()!!.bind(currentBucket)
                 }
             }
+        }
+    }
+
+    fun onBucketChanged(bucket: Bucket) {
+        bucketChanged = true
+        if (bucketView.get() != null) {
+            bucketView.get()!!.bind(bucket)
         }
     }
 

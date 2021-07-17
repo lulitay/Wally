@@ -18,6 +18,7 @@ class AddBucketPresenter(
 ) {
     private val addBucketView: WeakReference<AddBucketView?> = WeakReference(addBucketView)
     private var disposable: CompositeDisposable? = null
+    private var defaultBucket: Bucket? = null
     fun onAttachView() {
         disposable = CompositeDisposable()
     }
@@ -59,18 +60,15 @@ class AddBucketPresenter(
         val date = if (isRecurrent) firstDayOfNextMonth else dueDate
         val fields = checkFields(title, date, bucketType, target, isRecurrent)
         if (fields) {
-            disposable!!.add(bucketRepository[title]
+            val updatedBucket = Bucket(title, date, bucketType!!, target.toDouble(), defaultBucket?.entries, defaultBucket?.id, imagePath, isRecurrent)
+            disposable!!.add(bucketRepository.update(updatedBucket)
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
-                    .subscribe({ bucket: Bucket? ->
-                        val updatedBucket = Bucket(title, date, bucketType!!, target.toDouble(), bucket?.entries, bucket?.id, imagePath, isRecurrent)
-                        bucketRepository.update(updatedBucket).subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui()).subscribe({
+                    .subscribe({
                             if (addBucketView.get() != null) {
                                 addBucketView.get()!!.onSuccessSavingBucket(updatedBucket)
                             }
-                        }) {throwErrorSavingBucket()}
-                    }
-                    ) { throwErrorSavingBucket() }
+                        }) { throwErrorSavingBucket() }
             )
         }
     }
@@ -176,6 +174,7 @@ class AddBucketPresenter(
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe({ bucket: Bucket? ->
+                    defaultBucket = bucket
                     if (addBucketView.get() != null) {
                         addBucketView.get()!!.setDefaultValues(bucket)
                     }
