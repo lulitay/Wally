@@ -147,7 +147,7 @@ class HomeViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context, attrib
         val reduceEntryList: List<BucketEntry> = entryList!!
                 .filter { it!!.date!!.after(firstDayOfMonth) }
                 .groupBy { it!!.bucketTitle }
-                .mapValues { it -> BucketEntry(it.value.sumOf { it!!.amount }, it.value[0]!!.date, it.value[0]!!.comment, it.value[0]!!.bucketTitle) }
+                .mapValues { it -> BucketEntry(it.value.sumOf { it!!.amount }, it.value[0]!!.date, it.value[0]!!.comment, it.value[0]!!.bucketTitle, it.value[0]!!.bucketId) }
                 .values
                 .toList()
                 .sortedBy { it.amount }

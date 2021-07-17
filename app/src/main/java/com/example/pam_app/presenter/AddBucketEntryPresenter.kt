@@ -32,10 +32,10 @@ class AddBucketEntryPresenter(
     }
 
     fun saveBucketEntry(amount: String, date: Date?, description: String,
-                        bucketTitle: String?) {
+                        bucketTitle: String?, bucketId: Int) {
         val fields = checkFields(amount, date, description, bucketTitle)
         if (fields) {
-            val entry = BucketEntry(amount.toDouble(), date, description, bucketTitle)
+            val entry = BucketEntry(amount.toDouble(), date, description, bucketTitle, bucketId)
             disposable.add(
                     bucketRepository!![bucketTitle]
                             .subscribeOn(schedulerProvider!!.io())

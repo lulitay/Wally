@@ -116,7 +116,8 @@ abstract class AddBucketEntryFragment : Fragment(), AddBucketEntryView {
                     amount!!.text.toString(),
                     if (selectedDate!!.text.toString() == "") null else date!!.time,
                     description!!.text.toString(),
-                    bucket!!.text.toString()
+                    bucket!!.text.toString(),
+                    bucket!!.id
             )
         }
     }

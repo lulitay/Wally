@@ -10,30 +10,34 @@ class BucketEntry : Serializable, Entry {
     val amount: Double
     val date: Date?
     override val comment: String?
-    val id: Int?
+    val entryId: Int?
+    val bucketId: Int?
     val bucketTitle: String?
 
-    constructor(amount: Double, date: Date?, comment: String?) {
+    constructor(amount: Double, date: Date?, comment: String?, bucketId: Int?) {
         this.amount = amount
         this.date = date
         this.comment = comment
-        id = null
+        entryId = null
+        this.bucketId = bucketId
         bucketTitle = null
     }
 
-    constructor(amount: Double, date: Date?, comment: String?, bucketTitle: String?) {
+    constructor(amount: Double, date: Date?, comment: String?, bucketTitle: String?, bucketId: Int?) {
         this.amount = amount
         this.date = date
         this.comment = comment
-        id = null
+        entryId = null
+        this.bucketId = bucketId
         this.bucketTitle = bucketTitle
     }
 
-    constructor(amount: Double, date: Date?, comment: String?, id: Int) {
+    constructor(amount: Double, date: Date?, comment: String?, id: Int, bucketId: Int?) {
         this.amount = amount
         this.date = date
         this.comment = comment
-        this.id = id
+        this.entryId = id
+        this.bucketId = bucketId
         bucketTitle = null
     }
 
