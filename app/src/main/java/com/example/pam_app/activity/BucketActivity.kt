@@ -84,8 +84,8 @@ class BucketActivity : AppCompatActivity(), BucketView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun goToAddBucket(bucketName: String?, bucketType: Int, bucketTarget: Double, bucketDueDate: Long?, bucketIsRecurrent: Boolean) {
-        addBucketResultLauncher!!.launch("bucket_name=$bucketName&bucket_type=$bucketType&bucket_target=$bucketTarget&bucket_due_date=$bucketDueDate&bucket_is_recurrent=$bucketIsRecurrent")
+    override fun goToAddBucket(bucketId: Int) {
+        addBucketResultLauncher!!.launch("bucket_id=$bucketId")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

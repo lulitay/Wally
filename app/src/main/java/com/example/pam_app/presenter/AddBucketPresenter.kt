@@ -171,4 +171,16 @@ class AddBucketPresenter(
         )
     }
 
+    fun getDefaultBucket(defaultBucketId: Int) {
+        disposable!!.add(bucketRepository[defaultBucketId]
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ bucket: Bucket? ->
+                    if (addBucketView.get() != null) {
+                        addBucketView.get()!!.setDefaultValues(bucket)
+                    }
+                }) { throwErrorSavingBucket() }
+        )
+    }
+
 }

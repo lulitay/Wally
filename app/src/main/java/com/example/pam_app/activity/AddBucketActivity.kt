@@ -40,18 +40,15 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
     private var dropdown: TextInputLayout? = null
     private var isRecurrent: SwitchMaterial? = null
     private var galleryResultLauncher: ActivityResultLauncher<String>? = null
-    private var defaultBucketName = ""
-    private var defaultBucketType = R.string.bucket_type
-    private var defaultBucketTarget = ""
-    private var defaultBucketDueDate: Long? = 0
-    private var defaultBucketIsRecurrent = false
+    private var defaultBucketId: Int? = null
     private var updateBucket = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_bucket)
         val uri = intent.data
         if (uri != null) {
-            getDefaultValues(uri)
+            defaultBucketId = uri.getQueryParameter("bucket_id")?.toInt()
+            updateBucket = true
         }
         val container = ContainerLocator.locateComponent(this)
         presenter = AddBucketPresenter(this, container!!.bucketRepository!!,
@@ -73,11 +70,13 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build()
         isRecurrent = findViewById(R.id.switch_recurrent_bucket)
         presenter!!.onAttachView()
+        if(updateBucket) {
+            presenter!!.getDefaultBucket(defaultBucketId!!)
+        }
         setDatePicker()
         setSaveBucketListener()
         setBucketTypeValues()
         setIsRecurrentSwitch()
-        setDefaultValues()
     }
 
     private fun setIsRecurrentSwitch() {
@@ -236,26 +235,15 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
         galleryResultLauncher!!.launch("image/*")
     }
 
-    private fun getDefaultValues(uri: Uri) {
-        defaultBucketName = uri.getQueryParameter("bucket_name")!!
-        defaultBucketType = uri.getQueryParameter("bucket_type")?.toInt()!!
-        defaultBucketTarget = uri.getQueryParameter("bucket_target")!!
-        defaultBucketDueDate = uri.getQueryParameter("bucket_due_date")?.toLong()!!
-        defaultBucketIsRecurrent = uri.getQueryParameter("bucket_is_recurrent")?.toBoolean()!!
-        updateBucket = true
-    }
-
-    private fun setDefaultValues() {
+    override fun setDefaultValues(bucket: Bucket?) {
         //TODO: add imagepath?
-        title?.setText(defaultBucketName)
+        title?.setText(bucket!!.title)
         title?.isEnabled = !updateBucket
-        target?.setText(defaultBucketTarget)
-        bucketType?.setText(getString(defaultBucketType), false)
-        isRecurrent?.setChecked(defaultBucketIsRecurrent)
-        if(defaultBucketDueDate != 0L) {
-            date?.timeInMillis = defaultBucketDueDate!!
-            dueDate?.setText(date?.time.toString())
-        }
+        target?.setText(bucket!!.target.toString())
+        bucketType?.setText(getString(bucket!!.bucketType.stringResource), false)
+        isRecurrent?.setChecked(bucket!!.isRecurrent)
+        date?.timeInMillis = bucket!!.dueDate!!.time
+        dueDate?.setText(date?.time.toString())
     }
 
     companion object {

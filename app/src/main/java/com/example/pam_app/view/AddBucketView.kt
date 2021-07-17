@@ -1,7 +1,6 @@
 package com.example.pam_app.view
 
 import com.example.pam_app.model.Bucket
-import kotlin.jvm.Synchronized
 
 interface AddBucketView {
     fun onErrorSavingBucket()
@@ -13,4 +12,5 @@ interface AddBucketView {
     fun showBucketTypeError(error: Int)
     fun requestStoragePermission()
     fun changeDatePickerState(state: Boolean)
+    fun setDefaultValues(bucket: Bucket?)
 }

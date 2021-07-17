@@ -12,5 +12,5 @@ interface BucketView {
     fun showDeleteBucketError()
     fun showDeleteBucketSuccess()
     fun showSureDialog(clickable: () -> Unit)
-    fun goToAddBucket(bucketName: String?, bucketType: Int, bucketTarget: Double, bucketDueDate: Long?, bucketIsRecurrent: Boolean)
+    fun goToAddBucket(bucketId: Int)
 }

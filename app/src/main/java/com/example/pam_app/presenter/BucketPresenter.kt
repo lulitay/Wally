@@ -58,7 +58,7 @@ class BucketPresenter(private val id: Int,
 
     fun onEditSelected() {
         if (bucketView.get() != null) {
-            bucketView.get()!!.goToAddBucket(currentBucket!!.title, currentBucket!!.bucketType.stringResource, currentBucket!!.target, currentBucket!!.dueDate?.time, currentBucket!!.isRecurrent)
+            bucketView.get()!!.goToAddBucket(id)
         }
     }
 
