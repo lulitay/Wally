@@ -1,6 +1,8 @@
 package com.example.pam_app
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Pair
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     override fun onStart() {
         super.onStart()
         presenter!!.onViewAttached()
-        profileView!!.bind(presenter?.currentLocale?.language, ::applyChanges)
+        profileView!!.bind(presenter?.getCurrentLanguage()?.language, ::applyChanges)
     }
 
     override fun onBucketListViewReceived(bucketList: List<Bucket>?) {
@@ -85,11 +87,10 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     }
 
     override fun updateLocale(locale: Locale?) {
-        setLocale(locale)
-        finish()
-        overridePendingTransition(0, 0)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
-        overridePendingTransition(0, 0)
+        finish()
     }
 
     private fun setUpRecurrentBucketWorker() {
@@ -171,7 +172,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     }
 
     private fun launchAddBucketActivity() {
-        addBucketResultLauncher!!.launch("addBucket")
+        addBucketResultLauncher!!.launch("")
     }
 
     private fun setUpFAB() {
@@ -180,11 +181,12 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     }
 
     private fun setLocale(locale: Locale?) {
+        val config = resources.configuration
+        config.setLocale(locale)
         Locale.setDefault(locale!!)
-        val res = resources
-        val conf = res.configuration
-        conf.setLocale(locale)
-        createConfigurationContext(conf)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            createConfigurationContext(config)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun onEntryAdded(entry: java.io.Serializable) {
@@ -197,14 +199,13 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     }
 
     private fun setUpChosenLanguage() {
-        setLocale(presenter?.currentLocale)
+        setLocale(presenter?.getCurrentLanguage())
     }
 
     private fun setUpAddBucketResultLauncher() {
         addBucketResultLauncher = registerForActivityResult(
                 BucketContract()
-        ) {
-            result: Bucket? -> bucketListView?.onBucketAdded(result)
+        ) { result: Bucket? -> bucketListView?.onBucketAdded(result)
             val time = getNotificationDelay(result!!) + 5 + Calendar.getInstance().timeInMillis
             NotificationUtils().setNotification(time, this@MainActivity, result.title!!)
         }
@@ -224,7 +225,7 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
                 (result.first as List<java.io.Serializable>).forEach { entry: java.io.Serializable -> onEntryAdded(entry) }
             }
             if (result?.second is Int) {
-                bucketListView!!.onDeleteBucket(result.second as Int)
+                presenter!!.onBucketChanged(result.second as Int)
             }
         }
     }
@@ -244,6 +245,15 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
             entryDate[Calendar.DAY_OF_MONTH] -= 3
             entryDate.timeInMillis
         }
+    }
+
+    override fun onUpdateBucket(bucket: Bucket) {
+        bucketListView!!.onUpdateBucket(bucket)
+    }
+
+    override fun onDeleteBucket(id: Int) {
+        bucketListView!!.onDeleteBucket(id)
+        homeView!!.onDeleteBucket(id)
     }
 
     companion object {

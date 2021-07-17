@@ -72,5 +72,5 @@
     <string name="error_existing_bucket_name">Bucket with that name already exists</string>
     <string name="bucket_notif_title">Your bucket\'s due date is getting close!</string>
     <string name="bucket_notif_message">Your bucket \'%1$s\' will reach is due date soon. Try to meet your goal!</string>
-
+    <string name="edit">Edit</string>
 </resources>

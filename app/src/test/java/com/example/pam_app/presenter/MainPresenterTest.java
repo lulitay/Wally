@@ -44,8 +44,8 @@ public class MainPresenterTest {
     private static final Bucket BUCKET_2 = new Bucket("test2", new Date(), SAVING, 300, false);
     private static final Flowable<List<Bucket>> BUCKETS = just(ImmutableList.of(BUCKET_1, BUCKET_2));
 
-    private static final BucketEntry ENTRY_1 = new BucketEntry(20, new Date(), "test");
-    private static final BucketEntry ENTRY_2 = new BucketEntry(30, new Date(), "test2");
+    private static final BucketEntry ENTRY_1 = new BucketEntry(20, new Date(), "test", 1);
+    private static final BucketEntry ENTRY_2 = new BucketEntry(30, new Date(), "test2", 2);
     private static final Flowable<List<BucketEntry>> ENTRIES = just(ImmutableList.of(ENTRY_1, ENTRY_2));
 
     private static final Income INCOME_1 = new Income("test", 200, MONTHLY, new Date());

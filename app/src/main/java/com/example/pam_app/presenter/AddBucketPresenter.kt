@@ -18,6 +18,7 @@ class AddBucketPresenter(
 ) {
     private val addBucketView: WeakReference<AddBucketView?> = WeakReference(addBucketView)
     private var disposable: CompositeDisposable? = null
+    private var defaultBucket: Bucket? = null
     fun onAttachView() {
         disposable = CompositeDisposable()
     }
@@ -44,6 +45,30 @@ class AddBucketPresenter(
                             fetchBucket(bucket)
                         }
                     }) { throwErrorSavingBucket() }
+            )
+        }
+    }
+
+    fun updateBucket(
+            title: String,
+            dueDate: Date?,
+            bucketType: BucketType?,
+            target: String,
+            imagePath: String?,
+            isRecurrent: Boolean
+    ) {
+        val date = if (isRecurrent) firstDayOfNextMonth else dueDate
+        val fields = checkFields(title, date, bucketType, target, isRecurrent)
+        if (fields) {
+            val updatedBucket = Bucket(title, date, bucketType!!, target.toDouble(), defaultBucket?.entries, defaultBucket?.id, imagePath, isRecurrent)
+            disposable!!.add(bucketRepository.update(updatedBucket)
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe({
+                            if (addBucketView.get() != null) {
+                                addBucketView.get()!!.onSuccessSavingBucket(updatedBucket)
+                            }
+                        }) { throwErrorSavingBucket() }
             )
         }
     }
@@ -139,6 +164,19 @@ class AddBucketPresenter(
                 .subscribe({ b: Bucket? ->
                     if (addBucketView.get() != null) {
                         addBucketView.get()!!.onSuccessSavingBucket(b)
+                    }
+                }) { throwErrorSavingBucket() }
+        )
+    }
+
+    fun getDefaultBucket(defaultBucketId: Int) {
+        disposable!!.add(bucketRepository[defaultBucketId]
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ bucket: Bucket? ->
+                    defaultBucket = bucket
+                    if (addBucketView.get() != null) {
+                        addBucketView.get()!!.setDefaultValues(bucket)
                     }
                 }) { throwErrorSavingBucket() }
         )

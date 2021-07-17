@@ -11,4 +11,6 @@ interface MainView {
     fun onEntriesReceived(entryList: MutableList<BucketEntry>?)
     fun onIncomeDataReceived(incomeList: List<Income>?, incomeLeft: Double)
     fun updateLocale(locale: Locale?)
+    fun onDeleteBucket(id: Int)
+    fun onUpdateBucket(bucket: Bucket)
 }

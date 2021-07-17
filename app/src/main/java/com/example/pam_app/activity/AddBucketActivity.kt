@@ -25,6 +25,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputLayout
 import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissionsResultCallback {
@@ -40,9 +41,16 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
     private var dropdown: TextInputLayout? = null
     private var isRecurrent: SwitchMaterial? = null
     private var galleryResultLauncher: ActivityResultLauncher<String>? = null
+    private var defaultBucketId: Int? = null
+    private var updateBucket = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_bucket)
+        val uri = intent.data
+        if (uri != null) {
+            defaultBucketId = uri.getQueryParameter("bucket_id")?.toInt()
+            updateBucket = true
+        }
         val container = ContainerLocator.locateComponent(this)
         presenter = AddBucketPresenter(this, container!!.bucketRepository!!,
                 container.schedulerProvider!!)
@@ -63,6 +71,9 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
         datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.pick_a_date)).build()
         isRecurrent = findViewById(R.id.switch_recurrent_bucket)
         presenter!!.onAttachView()
+        if(updateBucket) {
+            presenter!!.getDefaultBucket(defaultBucketId!!)
+        }
         setDatePicker()
         setSaveBucketListener()
         setBucketTypeValues()
@@ -76,14 +87,22 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
     private fun setSaveBucketListener() {
         val saveEntry = findViewById<Button>(R.id.save)
         saveEntry.setOnClickListener {
+            if(updateBucket) { presenter!!.updateBucket(
+                    title!!.text.toString(),
+                    if (dueDate!!.text.toString() == "") null else date!!.time,
+                    BucketType.getBucketType(bucketType!!.text.toString()),
+                    target!!.text.toString(),
+                    imagePath,
+                    isRecurrent!!.isChecked)
+            } else {
             presenter!!.saveBucket(
                     title!!.text.toString(),
                     if (dueDate!!.text.toString() == "") null else date!!.time,
-                    BucketType.getBucketType(bucketType!!.text.toString())!!,
+                    BucketType.getBucketType(bucketType!!.text.toString()),
                     target!!.text.toString(),
                     imagePath,
-                    isRecurrent!!.isChecked
-            )
+                    isRecurrent!!.isChecked)
+            }
         }
     }
 
@@ -215,6 +234,21 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
 
     private fun loadImage() {
         galleryResultLauncher!!.launch("image/*")
+    }
+
+    override fun setDefaultValues(bucket: Bucket?) {
+        //TODO: add imagepath?
+        title?.setText(bucket!!.title)
+        title?.isEnabled = !updateBucket
+        target?.setText(bucket!!.target.toString())
+        bucketType?.setText(getString(bucket!!.bucketType.stringResource), false)
+        if(bucket!!.isRecurrent) {
+            dueDate?.isEnabled = false
+            isRecurrent?.setChecked(true)
+        }
+        val sdf = SimpleDateFormat("MMM dd, yyyy",)
+        date?.timeInMillis = bucket.dueDate!!.time
+        dueDate?.setText(sdf.format(date!!.time))
     }
 
     companion object {

@@ -35,12 +35,12 @@ class BucketMapper {
 
     fun toModel(bucketEntryEntity: BucketEntryEntity?): BucketEntry {
         return BucketEntry(bucketEntryEntity!!.amount, bucketEntryEntity.date,
-                bucketEntryEntity.comment)
+                bucketEntryEntity.comment, bucketEntryEntity.idBucket)
     }
 
     fun toModel(bucketEntryEntity: BucketEntryWithBucketEntity?): BucketEntry {
         return BucketEntry(bucketEntryEntity!!.bucketEntryEntity!!.amount, bucketEntryEntity.bucketEntryEntity!!.date,
-                bucketEntryEntity.bucketEntryEntity!!.comment, bucketEntryEntity.bucketEntity!!.title)
+                bucketEntryEntity.bucketEntryEntity!!.comment, bucketEntryEntity.bucketEntity!!.title, bucketEntryEntity.bucketEntity!!.id)
     }
 
     fun toEntity(bucketEntry: BucketEntry, idBucket: Int): BucketEntryEntity {

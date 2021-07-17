@@ -63,6 +63,13 @@ class HomeViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context, attrib
         }
     }
 
+    override fun onDeleteBucket(id: Int) {
+        val newEntryList = entryList?.filter { e -> e!!.bucketId != id } as List<BucketEntry>
+        adapter!!.setData(newEntryList)
+        entryList = newEntryList.toMutableList()
+        renderGraph(entryList)
+    }
+
     private fun setUpList() {
         val listView: RecyclerView = findViewById(R.id.activity)
         adapter = BucketEntryAdapter()
@@ -147,7 +154,7 @@ class HomeViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context, attrib
         val reduceEntryList: List<BucketEntry> = entryList!!
                 .filter { it!!.date!!.after(firstDayOfMonth) }
                 .groupBy { it!!.bucketTitle }
-                .mapValues { it -> BucketEntry(it.value.sumOf { it!!.amount }, it.value[0]!!.date, it.value[0]!!.comment, it.value[0]!!.bucketTitle) }
+                .mapValues { it -> BucketEntry(it.value.sumOf { it!!.amount }, it.value[0]!!.date, it.value[0]!!.comment, it.value[0]!!.bucketTitle, it.value[0]!!.bucketId) }
                 .values
                 .toList()
                 .sortedBy { it.amount }

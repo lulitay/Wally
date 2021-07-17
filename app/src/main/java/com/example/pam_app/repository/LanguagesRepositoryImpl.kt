@@ -7,8 +7,7 @@ import java.util.*
 class LanguagesRepositoryImpl(private val sharedPreferences: SharedPreferences) : LanguagesRepository {
     private var listener: OnSharedPreferenceChangeListener? = null
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    override val currentLocale: Locale
-        get() = Locale(sharedPreferences.getString(KEY_PREF_LANGUAGE, "en"))
+    override var currentLocale: Locale = Locale(sharedPreferences.getString(KEY_PREF_LANGUAGE, "en"), sharedPreferences.getString(KEY_PREF_COUNTRY, "US"))
 
     override fun getKeyPrefLanguage(key: String?): String? {
         return sharedPreferences.getString(key, "")
@@ -25,10 +24,12 @@ class LanguagesRepositoryImpl(private val sharedPreferences: SharedPreferences) 
 
     override fun changeLanguage(language: String?) {
         sharedPreferences.edit().putString(KEY_PREF_LANGUAGE, language).apply()
+        sharedPreferences.edit().putString(KEY_PREF_COUNTRY, if (language == "es") "ES" else "US").apply()
     }
 
     companion object {
         const val KEY_PREF_LANGUAGE = "pref_language"
+        const val KEY_PREF_COUNTRY = "pref_language"
     }
 
 }

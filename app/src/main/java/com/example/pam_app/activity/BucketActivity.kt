@@ -28,6 +28,7 @@ import com.example.pam_app.di.ContainerLocator
 import com.example.pam_app.model.Bucket
 import com.example.pam_app.model.Entry
 import com.example.pam_app.presenter.BucketPresenter
+import com.example.pam_app.utils.contracts.BucketContract
 import com.example.pam_app.utils.contracts.EntryContract
 import com.example.pam_app.view.BucketView
 import com.google.android.material.appbar.AppBarLayout
@@ -35,12 +36,14 @@ import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.FileNotFoundException
 import java.io.Serializable
+import java.util.*
 
 class BucketActivity : AppCompatActivity(), BucketView {
     private var bucketPresenter: BucketPresenter? = null
     private var binding: ActivityBucketBinding? = null
     private var readExternalStorage = false
     private var addBucketEntryResultLauncher: ActivityResultLauncher<String>? = null
+    private var addBucketResultLauncher: ActivityResultLauncher<String?>? = null
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
         val id: Int = intent.data!!.getQueryParameter("id")?.toInt()!!
@@ -52,6 +55,7 @@ class BucketActivity : AppCompatActivity(), BucketView {
         setUpList()
         setUpAddEntryButton()
         setUpAddEntryResultLauncher()
+        setUpAddBucketResultLauncher()
         readExternalStorage = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -73,8 +77,15 @@ class BucketActivity : AppCompatActivity(), BucketView {
         } else if (id == R.id.action_delete) {
             bucketPresenter!!.onDeleteSelected()
             return true
+        } else if (id == R.id.action_edit) {
+            bucketPresenter!!.onEditSelected()
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun goToAddBucket(bucketId: Int) {
+        addBucketResultLauncher!!.launch("bucket_id=$bucketId")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -193,4 +204,10 @@ class BucketActivity : AppCompatActivity(), BucketView {
         addBucketEntryResultLauncher = registerForActivityResult(
                 EntryContract()) { entry: Serializable? -> bucketPresenter!!.onAddEntry(entry) }
     }
+
+    private fun setUpAddBucketResultLauncher() {
+        addBucketResultLauncher = registerForActivityResult(
+                BucketContract()) {bucket: Bucket? -> bucketPresenter!!.onBucketChanged(bucket!!)}
+    }
+
 }

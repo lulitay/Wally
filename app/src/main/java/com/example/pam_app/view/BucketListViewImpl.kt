@@ -118,13 +118,38 @@ class BucketListViewImpl @kotlin.jvm.JvmOverloads constructor(context: Context?,
     override fun onDeleteBucket(id: Int) {
         savingsAdapter!!.delete(id)
         spendingAdapter!!.delete(id)
+
         if (savingsAdapter!!.itemCount == 0) {
             isSavingsListEmpty = true
             savingsBucketsUnavailable.visibility = View.VISIBLE
+            savingHeader.visibility = View.GONE
+            savingsBuckets.visibility = View.GONE
         }
         if (spendingAdapter!!.itemCount == 0) {
             isSpendingListEmpty = true
             spendingBucketsUnavailable.visibility = View.VISIBLE
+            spendingHeader.visibility = View.GONE
+            spendingBuckets.visibility = View.GONE
+        }
+    }
+
+    override fun onUpdateBucket(bucket: Bucket) {
+        savingsAdapter!!.delete(bucket.id!!)
+        spendingAdapter!!.delete(bucket.id)
+
+        onBucketAdded(bucket)
+
+        if (savingsAdapter!!.itemCount == 0) {
+            isSavingsListEmpty = true
+            savingsBucketsUnavailable.visibility = View.VISIBLE
+            savingHeader.visibility = View.GONE
+            savingsBuckets.visibility = View.GONE
+        }
+        if (spendingAdapter!!.itemCount == 0) {
+            isSpendingListEmpty = true
+            spendingBucketsUnavailable.visibility = View.VISIBLE
+            spendingHeader.visibility = View.GONE
+            spendingBuckets.visibility = View.GONE
         }
     }
 
