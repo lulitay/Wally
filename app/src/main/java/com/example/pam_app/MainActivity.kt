@@ -18,6 +18,7 @@ import com.example.pam_app.utils.contracts.BucketContract
 import com.example.pam_app.utils.contracts.EntryContract
 import com.example.pam_app.utils.contracts.EntryListContract
 import com.example.pam_app.utils.listener.Clickable
+import com.example.pam_app.utils.notifications.NotificationUtils
 import com.example.pam_app.utils.workers.RecurrentBucketWorker
 import com.example.pam_app.utils.workers.RecurrentBucketWorkerFactory
 import com.example.pam_app.utils.workers.RecurrentIncomeWorker
@@ -26,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity(), Clickable, MainView {
     private var navigationView: BottomNavigationView? = null
@@ -201,7 +203,11 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
     private fun setUpAddBucketResultLauncher() {
         addBucketResultLauncher = registerForActivityResult(
                 BucketContract()
-        ) { result: Bucket? -> bucketListView?.onBucketAdded(result) }
+        ) {
+            result: Bucket? -> bucketListView?.onBucketAdded(result)
+            val time = getNotificationDelay(result!!) + 5 + Calendar.getInstance().timeInMillis
+            NotificationUtils().setNotification(time, this@MainActivity, result.title!!)
+        }
     }
 
     private fun setUpAddEntryResultLauncher() {
@@ -225,6 +231,19 @@ class MainActivity : AppCompatActivity(), Clickable, MainView {
 
     private fun applyChanges(language: String) {
         presenter!!.changeLanguage(language)
+    }
+
+    private fun getNotificationDelay(bucket: Bucket) : Long {
+        val borderDate = Calendar.getInstance()
+        borderDate[Calendar.DAY_OF_MONTH] += 3
+        val entryDate = Calendar.getInstance()
+        entryDate.time = bucket.dueDate!!
+        return if (entryDate < borderDate) {
+            0
+        } else {
+            entryDate[Calendar.DAY_OF_MONTH] -= 3
+            entryDate.timeInMillis
+        }
     }
 
     companion object {
