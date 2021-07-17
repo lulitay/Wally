@@ -241,8 +241,11 @@ class AddBucketActivity : AppCompatActivity(), AddBucketView, OnRequestPermissio
         title?.isEnabled = !updateBucket
         target?.setText(bucket!!.target.toString())
         bucketType?.setText(getString(bucket!!.bucketType.stringResource), false)
-        isRecurrent?.setChecked(bucket!!.isRecurrent)
-        date?.timeInMillis = bucket!!.dueDate!!.time
+        if(bucket!!.isRecurrent) {
+            dueDate?.isEnabled = false
+            isRecurrent?.setChecked(true)
+        }
+        date?.timeInMillis = bucket.dueDate!!.time
         dueDate?.setText(date?.time.toString())
     }
 
