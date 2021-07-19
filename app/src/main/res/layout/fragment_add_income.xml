@@ -33,6 +33,13 @@
             style="@style/FormInputs"
             android:focusable="true" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_recurrent_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/recurrent_income"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/save"
             android:layout_width="wrap_content"

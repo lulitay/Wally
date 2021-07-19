@@ -58,6 +58,7 @@
     <string name="error_saving_bucket">Error saving bucket</string>
     <string name="bucket_saved">Bucket %1$s saved</string>
     <string name="recurrent_bucket">Recurrent bucket in a month</string>
+    <string name="recurrent_income">Recurrent income in a month</string>
     <string name="entries_old">History</string>
     <string name="monthly_income">Monthly income</string>
     <string name="apply_changes">Apply changes</string>
@@ -69,4 +70,7 @@
     <string name="metrics">Metrics</string>
     <string name="others">Others</string>
     <string name="error_existing_bucket_name">Bucket with that name already exists</string>
+    <string name="bucket_notif_title">Your bucket\'s due date is getting close!</string>
+    <string name="bucket_notif_message">Your bucket \'%1$s\' will reach is due date soon. Try to meet your goal!</string>
+    <string name="edit">Edit</string>
 </resources>

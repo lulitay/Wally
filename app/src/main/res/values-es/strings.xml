@@ -60,6 +60,7 @@
     <string name="error_saving_bucket">Error guardando cuenta</string>
     <string name="bucket_saved">Cuenta %1$s guardada</string>
     <string name="recurrent_bucket">Cuenta recurrente en un mes</string>
+    <string name="recurrent_income">Ingresos recurrente en un mes</string>
     <string name="entries_old">Historial</string>
     <string name="monthly_income">Ingresos mensuales</string>
     <string name="error_saving_income">Error guardando ingreso</string>
@@ -70,4 +71,7 @@
     <string name="metrics">Métricas</string>
     <string name="others">Otros</string>
     <string name="error_existing_bucket_name">Ya existe una cuenta con ese nombre</string>
+    <string name="bucket_notif_title">¡La fecha de vencimiento de tu cuenta se acerca!</string>
+    <string name="bucket_notif_message">Tu cuenta \'%1$s\' va a llegar a su vencimiento pronto. ¡Intenta completarla!</string>
+    <string name="edit">Editar</string>
 </resources>

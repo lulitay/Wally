@@ -38,11 +38,26 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AddBucketActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="wally" android:host="add_bucket" android:pathPrefix="/detail" />
+        </intent-filter>
+        </activity>
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
             tools:node="remove" />
+        <receiver
+            android:name=".utils.notifications.NotificationPublisher"
+            android:enabled="true" />
+
+        <service
+            android:name=".utils.notifications.NotificationService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:enabled="true" />
     </application>
 
 </manifest>
